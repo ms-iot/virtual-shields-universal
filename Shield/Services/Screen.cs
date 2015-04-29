@@ -55,6 +55,7 @@ namespace Shield.Services
             public UInt32 Value;
         }
 
+        private SolidColorBrush textForgroundBrush = new SolidColorBrush(Colors.White);
         private SolidColorBrush foreground = new SolidColorBrush(Color.FromArgb(0xFF,0xFF,0xFF,0xFF));
         private SolidColorBrush background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
         private SolidColorBrush gray = new SolidColorBrush(Color.FromArgb(0xFF, 0x80, 0x80, 0x80));
@@ -65,7 +66,7 @@ namespace Shield.Services
             var isText = lcdt.Service.Equals("LCDT");
             FrameworkElement element = null;
             var expandToEdge = false;
-            SolidColorBrush brush = null;
+            SolidColorBrush backgroundBrush = null;
 
             if (lcdt.Action != null)
             {
@@ -76,7 +77,7 @@ namespace Shield.Services
                         var hex = lcdt.ARGB.ToByteArray();
                         if (hex.Length > 3)
                         {
-                            brush =
+                            backgroundBrush =
                                 new SolidColorBrush(Color.FromArgb((hex[0] == 0 ? (byte) 255 : hex[0]), hex[1], hex[2],
                                     hex[3]));
                         }
@@ -87,7 +88,7 @@ namespace Shield.Services
                         if (UInt32.TryParse(lcdt.ARGB, out color))
                         {
                             var argb = new ArgbUnion {Value = color};
-                            brush = new SolidColorBrush(Color.FromArgb(argb.A == 0 ? (byte) 255 : argb.A, argb.R, argb.G, argb.B));
+                            backgroundBrush = new SolidColorBrush(Color.FromArgb(argb.A == 0 ? (byte) 255 : argb.A, argb.R, argb.G, argb.B));
                         }
                     }   
                 }
@@ -135,9 +136,9 @@ namespace Shield.Services
                             {
                                 mainPage.canvas.Children.Clear();
 
-                                if (brush != null)
+                                if (backgroundBrush != null)
                                 {
-                                    mainPage.canvas.Background = brush;
+                                    mainPage.canvas.Background = backgroundBrush;
                                 }
 
                                 lastY = -1;
@@ -154,7 +155,10 @@ namespace Shield.Services
                             {
                                 Content = lcdt.Message,
                                 FontSize = lcdt.Size ?? DefaultFontSize,
-                                Tag = lcdt.Tag
+                                Tag = lcdt.Tag,
+                                Foreground = textForgroundBrush,
+                                Background =  new SolidColorBrush(Colors.Gray)
+
                             };
 
                             element.Tapped += async (s, a) => await mainPage.SendEvent(s, a, "tapped");
@@ -214,7 +218,7 @@ namespace Shield.Services
                                 Text = lcdt.Message,
                                 FontSize = lcdt.Size ?? DefaultFontSize,
                                 TextWrapping = TextWrapping.Wrap,
-                                Foreground = brush ?? foreground,
+                                Foreground = textForgroundBrush,
                                 AcceptsReturn = lcdt.Multi ?? false
                             };
 
@@ -234,7 +238,7 @@ namespace Shield.Services
                             var rect = new Rectangle
                             {
                                 Tag = lcdt.Tag,
-                                Fill = brush ?? gray
+                                Fill = backgroundBrush ?? gray
                             };
 
                             if (lcdt.Width.HasValue)
@@ -254,16 +258,17 @@ namespace Shield.Services
                         }
                     case "TEXT":
                         {
-                            element = new TextBlock
+                            TextBlock textBlock = new TextBlock
                             {
                                 Text = lcdt.Message,
                                 FontSize = lcdt.Size ?? DefaultFontSize,
                                 TextWrapping = TextWrapping.Wrap,
-                                Foreground = brush ?? foreground
+                                Foreground = textForgroundBrush
                             };
 
                             expandToEdge = true;
 
+                            element = textBlock;
                             element.SetValue(Canvas.LeftProperty, lcdt.X);
                             element.SetValue(Canvas.TopProperty, lcdt.Y);
                             break;
@@ -286,7 +291,8 @@ namespace Shield.Services
                     Text = lcdt.Message,
                     FontSize = lcdt.Size ?? DefaultFontSize,
                     TextWrapping = TextWrapping.Wrap,
-                    Tag = y.ToString()
+                    Tag = y.ToString(),
+                    Foreground = textForgroundBrush
                 };
 
                 var textblock = (TextBlock)element;
