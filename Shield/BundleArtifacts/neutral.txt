@@ -1,0 +1,2 @@
+MainPackage=C:\CODE\git\virtual-shields\Shield\Shield\bin\Release\Shield_1.1.0.0_AnyCPU.appx
+SymbolPackage=C:\CODE\git\virtual-shields\Shield\Shield\AppPackages\Shield_1.1.0.0_Test\Shield_1.1.0.0_AnyCPU.appxsym

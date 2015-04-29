@@ -1,0 +1,755 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<StoreAssociation xmlns="http://schemas.microsoft.com/appx/2010/storeassociation">
+  <Publisher>CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US</Publisher>
+  <PublisherDisplayName>Microsoft Corporation</PublisherDisplayName>
+  <GeneratePackageHash>http://www.w3.org/2001/04/xmlenc#sha256</GeneratePackageHash>
+  <SupportedLocales>
+    <Language Code="af" InMinimumRequirementSet="true" />
+    <Language Code="af-za" InMinimumRequirementSet="true" />
+    <Language Code="am" InMinimumRequirementSet="true" />
+    <Language Code="am-et" InMinimumRequirementSet="true" />
+    <Language Code="ar" InMinimumRequirementSet="true" />
+    <Language Code="ar-ae" InMinimumRequirementSet="true" />
+    <Language Code="ar-bh" InMinimumRequirementSet="true" />
+    <Language Code="ar-dz" InMinimumRequirementSet="true" />
+    <Language Code="ar-eg" InMinimumRequirementSet="true" />
+    <Language Code="ar-iq" InMinimumRequirementSet="true" />
+    <Language Code="ar-jo" InMinimumRequirementSet="true" />
+    <Language Code="ar-kw" InMinimumRequirementSet="true" />
+    <Language Code="ar-lb" InMinimumRequirementSet="true" />
+    <Language Code="ar-ly" InMinimumRequirementSet="true" />
+    <Language Code="ar-ma" InMinimumRequirementSet="true" />
+    <Language Code="ar-om" InMinimumRequirementSet="true" />
+    <Language Code="ar-qa" InMinimumRequirementSet="true" />
+    <Language Code="ar-sa" InMinimumRequirementSet="true" />
+    <Language Code="ar-sy" InMinimumRequirementSet="true" />
+    <Language Code="ar-tn" InMinimumRequirementSet="true" />
+    <Language Code="ar-ye" InMinimumRequirementSet="true" />
+    <Language Code="as" InMinimumRequirementSet="true" />
+    <Language Code="as-in" InMinimumRequirementSet="true" />
+    <Language Code="az-arab" InMinimumRequirementSet="true" />
+    <Language Code="az-arab-az" InMinimumRequirementSet="true" />
+    <Language Code="az-cyrl" InMinimumRequirementSet="true" />
+    <Language Code="az-cyrl-az" InMinimumRequirementSet="true" />
+    <Language Code="az-latn" InMinimumRequirementSet="true" />
+    <Language Code="az-latn-az" InMinimumRequirementSet="true" />
+    <Language Code="be" InMinimumRequirementSet="true" />
+    <Language Code="be-by" InMinimumRequirementSet="true" />
+    <Language Code="bg" InMinimumRequirementSet="true" />
+    <Language Code="bg-bg" InMinimumRequirementSet="true" />
+    <Language Code="bn" InMinimumRequirementSet="true" />
+    <Language Code="bn-bd" InMinimumRequirementSet="true" />
+    <Language Code="bn-in" InMinimumRequirementSet="true" />
+    <Language Code="bs" InMinimumRequirementSet="true" />
+    <Language Code="bs-cyrl" InMinimumRequirementSet="true" />
+    <Language Code="bs-cyrl-ba" InMinimumRequirementSet="true" />
+    <Language Code="bs-latn" InMinimumRequirementSet="true" />
+    <Language Code="bs-latn-ba" InMinimumRequirementSet="true" />
+    <Language Code="ca" InMinimumRequirementSet="true" />
+    <Language Code="ca-es" InMinimumRequirementSet="true" />
+    <Language Code="ca-es-valencia" InMinimumRequirementSet="true" />
+    <Language Code="chr-cher" InMinimumRequirementSet="true" />
+    <Language Code="chr-cher-us" InMinimumRequirementSet="true" />
+    <Language Code="chr-latn" InMinimumRequirementSet="true" />
+    <Language Code="cs" InMinimumRequirementSet="true" />
+    <Language Code="cs-cz" InMinimumRequirementSet="true" />
+    <Language Code="cy" InMinimumRequirementSet="true" />
+    <Language Code="cy-gb" InMinimumRequirementSet="true" />
+    <Language Code="da" InMinimumRequirementSet="true" />
+    <Language Code="da-dk" InMinimumRequirementSet="true" />
+    <Language Code="de" InMinimumRequirementSet="true" />
+    <Language Code="de-at" InMinimumRequirementSet="true" />
+    <Language Code="de-ch" InMinimumRequirementSet="true" />
+    <Language Code="de-de" InMinimumRequirementSet="true" />
+    <Language Code="de-li" InMinimumRequirementSet="true" />
+    <Language Code="de-lu" InMinimumRequirementSet="true" />
+    <Language Code="el" InMinimumRequirementSet="true" />
+    <Language Code="el-gr" InMinimumRequirementSet="true" />
+    <Language Code="en" InMinimumRequirementSet="true" />
+    <Language Code="en-011" InMinimumRequirementSet="true" />
+    <Language Code="en-014" InMinimumRequirementSet="true" />
+    <Language Code="en-018" InMinimumRequirementSet="true" />
+    <Language Code="en-021" InMinimumRequirementSet="true" />
+    <Language Code="en-029" InMinimumRequirementSet="true" />
+    <Language Code="en-053" InMinimumRequirementSet="true" />
+    <Language Code="en-au" InMinimumRequirementSet="true" />
+    <Language Code="en-bz" InMinimumRequirementSet="true" />
+    <Language Code="en-ca" InMinimumRequirementSet="true" />
+    <Language Code="en-gb" InMinimumRequirementSet="true" />
+    <Language Code="en-hk" InMinimumRequirementSet="true" />
+    <Language Code="en-id" InMinimumRequirementSet="true" />
+    <Language Code="en-ie" InMinimumRequirementSet="true" />
+    <Language Code="en-in" InMinimumRequirementSet="true" />
+    <Language Code="en-jm" InMinimumRequirementSet="true" />
+    <Language Code="en-kz" InMinimumRequirementSet="true" />
+    <Language Code="en-mt" InMinimumRequirementSet="true" />
+    <Language Code="en-my" InMinimumRequirementSet="true" />
+    <Language Code="en-nz" InMinimumRequirementSet="true" />
+    <Language Code="en-ph" InMinimumRequirementSet="true" />
+    <Language Code="en-pk" InMinimumRequirementSet="true" />
+    <Language Code="en-sg" InMinimumRequirementSet="true" />
+    <Language Code="en-tt" InMinimumRequirementSet="true" />
+    <Language Code="en-us" InMinimumRequirementSet="true" />
+    <Language Code="en-vn" InMinimumRequirementSet="true" />
+    <Language Code="en-za" InMinimumRequirementSet="true" />
+    <Language Code="es" InMinimumRequirementSet="true" />
+    <Language Code="es-019" InMinimumRequirementSet="true" />
+    <Language Code="es-419" InMinimumRequirementSet="true" />
+    <Language Code="es-ar" InMinimumRequirementSet="true" />
+    <Language Code="es-bo" InMinimumRequirementSet="true" />
+    <Language Code="es-cl" InMinimumRequirementSet="true" />
+    <Language Code="es-co" InMinimumRequirementSet="true" />
+    <Language Code="es-cr" InMinimumRequirementSet="true" />
+    <Language Code="es-do" InMinimumRequirementSet="true" />
+    <Language Code="es-ec" InMinimumRequirementSet="true" />
+    <Language Code="es-es" InMinimumRequirementSet="true" />
+    <Language Code="es-gt" InMinimumRequirementSet="true" />
+    <Language Code="es-hn" InMinimumRequirementSet="true" />
+    <Language Code="es-mx" InMinimumRequirementSet="true" />
+    <Language Code="es-ni" InMinimumRequirementSet="true" />
+    <Language Code="es-pa" InMinimumRequirementSet="true" />
+    <Language Code="es-pe" InMinimumRequirementSet="true" />
+    <Language Code="es-pr" InMinimumRequirementSet="true" />
+    <Language Code="es-py" InMinimumRequirementSet="true" />
+    <Language Code="es-sv" InMinimumRequirementSet="true" />
+    <Language Code="es-us" InMinimumRequirementSet="true" />
+    <Language Code="es-uy" InMinimumRequirementSet="true" />
+    <Language Code="es-ve" InMinimumRequirementSet="true" />
+    <Language Code="et" InMinimumRequirementSet="true" />
+    <Language Code="et-ee" InMinimumRequirementSet="true" />
+    <Language Code="eu" InMinimumRequirementSet="true" />
+    <Language Code="eu-es" InMinimumRequirementSet="true" />
+    <Language Code="fa" InMinimumRequirementSet="true" />
+    <Language Code="fa-ir" InMinimumRequirementSet="true" />
+    <Language Code="fi" InMinimumRequirementSet="true" />
+    <Language Code="fi-fi" InMinimumRequirementSet="true" />
+    <Language Code="fil" InMinimumRequirementSet="true" />
+    <Language Code="fil-latn" InMinimumRequirementSet="true" />
+    <Language Code="fil-ph" InMinimumRequirementSet="true" />
+    <Language Code="fr" InMinimumRequirementSet="true" />
+    <Language Code="fr-011" InMinimumRequirementSet="true" />
+    <Language Code="fr-015" InMinimumRequirementSet="true" />
+    <Language Code="fr-021" InMinimumRequirementSet="true" />
+    <Language Code="fr-029" InMinimumRequirementSet="true" />
+    <Language Code="fr-155" InMinimumRequirementSet="true" />
+    <Language Code="fr-be" InMinimumRequirementSet="true" />
+    <Language Code="fr-ca" InMinimumRequirementSet="true" />
+    <Language Code="fr-cd" InMinimumRequirementSet="true" />
+    <Language Code="fr-ch" InMinimumRequirementSet="true" />
+    <Language Code="fr-ci" InMinimumRequirementSet="true" />
+    <Language Code="fr-cm" InMinimumRequirementSet="true" />
+    <Language Code="fr-fr" InMinimumRequirementSet="true" />
+    <Language Code="fr-ht" InMinimumRequirementSet="true" />
+    <Language Code="fr-lu" InMinimumRequirementSet="true" />
+    <Language Code="fr-ma" InMinimumRequirementSet="true" />
+    <Language Code="fr-mc" InMinimumRequirementSet="true" />
+    <Language Code="fr-ml" InMinimumRequirementSet="true" />
+    <Language Code="fr-re" InMinimumRequirementSet="true" />
+    <Language Code="frc-latn" InMinimumRequirementSet="true" />
+    <Language Code="frp-latn" InMinimumRequirementSet="true" />
+    <Language Code="ga" InMinimumRequirementSet="true" />
+    <Language Code="ga-ie" InMinimumRequirementSet="true" />
+    <Language Code="gd-gb" InMinimumRequirementSet="true" />
+    <Language Code="gd-latn" InMinimumRequirementSet="true" />
+    <Language Code="gl" InMinimumRequirementSet="true" />
+    <Language Code="gl-es" InMinimumRequirementSet="true" />
+    <Language Code="gu" InMinimumRequirementSet="true" />
+    <Language Code="gu-in" InMinimumRequirementSet="true" />
+    <Language Code="ha-latn" InMinimumRequirementSet="true" />
+    <Language Code="ha-latn-ng" InMinimumRequirementSet="true" />
+    <Language Code="he" InMinimumRequirementSet="true" />
+    <Language Code="he-il" InMinimumRequirementSet="true" />
+    <Language Code="hi" InMinimumRequirementSet="true" />
+    <Language Code="hi-in" InMinimumRequirementSet="true" />
+    <Language Code="hr" InMinimumRequirementSet="true" />
+    <Language Code="hr-ba" InMinimumRequirementSet="true" />
+    <Language Code="hr-hr" InMinimumRequirementSet="true" />
+    <Language Code="hu" InMinimumRequirementSet="true" />
+    <Language Code="hu-hu" InMinimumRequirementSet="true" />
+    <Language Code="hy" InMinimumRequirementSet="true" />
+    <Language Code="hy-am" InMinimumRequirementSet="true" />
+    <Language Code="id" InMinimumRequirementSet="true" />
+    <Language Code="id-id" InMinimumRequirementSet="true" />
+    <Language Code="ig-latn" InMinimumRequirementSet="true" />
+    <Language Code="ig-ng" InMinimumRequirementSet="true" />
+    <Language Code="is" InMinimumRequirementSet="true" />
+    <Language Code="is-is" InMinimumRequirementSet="true" />
+    <Language Code="it" InMinimumRequirementSet="true" />
+    <Language Code="it-ch" InMinimumRequirementSet="true" />
+    <Language Code="it-it" InMinimumRequirementSet="true" />
+    <Language Code="iu-cans" InMinimumRequirementSet="true" />
+    <Language Code="iu-latn" InMinimumRequirementSet="true" />
+    <Language Code="iu-latn-ca" InMinimumRequirementSet="true" />
+    <Language Code="ja" InMinimumRequirementSet="true" />
+    <Language Code="ja-jp" InMinimumRequirementSet="true" />
+    <Language Code="ka" InMinimumRequirementSet="true" />
+    <Language Code="ka-ge" InMinimumRequirementSet="true" />
+    <Language Code="kk" InMinimumRequirementSet="true" />
+    <Language Code="kk-kz" InMinimumRequirementSet="true" />
+    <Language Code="km" InMinimumRequirementSet="true" />
+    <Language Code="km-kh" InMinimumRequirementSet="true" />
+    <Language Code="kn" InMinimumRequirementSet="true" />
+    <Language Code="kn-in" InMinimumRequirementSet="true" />
+    <Language Code="ko" InMinimumRequirementSet="true" />
+    <Language Code="ko-kr" InMinimumRequirementSet="true" />
+    <Language Code="kok" InMinimumRequirementSet="true" />
+    <Language Code="kok-in" InMinimumRequirementSet="true" />
+    <Language Code="ku-arab" InMinimumRequirementSet="true" />
+    <Language Code="ku-arab-iq" InMinimumRequirementSet="true" />
+    <Language Code="ky-cyrl" InMinimumRequirementSet="true" />
+    <Language Code="ky-kg" InMinimumRequirementSet="true" />
+    <Language Code="lb" InMinimumRequirementSet="true" />
+    <Language Code="lb-lu" InMinimumRequirementSet="true" />
+    <Language Code="lt" InMinimumRequirementSet="true" />
+    <Language Code="lt-lt" InMinimumRequirementSet="true" />
+    <Language Code="lv" InMinimumRequirementSet="true" />
+    <Language Code="lv-lv" InMinimumRequirementSet="true" />
+    <Language Code="mi" InMinimumRequirementSet="true" />
+    <Language Code="mi-latn" InMinimumRequirementSet="true" />
+    <Language Code="mi-nz" InMinimumRequirementSet="true" />
+    <Language Code="mk" InMinimumRequirementSet="true" />
+    <Language Code="mk-mk" InMinimumRequirementSet="true" />
+    <Language Code="ml" InMinimumRequirementSet="true" />
+    <Language Code="ml-in" InMinimumRequirementSet="true" />
+    <Language Code="mn-cyrl" InMinimumRequirementSet="true" />
+    <Language Code="mn-mn" InMinimumRequirementSet="true" />
+    <Language Code="mn-mong" InMinimumRequirementSet="true" />
+    <Language Code="mn-phag" InMinimumRequirementSet="true" />
+    <Language Code="mr" InMinimumRequirementSet="true" />
+    <Language Code="mr-in" InMinimumRequirementSet="true" />
+    <Language Code="ms" InMinimumRequirementSet="true" />
+    <Language Code="ms-bn" InMinimumRequirementSet="true" />
+    <Language Code="ms-my" InMinimumRequirementSet="true" />
+    <Language Code="mt" InMinimumRequirementSet="true" />
+    <Language Code="mt-mt" InMinimumRequirementSet="true" />
+    <Language Code="nb" InMinimumRequirementSet="true" />
+    <Language Code="nb-no" InMinimumRequirementSet="true" />
+    <Language Code="ne" InMinimumRequirementSet="true" />
+    <Language Code="ne-np" InMinimumRequirementSet="true" />
+    <Language Code="nl" InMinimumRequirementSet="true" />
+    <Language Code="nl-be" InMinimumRequirementSet="true" />
+    <Language Code="nl-nl" InMinimumRequirementSet="true" />
+    <Language Code="nn" InMinimumRequirementSet="true" />
+    <Language Code="nn-no" InMinimumRequirementSet="true" />
+    <Language Code="no" InMinimumRequirementSet="true" />
+    <Language Code="no-no" InMinimumRequirementSet="true" />
+    <Language Code="nso" InMinimumRequirementSet="true" />
+    <Language Code="nso-za" InMinimumRequirementSet="true" />
+    <Language Code="or" InMinimumRequirementSet="true" />
+    <Language Code="or-in" InMinimumRequirementSet="true" />
+    <Language Code="pa" InMinimumRequirementSet="true" />
+    <Language Code="pa-arab" InMinimumRequirementSet="true" />
+    <Language Code="pa-arab-pk" InMinimumRequirementSet="true" />
+    <Language Code="pa-deva" InMinimumRequirementSet="true" />
+    <Language Code="pa-in" InMinimumRequirementSet="true" />
+    <Language Code="pl" InMinimumRequirementSet="true" />
+    <Language Code="pl-pl" InMinimumRequirementSet="true" />
+    <Language Code="prs" InMinimumRequirementSet="true" />
+    <Language Code="prs-af" InMinimumRequirementSet="true" />
+    <Language Code="prs-arab" InMinimumRequirementSet="true" />
+    <Language Code="pt" InMinimumRequirementSet="true" />
+    <Language Code="pt-br" InMinimumRequirementSet="true" />
+    <Language Code="pt-pt" InMinimumRequirementSet="true" />
+    <Language Code="quc-latn" InMinimumRequirementSet="true" />
+    <Language Code="qut-gt" InMinimumRequirementSet="true" />
+    <Language Code="qut-latn" InMinimumRequirementSet="true" />
+    <Language Code="quz" InMinimumRequirementSet="true" />
+    <Language Code="quz-bo" InMinimumRequirementSet="true" />
+    <Language Code="quz-ec" InMinimumRequirementSet="true" />
+    <Language Code="quz-pe" InMinimumRequirementSet="true" />
+    <Language Code="ro" InMinimumRequirementSet="true" />
+    <Language Code="ro-ro" InMinimumRequirementSet="true" />
+    <Language Code="ru" InMinimumRequirementSet="true" />
+    <Language Code="ru-ru" InMinimumRequirementSet="true" />
+    <Language Code="rw" InMinimumRequirementSet="true" />
+    <Language Code="rw-rw" InMinimumRequirementSet="true" />
+    <Language Code="sd-arab" InMinimumRequirementSet="true" />
+    <Language Code="sd-arab-pk" InMinimumRequirementSet="true" />
+    <Language Code="sd-deva" InMinimumRequirementSet="true" />
+    <Language Code="si" InMinimumRequirementSet="true" />
+    <Language Code="si-lk" InMinimumRequirementSet="true" />
+    <Language Code="sk" InMinimumRequirementSet="true" />
+    <Language Code="sk-sk" InMinimumRequirementSet="true" />
+    <Language Code="sl" InMinimumRequirementSet="true" />
+    <Language Code="sl-si" InMinimumRequirementSet="true" />
+    <Language Code="sq" InMinimumRequirementSet="true" />
+    <Language Code="sq-al" InMinimumRequirementSet="true" />
+    <Language Code="sr-cyrl" InMinimumRequirementSet="true" />
+    <Language Code="sr-cyrl-ba" InMinimumRequirementSet="true" />
+    <Language Code="sr-cyrl-cs" InMinimumRequirementSet="true" />
+    <Language Code="sr-cyrl-me" InMinimumRequirementSet="true" />
+    <Language Code="sr-cyrl-rs" InMinimumRequirementSet="true" />
+    <Language Code="sr-latn" InMinimumRequirementSet="true" />
+    <Language Code="sr-latn-ba" InMinimumRequirementSet="true" />
+    <Language Code="sr-latn-cs" InMinimumRequirementSet="true" />
+    <Language Code="sr-latn-me" InMinimumRequirementSet="true" />
+    <Language Code="sr-latn-rs" InMinimumRequirementSet="true" />
+    <Language Code="sv" InMinimumRequirementSet="true" />
+    <Language Code="sv-fi" InMinimumRequirementSet="true" />
+    <Language Code="sv-se" InMinimumRequirementSet="true" />
+    <Language Code="sw" InMinimumRequirementSet="true" />
+    <Language Code="sw-ke" InMinimumRequirementSet="true" />
+    <Language Code="ta" InMinimumRequirementSet="true" />
+    <Language Code="ta-in" InMinimumRequirementSet="true" />
+    <Language Code="te" InMinimumRequirementSet="true" />
+    <Language Code="te-in" InMinimumRequirementSet="true" />
+    <Language Code="tg-arab" InMinimumRequirementSet="true" />
+    <Language Code="tg-cyrl" InMinimumRequirementSet="true" />
+    <Language Code="tg-cyrl-tj" InMinimumRequirementSet="true" />
+    <Language Code="tg-latn" InMinimumRequirementSet="true" />
+    <Language Code="th" InMinimumRequirementSet="true" />
+    <Language Code="th-th" InMinimumRequirementSet="true" />
+    <Language Code="ti" InMinimumRequirementSet="true" />
+    <Language Code="ti-et" InMinimumRequirementSet="true" />
+    <Language Code="tk-cyrl" InMinimumRequirementSet="true" />
+    <Language Code="tk-cyrl-tr" InMinimumRequirementSet="true" />
+    <Language Code="tk-latn" InMinimumRequirementSet="true" />
+    <Language Code="tk-latn-tr" InMinimumRequirementSet="true" />
+    <Language Code="tk-tm" InMinimumRequirementSet="true" />
+    <Language Code="tn" InMinimumRequirementSet="true" />
+    <Language Code="tn-bw" InMinimumRequirementSet="true" />
+    <Language Code="tn-za" InMinimumRequirementSet="true" />
+    <Language Code="tr" InMinimumRequirementSet="true" />
+    <Language Code="tr-tr" InMinimumRequirementSet="true" />
+    <Language Code="tt-arab" InMinimumRequirementSet="true" />
+    <Language Code="tt-cyrl" InMinimumRequirementSet="true" />
+    <Language Code="tt-latn" InMinimumRequirementSet="true" />
+    <Language Code="tt-ru" InMinimumRequirementSet="true" />
+    <Language Code="ug-arab" InMinimumRequirementSet="true" />
+    <Language Code="ug-cn" InMinimumRequirementSet="true" />
+    <Language Code="ug-cyrl" InMinimumRequirementSet="true" />
+    <Language Code="ug-latn" InMinimumRequirementSet="true" />
+    <Language Code="uk" InMinimumRequirementSet="true" />
+    <Language Code="uk-ua" InMinimumRequirementSet="true" />
+    <Language Code="ur" InMinimumRequirementSet="true" />
+    <Language Code="ur-pk" InMinimumRequirementSet="true" />
+    <Language Code="uz-cyrl" InMinimumRequirementSet="true" />
+    <Language Code="uz-latn" InMinimumRequirementSet="true" />
+    <Language Code="uz-latn-uz" InMinimumRequirementSet="true" />
+    <Language Code="vi" InMinimumRequirementSet="true" />
+    <Language Code="vi-vn" InMinimumRequirementSet="true" />
+    <Language Code="wo" InMinimumRequirementSet="true" />
+    <Language Code="wo-sn" InMinimumRequirementSet="true" />
+    <Language Code="xh" InMinimumRequirementSet="true" />
+    <Language Code="xh-za" InMinimumRequirementSet="true" />
+    <Language Code="yo-latn" InMinimumRequirementSet="true" />
+    <Language Code="yo-ng" InMinimumRequirementSet="true" />
+    <Language Code="zh-cn" InMinimumRequirementSet="true" />
+    <Language Code="zh-hans" InMinimumRequirementSet="true" />
+    <Language Code="zh-hans-cn" InMinimumRequirementSet="true" />
+    <Language Code="zh-hans-sg" InMinimumRequirementSet="true" />
+    <Language Code="zh-hant" InMinimumRequirementSet="true" />
+    <Language Code="zh-hant-hk" InMinimumRequirementSet="true" />
+    <Language Code="zh-hant-mo" InMinimumRequirementSet="true" />
+    <Language Code="zh-hant-tw" InMinimumRequirementSet="true" />
+    <Language Code="zh-hk" InMinimumRequirementSet="true" />
+    <Language Code="zh-tw" InMinimumRequirementSet="true" />
+    <Language Code="zu" InMinimumRequirementSet="true" />
+    <Language Code="zu-za" InMinimumRequirementSet="true" />
+  </SupportedLocales>
+  <ProductReservedInfo>
+    <MainPackageIdentityName>Microsoft.WindowsVirtualShieldsforIoTMakers</MainPackageIdentityName>
+    <ReservedNames>
+      <ReservedName>Windows Virtual Shields for IoT Makers</ReservedName>
+      <ReservedName>Windows Virtual Shields for Arduino</ReservedName>
+    </ReservedNames>
+  </ProductReservedInfo>
+  <AccountPackageIdentityNames>
+    <MainPackageIdentityName>Microsoft.65328AF7C0EAD</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BingHealth</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Drums</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.FiveInaRow</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.HydroThunderHurricane</MainPackageIdentityName>
+    <MainPackageIdentityName>microsoft.Labyrinth</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Memories</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Music</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.NewsBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.PaintPlay</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.PinballFX2</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SimpleFlipViewFPA</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SimpleWWAFPA</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.StocksBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.TilePuzzle</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.TreehouseStampede</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.TweetramaBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Video</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WeatherBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.1055520740551010</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.1MSQFT</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.3DBuilder</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.3DMaker</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.AAD.BrokerPlugin</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.AccountsControl</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ActivityContinuity</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ALJan17AppXv2</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.AmazonXboxOneCountdown</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.AnswerDesk</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ApolloFBApp</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.App10</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.AppLinkTest81</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.AppLinkTestJupiter</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.AppStudioContosoSampleApp</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ArcTouchMouseSurfaceEditionSettings</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.AudioTagPiano</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.551162688C1F2</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Avatars</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.AzureAuthenticator</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.AzureMediaServiceCapture</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BasicAttractLoop</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BasicDemoHub</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BatteryPowerSense</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BetaCompanyPortal</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BetaSstpPluginApp</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Bing</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BingFinance</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BingFoodAndDrink</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BingHealthAndFitness</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BingMagazines</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BingMaps</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BingNews</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.6027676A98F14</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BingSports</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BingTranslator</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BingTravel</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BingWeather</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BingWikipediaBrowser</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BingRewards</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BioEnrollment</MainPackageIdentityName>
+    <MainPackageIdentityName>microsoft.BitBox</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BlockandFilter</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BlockandFilterglobal</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BodyBasics-HTML</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BooksMagazines</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Bookspreview</MainPackageIdentityName>
+    <MainPackageIdentityName>microsoft.build</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Build2012</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.CairoFC</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Camera</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.CameraBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.CertificateManager</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Channel9</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.CityArtSearch</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Cityzen</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.CloudExperienceHost</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Collaborate</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.CommsPhone</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.CompanyPortal</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.CompanyPortalPreview</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.CompanyPortalRC</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ConnectivityStore</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ContactsandMessageBackup</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ContentDeliveryManager</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.226835C6D7368</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ControlsBasics-DX</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.CoordinateMappingBasics-HTML</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Copper</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Cortana</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.CRMforphonesexpress</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.CSRWNS</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.d7541746-28b0-4a87-99e5-3e0b557e3182</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.DataMartAlpha</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.DealsfromStore</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.DepthBasics-XAML2</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.DevSpace</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Dictio</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.DigitalGiftCards</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.DiscreteGestureBasics-XAML</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.DMWi-FiDemo</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Microsoft.UpdateAdvisor</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.DynamicsAX2012Approvals</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.DynamicsAX2012Expenses</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.DynamicsAX2012Timesheets</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.DynamicsC5</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.DynamicsCRMTest</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.DynamicsNAV</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ECIXboxOneCountdown</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.EventExperience</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.EventExperienceMicrosoft</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.FaceBasics-HTML</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.FaceBasicsUnity</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.FacebookTrialBuild</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.FaceViewUnity-Test-Win8.1</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.FloatzaMicrosoftGarageproject</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.FNACXboxOneCountdown</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.FoundryCambridgeSettingsTest</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.FreshPaint</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.FreshPaint8.1Preview</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.FxVCLibs</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.GameXboxOneCountdown</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.GamestopXboxOneCountdown</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.GearUp</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.gecai1118a</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Getstarted</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.GroupMe</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Groups</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.HDFaceBasicsUnity-Test</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.HDFaceBasics-XAMLCPP</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.HDFaceBasics-XAMLCS</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.HDFaceBasics-XAMLCS2</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.HealthVault</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.HelpAndTips</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.HelpAndTipsBlue</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Hollyapp</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Hollydevice</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Hover</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.IEDataSavings</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.IETileManager</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ImageAnnotator</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.InsiderHub</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Iridias</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Iridias2.0</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.JBHiFiXboxOneCountdown</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.KinectEvolution</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.KinectView-XAML</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.languages1210</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.LIBROXboxOneCountdown</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.LifeCamDashboard</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.LiveLockScreen</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.LiveLockScreenBETA</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.LostTurtle</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.LumiaCameraBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Lync2013</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Lync2013PreCallDiagnostics</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.7925F3F9209F</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.LyncMX</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Maker</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Maps3DPreview</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MediaMarktXboxOneCountdown</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Messaging</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MessagingSkype</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftProjectSiena</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftBooks</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftBuilder</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftDataGathering</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftDemo1</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftDemo2</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftDemo3</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftDemo4</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftDemo5</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftDynamicsAXProductionFloor</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftDynamicsBusinessAnalyzer</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.microsoftdynamicscrm</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftDynamicsCRMforWindows8.1</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftEducationDeliveryforTablets</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftFeedback</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftITAcademy</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftITShowcase</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftLumiaCamera</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftMaker</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftMath</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftMuseum</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftPodcast</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftPowerBIForWindows</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftPressGuidedTours</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftRetailDemoProvisioning</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftRetailMode</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftStartupDirectory</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftStreetsTrips</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftTechCompanion</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftVenturesStartupDirectory</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftVPN</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftWallet</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftWiFi</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SurfaceWirelessDisplayAdapter</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.CheckM8</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Microsoft.FaceViewUnity-Test-Win8.1</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Microsoft.OneSupport</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Microsoft.PPIBlizz</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Microsoft.PPISkype</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Microsoft.WindowsStore</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Microsoft.WPDiet</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftRetailModeBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.mjftest123</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.mobileowa</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MoCollabSharer</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MovieMoments</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MSBatterySense</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MSCalendar</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MSFileManager</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MSPodcast</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MSStarbucks</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MSCamera</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MSDiagnostics</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MSDNVoiceSearch</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MSFacebook</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MSFacebookBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MSKAPP</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.msrathena</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MusicDeals</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MusicDealsBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Music.Preview</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MyServer</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MyServer2012R2</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.NeonCarrot</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.NetworkOne</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.NetworkThree</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.NetworkTwo</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.NewsstandPreview</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.NotebooksbilligersXboxOneCountdown</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.NovaBacon</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office365Admin</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office365PartnerAdmin</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.OfficeLens</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.1</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.10</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.11</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.12</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.13</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.14</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.15</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.16</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.17</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.18</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.19</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.2</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.20</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.21</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.22</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.23</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.24</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.25</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.26</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.27</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.28</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.29</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.3</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.4</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.5</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.6</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.7</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.8</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.9</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.Atlanta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.Calendar</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.Excel</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.Mail</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SkyDriveProMXApp</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.Outlook</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.People</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.PowerPoint</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.Rio</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.Word</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Officetestnameexample</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.OneNote</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.OperationalInsights</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.People</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Piano</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Pictate</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.PowerAppsPlayerBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.PowerBI</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.PPIProjection</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.PPISensorView</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.PPIShellExperienceHost</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.PPIWelcome</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.PPISkype</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ProMock</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.QuizToWin</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.RaconteurPreview</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ReachmeaMicrosoftGarageproject</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Reader</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ReceiptTracker</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.RemoteDesktop</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ReservedName</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.RMSSharing</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.RtcPowerGates</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SharePoint2013Newsfeed</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ShopToXboxOneCountdown</MainPackageIdentityName>
+    <MainPackageIdentityName>microsoft.microsoftskydrive</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SkypeRoomSystemsBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SkypeVideoCalling</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SmokeyTopaz</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SmythsXboxOneCountdown</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SnapGold</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Socialite</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Solitaire</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SoundStack</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Spartan</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SpartanBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SquadWatch</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.StudentPlanner</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SurfaceHub</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SurfaceMusicKit</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SwitchTo</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.TechNetEdgeShow</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.test1203a</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.test1209a</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.TestAppIDExample</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.TestUnity-Win8.0</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.TestUnity-Win8.1</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.TetraLockscreen</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.TouchDevelop</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Skype</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.TypeNameHere</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.uapFramework1120</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.uapStoreMobile1124</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.uapStoreMobile1124b</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.UpdateAdvisor</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Upload1029</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Upprv</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.VBGTestUnity</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.VenueSurvey</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.VGBTestUnity</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.VGBTestUnity-Win8.1</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Video.Preview</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WayfindingAlpha</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Whatupsm</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsAlarms</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsAppStudioSample</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsAppStudioSampleApp</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsAssignedAccessLockScreen</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsCalculator</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsCamera</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsCommunications</MainPackageIdentityName>
+    <MainPackageIdentityName>microsoft.windowscommunicationsapps</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsDefaultLockScreen</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsEmulatorbyMicrosoft</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsMaps</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsMapsChinaNavigation</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsPhone</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsPhoneCASVC</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsPhoneCCPService</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsPhoneCortana</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsPhoneMPNService</MainPackageIdentityName>
+    <MainPackageIdentityName>microsoft.windowsphotos</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsReadingList</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsScan</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsSoundRecorder</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsStore</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsVoiceNotes</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Windows.Photos</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Windows.ShellExperienceHost</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsPhoneFileProvider</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsStore1121</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsStore1121b</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WorkItemStudio</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WPAdControl</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WPDiet</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.wpdevBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XblAuthManager</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XboxApp</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XboxCompanion</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XboxLIVECompanion</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XboxLIVEGames</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XboxOneCountdown</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XboxOneSmartGlass</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XboxOneSmartGlassBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XboxOneVideo</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XboxGameCallableUI</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XboxIdentityProvider</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XboxTestGame1</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XboxTestGame2</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Microsoft.XboxTestGame3</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XboxTestGame4</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XboxTestGame5</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XtravisionXboxOneCountdown</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Yammer-dogfood</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.YourWeather</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.zMaps</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.zSpartan</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ZuneMusic</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ZuneVideo</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.5220175982889</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BingDictionary</MainPackageIdentityName>
+  </AccountPackageIdentityNames>
+  <PackageInfoList LandingUrl="https://appdev.microsoft.com:443/StorePortals/Developer/Catalog/ReleaseAnchor/825ce4f7-8806-4b98-aca0-38fed259e6d8" />
+</StoreAssociation>
