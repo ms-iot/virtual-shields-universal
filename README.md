@@ -1,6 +1,6 @@
 ﻿
 
-#Windows Virtual Shields for Arduino (Library)
+#Windows Virtual Shields for Arduino (Universal Windows App)
 
 This project lets your Arduino sketch control your Windows 10 device (phone). The only code you write is to an Arduino sketch.
 
