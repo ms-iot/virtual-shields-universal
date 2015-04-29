@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Be sure to use the new v1.1 namespace to utilize the new PhraseTopic feature -->
+<VoiceCommands xmlns="http://schemas.microsoft.com/voicecommands/1.1">
+  <!-- The CommandSet Name is used to programmatically access the CommandSet -->
+  <CommandSet xml:lang="en-US" Name="englishCommands">
+    <!-- The CommandPrefix provides an alternative to your full app name for invocation -->
+    <CommandPrefix> Arduino </CommandPrefix>
+    <!-- The CommandSet Example appears in the global help alongside your app name -->
+    <Example> Arduino, what is the temperature? </Example>
+
+    <Command Name="WPUtilities">
+      <!-- The Command example appears in the drill-down help page for your app -->
+      <Example> is it (in Hawaii)? </Example>
+
+      <!-- ListenFor elements provide ways to say the command, including references to 
+            {PhraseLists} and {PhraseTopics} as well as [optional] words -->
+      <ListenFor> what is the {dictatedSearchTerms} </ListenFor>
+
+      <!--Feedback provides the displayed and spoken text when your command is triggered -->
+      <Feedback> Connecting to the Arduino... </Feedback>
+
+      <!-- Navigate specifies the desired page or invocation destination for the Command-->
+      <Navigate Target="MainPage.xaml" />
+    </Command>
+
+    <!--<Command Name="WhatTimeNaturalLanguage">
+      <Example> what time is it (in Hawaii)? </Example>
+      <ListenFor> is it [right] [now] {prep} {naturalLanguage} </ListenFor>
+      <ListenFor> what is the [current] time [right] [now] {prep} {naturalLanguage} </ListenFor>
+      <ListenFor> is it [right] [now] </ListenFor>
+      <ListenFor> what is the [current] time [right] [now] </ListenFor>
+      <Feedback> Looking up the time... </Feedback>
+      <Navigate Target="MainPage.xaml" />
+    </Command>-->
+
+    <!--<PhraseList Label="prep">
+      <Item> in </Item>
+      <Item> on </Item>
+      <Item> at </Item>
+      <Item> near </Item>
+    </PhraseList>-->
+
+    <PhraseTopic Label="dictatedSearchTerms" Scenario="Search">
+      <Subject> Temperature </Subject>
+    </PhraseTopic>
+
+    <!--<PhraseTopic Label="naturalLanguage" Scenario="Natural Language">
+      <Subject> Temperature </Subject>
+    </PhraseTopic>-->
+
+  </CommandSet>
+
+</VoiceCommands>

@@ -1,0 +1,14 @@
+﻿<Application
+    x:Class="Shield.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Shield" 
+    xmlns:viewModels="using:Shield.ViewModels">
+
+    <Application.Resources>
+        <viewModels:ViewModelLocator x:Key="ViewModelLocator" />
+        <local:AppSettings x:Key="appSettings"></local:AppSettings>
+        <local:BoolToVisConverter x:Key="BoolToVisConverter"/>
+    </Application.Resources>
+
+</Application>

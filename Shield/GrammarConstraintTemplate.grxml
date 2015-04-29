@@ -1,0 +1,14 @@
+﻿<grammar xml:lang="en-US"
+         root="items"
+         version="1.0"
+         tag-format="semantics/1.0"
+         xmlns="http://www.w3.org/2001/06/grammar">
+
+  <!-- The following rules recognize variants of items. -->
+  <rule id="items">
+    <one-of>
+      {0}
+    </one-of>
+  </rule>
+</grammar>
+
