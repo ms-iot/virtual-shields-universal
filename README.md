@@ -7,7 +7,7 @@ This project lets your Arduino sketch control your Windows 10 device (phone). Th
 This repository is a Universal Windows Application which exposes sensors and capabilities to a [Windows Virtual Shields for Arduino library](https://github.com/ms-iot/virtual-shields-arduino/).
 
 Windows Virtual Shields for Arduino is an open-source library primarily for the Arduino UNO which communicates with this open-source Windows Universal Application
-running on all Windows 10 devices, primarily focusing on Windows Lumia Phones.  The library exposes the Lumia Phones's sensors and capabilities to the an Arduino Wiring Sketch.
+running on all Windows 10 devices, primarily focusing on Windows Phones.  The library exposes the Phones's sensors and capabilities to the an Arduino Wiring Sketch.
 The following sensors and capabilities can be used from Arduino Wiring:
 
 Sensors:
