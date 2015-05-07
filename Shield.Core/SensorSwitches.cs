@@ -22,7 +22,7 @@
     THE SOFTWARE.
 */
 
-﻿namespace Shield.Core
+namespace Shield.Core
 {
     public class SensorSwitches
     {

@@ -22,7 +22,7 @@
     THE SOFTWARE.
 */
 
-﻿using Shield.Communication;
+using Shield.Communication;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

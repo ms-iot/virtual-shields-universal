@@ -22,7 +22,7 @@
     THE SOFTWARE.
 */
 
-﻿using System;
+using System;
 
 namespace Shield
 {

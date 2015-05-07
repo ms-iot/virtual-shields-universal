@@ -22,7 +22,6 @@
     THE SOFTWARE.
 */
 
-﻿
 using Shield.Communication;
 using System;
 using System.Collections.Generic;
