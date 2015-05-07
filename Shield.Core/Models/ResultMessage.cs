@@ -22,7 +22,7 @@
     THE SOFTWARE.
 */
 
-﻿namespace Shield.Core.Models
+namespace Shield.Core.Models
 {
     public class ResultMessage
     {

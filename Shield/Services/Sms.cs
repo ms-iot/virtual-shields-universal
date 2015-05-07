@@ -22,7 +22,7 @@
     THE SOFTWARE.
 */
 
-﻿using System;
+using System;
 using System.Linq;
 using Windows.ApplicationModel.Chat;
 using Windows.ApplicationModel.Contacts;

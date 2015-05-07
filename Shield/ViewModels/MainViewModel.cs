@@ -22,7 +22,7 @@
     THE SOFTWARE.
 */
 
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using Shield.Services;
 
 namespace Shield.ViewModels
