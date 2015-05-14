@@ -66,6 +66,7 @@ namespace Shield
             new Dictionary<string, Dictionary<string, string>>();
 
         private Speech speechService;
+        public StringBuilder logger;
 
         private void QueueMessage(MessageBase message)
         {
@@ -728,6 +729,8 @@ namespace Shield
         {
             if (appSettings.IsLogging)
             {
+                var now = DateTime.Now;
+                logger.AppendLine(now.ToString("HH:mm:ss.fff:") + message);
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { appSettings.LogText = message; });
             }
         }
