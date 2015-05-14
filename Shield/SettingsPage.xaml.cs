@@ -24,16 +24,14 @@
 
 using Shield.Communication;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Shield.Core;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -45,7 +43,7 @@ namespace Shield
     public sealed partial class SettingsPage : Page
     {
         private MainPage main;
-        private AppSettings appSettings = null;
+        private AppSettings appSettings;
     
         public SettingsPage()
         {
@@ -113,11 +111,36 @@ namespace Shield
         private void Log_Click(object sender, RoutedEventArgs e)
         {
             appSettings.IsLogging = !appSettings.IsLogging;
+            if (appSettings.IsLogging)
+            {
+                main.logger = new StringBuilder();
+            }
+            else
+            {
+                appSettings.LogText = main.logger.ToString();
+            }
         }
-        private void Log_Clear(object sender, RoutedEventArgs e)
+        private async void Log_Clear(object sender, RoutedEventArgs e)
         {
             appSettings.Log.Clear();
             appSettings.LogText = string.Empty;
+            try
+            {
+                StorageFile file =
+                    await KnownFolders.AppCaptures.CreateFileAsync("log.txt",
+                        CreationCollisionOption.ReplaceExisting);
+
+                if (file != null)
+                {
+                    var stream = await file.OpenStreamForWriteAsync();
+                    await stream.WriteAsync(main.logger.ToString().ToByteArray(), 0, main.logger.Length);
+                    main.logger = null;
+                }
+            }
+            catch (IOException fileException)
+            {
+                //ignore
+            }
         }
 
         private void AlwaysRunning_Toggled(object sender, RoutedEventArgs e)
