@@ -138,9 +138,7 @@ namespace Shield.Communication.Services
                         {
                             if (this.queuedSends.Count > 0)
                             {
-                                //this.IsClearToSend = false;
                                 part = this.queuedSends.Dequeue();
-                                //Task.Delay(100).ContinueWith(t => { IsClearToSend = true; });
                             }
                             else if (this.queuedMessages.Count > 0)
                             {
@@ -169,18 +167,9 @@ namespace Shield.Communication.Services
 
                         if (part != null)
                         {
-                            //var waitTime = (int) nextSend.Subtract(DateTime.Now).TotalMilliseconds;
-                            //if (waitTime > 0)
-                            //{
-                            //    await Task.Delay(waitTime);
-                            //}
-
-                            //nextSend = DateTime.Now.AddMilliseconds(msBetweenSends);
                             Debug.WriteLine(part);
                             await SendMessage2(part);
                         }
-
-                        //IsClearToSend = true;
                     }
 
                 }
