@@ -117,6 +117,7 @@ namespace Shield
             }
             else
             {
+                appSettings.Log.Clear();
                 appSettings.LogText = main.logger.ToString();
             }
         }
@@ -124,23 +125,23 @@ namespace Shield
         {
             appSettings.Log.Clear();
             appSettings.LogText = string.Empty;
-            try
-            {
-                StorageFile file =
-                    await KnownFolders.AppCaptures.CreateFileAsync("log.txt",
-                        CreationCollisionOption.ReplaceExisting);
+            //try
+            //{
+            //    StorageFile file =
+            //        await KnownFolders.AppCaptures.CreateFileAsync("log.txt",
+            //            CreationCollisionOption.ReplaceExisting);
 
-                if (file != null)
-                {
-                    var stream = await file.OpenStreamForWriteAsync();
-                    await stream.WriteAsync(main.logger.ToString().ToByteArray(), 0, main.logger.Length);
-                    main.logger = null;
-                }
-            }
-            catch (IOException fileException)
-            {
-                //ignore
-            }
+            //    if (file != null)
+            //    {
+            //        var stream = await file.OpenStreamForWriteAsync();
+            //        await stream.WriteAsync(main.logger.ToString().ToByteArray(), 0, main.logger.Length);
+            //        main.logger = null;
+            //    }
+            //}
+            //catch (IOException fileException)
+            //{
+            //    //ignore
+            //}
         }
 
         private void AlwaysRunning_Toggled(object sender, RoutedEventArgs e)
