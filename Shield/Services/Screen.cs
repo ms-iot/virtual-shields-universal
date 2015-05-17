@@ -304,6 +304,7 @@ namespace Shield.Services
                                 Text = lcdt.Message,
                                 FontSize = lcdt.Size ?? DefaultFontSize,
                                 TextWrapping = TextWrapping.Wrap,
+                                Tag = lcdt.Tag,
                                 Foreground = textForgroundBrush
                             };
 
