@@ -33,7 +33,8 @@ using Windows.ApplicationModel.Email;
 using Windows.Data.Xml.Dom;
 using Windows.Devices.Geolocation;
 using Windows.Devices.Sensors;
-using Windows.Media.SpeechRecognition;
+﻿using Windows.Graphics.Display;
+﻿using Windows.Media.SpeechRecognition;
 using Windows.Phone.Devices.Notification;
 using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.Storage;
@@ -66,6 +67,7 @@ namespace Shield
             new Dictionary<string, Dictionary<string, string>>();
 
         private Speech speechService;
+        public StringBuilder logger;
 
         private void QueueMessage(MessageBase message)
         {
@@ -184,6 +186,9 @@ namespace Shield
                     }
                     else if (message.Action.Equals("START"))
                     {
+                        //reset orientation
+                        DisplayInformation.AutoRotationPreferences = DisplayOrientations.None;
+
                         //turn off all sensors, accept buffer length
                         var switches = new SensorSwitches {A = 0, G = 0, L = 0, M = 0, P = 0, Q = 0};
                         var sensors = new List<SensorSwitches>();
@@ -728,6 +733,8 @@ namespace Shield
         {
             if (appSettings.IsLogging)
             {
+                var now = DateTime.Now;
+                logger.AppendLine(now.ToString("HH:mm:ss.fff:") + message);
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { appSettings.LogText = message; });
             }
         }

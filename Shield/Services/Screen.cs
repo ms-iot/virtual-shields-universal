@@ -22,12 +22,14 @@
     THE SOFTWARE.
 */
 
-using System;
-using System.Globalization;
+﻿using System;
+﻿using System.Collections.Generic;
+﻿using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Windows.Graphics.Display;
+﻿using Windows.Foundation;
+﻿using Windows.Graphics.Display;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -256,7 +258,19 @@ namespace Shield.Services
 
                             break;
                         }
+                    case "CHANGE":
+                        {
+                            var retrievedElement = GetId(lcdt.Pid.Value);
+                            if (retrievedElement != null)
+                            {
+                                if (lcdt.ARGB != null)
+                                {
+                                    var i = 0;
+                                }
+                            }
 
+                            break;
+                        }
                     case "RECTANGLE":
                         {
                             var rect = new Rectangle
@@ -278,6 +292,9 @@ namespace Shield.Services
                             element = rect;
 
                             element.Tapped += async (s, a) => await mainPage.SendEvent(s, a, "tapped", lcdt);
+                            rect.PointerEntered += async (s, a) => await mainPage.SendEvent(s, a, "entered", lcdt);
+                            rect.PointerExited += async (s, a) => await mainPage.SendEvent(s, a, "exited", lcdt);
+
                             break;
                         }
                     case "TEXT":
@@ -420,7 +437,7 @@ namespace Shield.Services
 
         private void RemoveLine(int y)
         {
-            var lines =
+            IEnumerable<UIElement> lines =
                 mainPage.canvas.Children.Where(
                     t => t is TextBlock && ((TextBlock)t).Tag.Equals(y.ToString()));
             foreach (var line in lines)
@@ -429,9 +446,15 @@ namespace Shield.Services
             }
         }
 
+        private UIElement GetId(int id)
+        {
+            return
+                mainPage.canvas.Children.FirstOrDefault(e => ((int)e.GetValue(RemoteIdProperty)) == id);
+        }
+
         private void RemoveId(int id)
         {
-            var items =
+            IEnumerable<UIElement> items =
                 mainPage.canvas.Children.Where(e => ((int)e.GetValue(RemoteIdProperty)) == id);
 
             foreach (var item in items)

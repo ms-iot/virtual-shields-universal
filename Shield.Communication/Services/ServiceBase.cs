@@ -121,6 +121,9 @@ namespace Shield.Communication.Services
             }
         }
 
+        private int msBetweenSends = 10;
+        private DateTime nextSend = DateTime.Now;
+
         public async void SendMessages()
         {
             try
@@ -135,7 +138,6 @@ namespace Shield.Communication.Services
                         {
                             if (this.queuedSends.Count > 0)
                             {
-                                this.IsClearToSend = false;
                                 part = this.queuedSends.Dequeue();
                             }
                             else if (this.queuedMessages.Count > 0)
