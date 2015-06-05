@@ -22,7 +22,7 @@
     THE SOFTWARE.
 */
 
-﻿namespace Shield.Core
+namespace Shield.Core
 {
     [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = true)]
 
