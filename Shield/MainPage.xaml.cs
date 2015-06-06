@@ -87,7 +87,14 @@ namespace Shield
             appSettings = (AppSettings) App.Current.Resources["appSettings"];
 
             Initialize();
-            StatusBar.GetForCurrentView().BackgroundOpacity = 0.50;
+
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.ViewManagement.StatusBar"))
+            {
+                if (StatusBar.GetForCurrentView() != null)
+                {
+                    StatusBar.GetForCurrentView().BackgroundOpacity = 0.50;
+                }
+            }
         }
 
         public Sensors Sensors { get; set; }
