@@ -29,6 +29,8 @@ using Windows.Networking;
 using Windows.Networking.Proximity;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
+using Windows.Devices.Bluetooth.Rfcomm;
+using Windows.Devices.Enumeration;
 
 namespace Shield.Communication.Services
 {
@@ -48,25 +50,34 @@ namespace Shield.Communication.Services
 
             try
             {
-                PeerFinder.AllowBluetooth = true;
-                PeerFinder.AllowWiFiDirect = true;
-                PeerFinder.DisplayName = "Virtual Shields";
-                PeerFinder.Role = PeerRole.Peer;
-                if (!isPrePairedDevice)
-                {
-                    PeerFinder.Start();
-                }
+                var devices = RfcommDeviceService.GetDeviceSelector(RfcommServiceId.SerialPort);
+                var peers = await DeviceInformation.FindAllAsync(devices);
 
-                var peers = await PeerFinder.FindAllPeersAsync();
                 var connections = new Connections();
                 foreach (var peer in peers)
                 {
-                    connections.Add(new Connection(peer.DisplayName, peer));
+                    connections.Add(new Connection(peer.Name, peer));
                 }
+
+                //PeerFinder.AllowBluetooth = true;
+                //PeerFinder.AllowWiFiDirect = true;
+                //PeerFinder.DisplayName = "Virtual Shields";
+                //PeerFinder.Role = PeerRole.Peer;
+                //if (!isPrePairedDevice)
+                //{
+                //    PeerFinder.Start();
+                //}
+
+                //var peers = await PeerFinder.FindAllPeersAsync();
+                //var connections = new Connections();
+                //foreach (var peer in peers)
+                //{
+                //    connections.Add(new Connection(peer.DisplayName, peer));
+                //}
 
                 return connections;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return null;
             }
@@ -75,13 +86,38 @@ namespace Shield.Communication.Services
 
         public override async Task<bool> Connect(Connection newConnection)
         {
+            HostName hostName = null;
+            string remoteServiceName = null;
+
             var peer = newConnection.Source as PeerInformation;
-            var result = await Connect(peer.HostName);
-            await base.Connect(newConnection);
+            if (peer != null)
+            {
+                hostName = peer.HostName;
+                remoteServiceName = "1";
+            }
+            else
+            {
+                var deviceInfo = newConnection.Source as DeviceInformation;
+                if (deviceInfo != null)
+                {
+                    var service = await RfcommDeviceService.FromIdAsync(deviceInfo.Id);
+                    hostName = service.ConnectionHostName;
+                    remoteServiceName = service.ConnectionServiceName;
+                }
+            }
+
+            bool result = false;
+
+            if (hostName != null)
+            {
+                result = await Connect(hostName, remoteServiceName);
+                await base.Connect(newConnection);
+            }
+
             return result;
         }
 
-        private async Task<bool> Connect(HostName deviceHostName)
+        private async Task<bool> Connect(HostName deviceHostName, string remoteServiceName)
         {
             if (!isListening)
             {
@@ -96,7 +132,7 @@ namespace Shield.Communication.Services
                     {
                         CancellationTokenSource cts = new CancellationTokenSource();
                         cts.CancelAfter(10000);
-                        await socket.ConnectAsync(deviceHostName, "1");
+                        await socket.ConnectAsync(deviceHostName, remoteServiceName);
                         dataReader = new DataReader(socket.InputStream);
                         this.isListening = true;
 #pragma warning disable 4014
@@ -107,7 +143,7 @@ namespace Shield.Communication.Services
 
                         return true;
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
                         //log
                     }
