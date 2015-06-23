@@ -116,6 +116,7 @@
     <Compile Include="Destinations\AzureBlob.cs" />
     <Compile Include="Destinations\BlobHelper.cs" />
     <Compile Include="Destinations\RESTHelper.cs" />
+    <Compile Include="Services\Wifi.cs" />
     <Compile Include="Services\Bluetooth.cs" />
     <Compile Include="Connection.cs" />
     <Compile Include="Services\ServerClient.cs" />

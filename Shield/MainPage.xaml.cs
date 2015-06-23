@@ -105,7 +105,7 @@ namespace Shield
         {
             //blobHelper = new BlobHelper(blobAccountName, blobAccountKey);
 
-            service = new Bluetooth();
+            service = new Wifi(); //Bluetooth();
             service.OnConnect +=
                 async connection =>
                 {
