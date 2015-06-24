@@ -31,12 +31,13 @@ using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Devices.Enumeration;
-using ;
+using Windows.Networking.Connectivity;
 
 namespace Shield.Communication.Services
 {
     public class Wifi : ServiceBase
     {
+        private int port = 1235;
         public Wifi()
         {
             isPollingToSend = true;
@@ -47,16 +48,24 @@ namespace Shield.Communication.Services
             return null;
         }
 
-        public void Listen()
+        public override async void Listen()
         {
-            
+            var listener = new StreamSocketListener();
+            var hosts = NetworkInformation.GetHostNames();
+            listener.ConnectionReceived += Connected;
+            await listener.BindServiceNameAsync(port.ToString());
+        }
+
+
+        private void Connected(StreamSocketListener sender, StreamSocketListenerConnectionReceivedEventArgs args)
+        {
+            InstrumentSocket(args.Socket);
         }
 
         public override async Task<bool> Connect(Connection newConnection)
         {
-            //
-            var listener = new StreamSocketListener();
-            //
+            //purposely connect to a destination
+
 
 
             HostName hostName = null;
@@ -90,6 +99,29 @@ namespace Shield.Communication.Services
             return result;
         }
 
+        private bool InstrumentSocket(StreamSocket socket)
+        {
+            var result = false;
+
+            try
+            {
+                dataReader = new DataReader(socket.InputStream);
+                this.isListening = true;
+#pragma warning disable 4014
+                Task.Run(() => { ReceiveMessages(); });
+                Task.Run(() => { SendMessages(); });
+#pragma warning restore 4014
+                dataWriter = new DataWriter(socket.OutputStream);
+                result = true;
+            }
+            catch (Exception)
+            {
+                //log
+            }
+
+            return result;
+        }
+
         private async Task<bool> Connect(HostName deviceHostName, string remoteServiceName)
         {
             if (!isListening)
@@ -106,15 +138,7 @@ namespace Shield.Communication.Services
                         CancellationTokenSource cts = new CancellationTokenSource();
                         cts.CancelAfter(10000);
                         await socket.ConnectAsync(deviceHostName, remoteServiceName);
-                        dataReader = new DataReader(socket.InputStream);
-                        this.isListening = true;
-#pragma warning disable 4014
-                        Task.Run(() => { ReceiveMessages(); });
-                        Task.Run(() => { SendMessages(); });
-#pragma warning restore 4014
-                        dataWriter = new DataWriter(socket.OutputStream);
-
-                        return true;
+                        return InstrumentSocket(socket);
                     }
                     catch (Exception e)
                     {

@@ -122,6 +122,8 @@ namespace Shield
             ////service = new ServerClient(remoteHost, remoteService);
             ////service.Initialize(); 
 
+            service.Listen();
+
             RefreshConnections();
 
             destinations = new List<IDestination>();

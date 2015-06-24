@@ -84,6 +84,11 @@ namespace Shield.Communication.Services
 
         }
 
+        public override void Listen()
+        {
+            //Bluetooth listens by default
+        }
+
         public override async Task<bool> Connect(Connection newConnection)
         {
             HostName hostName = null;

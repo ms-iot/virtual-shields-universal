@@ -1,0 +1,99 @@
+﻿NetworkInformation.GetConnectionProfiles()[0]
+{Windows.Networking.Connectivity.ConnectionProfile}
+    IsWlanConnectionProfile: false
+    IsWwanConnectionProfile: false
+    NetworkAdapter: {Windows.Networking.Connectivity.NetworkAdapter}
+    NetworkSecuritySettings: {Windows.Networking.Connectivity.NetworkSecuritySettings}
+    ProfileName: "Bluetooth Network Connection"
+    ServiceProviderGuid: null
+    WlanConnectionProfileDetails: null
+    WwanConnectionProfileDetails: null
+    Native View: To inspect the native object, enable native code debugging.
+
+NetworkInformation.GetConnectionProfiles()[1].NetworkAdapter
+{Windows.Networking.Connectivity.NetworkAdapter}
+    IanaInterfaceType: 6
+    InboundMaxBitsPerSecond: 1000000000
+    NetworkAdapterId: {26ca7e77-a759-466b-b223-805c5a373e61}
+    NetworkItem: {Windows.Networking.Connectivity.NetworkItem}
+    OutboundMaxBitsPerSecond: 1000000000
+    Native View: To inspect the native object, enable native code debugging.
+listener.BindServiceNameAsync(port.ToString(), SocketProtectionLevel.PlainSocket, NetworkInformation.GetConnectionProfiles()[1].NetworkAdapter)
+'listener.BindServiceNameAsync(port.ToString(), SocketProtectionLevel.PlainSocket, NetworkInformation.GetConnectionProfiles()[1].NetworkAdapter)' threw an exception of type 'System.Exception'
+    Data: {System.Collections.ListDictionaryInternal}
+    HResult: -2147014874
+    HelpLink: null
+    InnerException: null
+    Message: "An invalid argument was supplied.\r\n\r\nAn invalid argument was supplied.\r\n"
+    Source: ""
+    StackTrace: "   at Windows.Networking.Sockets.StreamSocketListener.BindServiceNameAsync(String localServiceName, SocketProtectionLevel protectionLevel, NetworkAdapter adapter)"
+listener.BindServiceNameAsync(port.ToString(), SocketProtectionLevel.PlainSocket, NetworkInformation.GetConnectionProfiles()[1].NetworkAdapter)
+
+
+///
+
+
+#include <SPI.h>
+#include <WiFi.h>
+#include "WiFiStream.h"
+
+char ssid[] = "Win10JG";     //  your network SSID (name) 
+char pass[] = "abcd1234";    // your network password
+int status = WL_IDLE_STATUS;     // the Wifi radio's status
+WiFiStream wifi;
+
+void printMacAddress() {
+  // the MAC address of your Wifi shield
+  byte mac[6];                     
+
+  // print your MAC address:
+  WiFi.macAddress(mac);
+  Serial.print("MAC: ");
+  Serial.print(mac[5],HEX);
+  Serial.print(":");
+  Serial.print(mac[4],HEX);
+  Serial.print(":");
+  Serial.print(mac[3],HEX);
+  Serial.print(":");
+  Serial.print(mac[2],HEX);
+  Serial.print(":");
+  Serial.print(mac[1],HEX);
+  Serial.print(":");
+  Serial.println(mac[0],HEX);
+}
+
+void setup() {
+  // initialize serial:
+  Serial.begin(9600);
+
+  // attempt to connect using WPA2 encryption:
+  Serial.println("Attempting to connect to WPA network...");
+  
+  status = wifi.begin(ssid, pass, 1235); 
+  
+  //status = WiFi.begin(ssid, pass); 
+
+  // if you're not connected, stop here:
+  if ( status != WL_CONNECTED) { 
+    Serial.println("Couldn't get a wifi connection");
+    while(true);
+  } 
+  // if you are connected, print out info about the connection:
+  else {
+    Serial.println("Connected to network");
+    
+    IPAddress remote(192,168,173,1);
+    
+    if (wifi.client.connect(remote, 1235)) {
+      Serial.println("Connected to remote machine");
+    } else {
+      Serial.println("Not connected to remote machine");
+    }
+  }
+  
+  //printMacAddress();
+}
+
+void loop() {
+  // do nothing
+}
