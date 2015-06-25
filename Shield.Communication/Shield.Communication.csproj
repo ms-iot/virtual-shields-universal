@@ -110,6 +110,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <Content Include="TEMP_NOTES.txt" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IDestination.cs" />

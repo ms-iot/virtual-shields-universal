@@ -105,7 +105,7 @@ namespace Shield
         {
             //blobHelper = new BlobHelper(blobAccountName, blobAccountKey);
 
-            service = new Wifi(); //Bluetooth();
+            service = new Wifi();
             service.OnConnect +=
                 async connection =>
                 {
@@ -121,8 +121,6 @@ namespace Shield
             service.Initialize( !appSettings.MissingBackButton );
             ////service = new ServerClient(remoteHost, remoteService);
             ////service.Initialize(); 
-
-            service.Listen();
 
             RefreshConnections();
 

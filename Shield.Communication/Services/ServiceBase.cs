@@ -216,10 +216,5 @@ namespace Shield.Communication.Services
                 socket = null;
             }
         }
-
-        public virtual void Listen()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

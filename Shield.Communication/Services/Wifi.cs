@@ -43,31 +43,17 @@ namespace Shield.Communication.Services
             isPollingToSend = true;
         }
 
-        public override Task<Connections> GetConnections()
+        public override async Task<Connections> GetConnections()
         {
-            return null;
-        }
-
-        public override async void Listen()
-        {
-            var listener = new StreamSocketListener();
-            var hosts = NetworkInformation.GetHostNames();
-            listener.ConnectionReceived += Connected;
-            await listener.BindServiceNameAsync(port.ToString());
-        }
-
-
-        private void Connected(StreamSocketListener sender, StreamSocketListenerConnectionReceivedEventArgs args)
-        {
-            InstrumentSocket(args.Socket);
+            var connections = new Connections();
+            connections.Add(new Connection("Arduino", "192.168.173.17"));
+            await Task.Delay(0);
+            return connections;
         }
 
         public override async Task<bool> Connect(Connection newConnection)
         {
             //purposely connect to a destination
-
-
-
             HostName hostName = null;
             string remoteServiceName = null;
 
@@ -85,6 +71,15 @@ namespace Shield.Communication.Services
                     var service = await RfcommDeviceService.FromIdAsync(deviceInfo.Id);
                     hostName = service.ConnectionHostName;
                     remoteServiceName = service.ConnectionServiceName;
+                }
+                else
+                {
+                    var ip = newConnection.Source as string;
+                    if (ip != null)
+                    {
+                        hostName = new HostName(ip);
+                        remoteServiceName = "1235";
+                    }
                 }
             }
 
