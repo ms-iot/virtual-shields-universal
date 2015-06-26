@@ -41,6 +41,7 @@ namespace Shield.Communication.Services
     public class Wifi : ServiceBase
     {
         private int port = 1235;
+        private bool beaconIsOn = false;
         DatagramSocket listener = new DatagramSocket(); 
 
         public Wifi()
@@ -53,19 +54,22 @@ namespace Shield.Communication.Services
             var connections = new Connections();
             foreach (var client in clients)
             {
-                var peer = client.Value.Source as RemotePeer;
-                if (peer != null)
+                if (client.Value != null && client.Value.Source != null)
                 {
-                    if (DateTime.Now.Subtract(peer.Pinged).TotalSeconds > 15)
+                    var peer = client.Value.Source as RemotePeer;
+                    if (peer != null)
                     {
-                        continue;
+                        if (DateTime.Now.Subtract(peer.Pinged).TotalSeconds > 15)
+                        {
+                            continue;
+                        }
                     }
-                }
 
-                connections.Add(client.Value);
+                    connections.Add(client.Value);
+                }
             }
 
-            //connections.Add(new Connection("Arduino", "192.168.173.17:1235"));
+            //connections.Add(new Connection("Arduino", "192.168.2.19:1235"));
 
             await Task.FromResult(false);
             return connections;
@@ -73,14 +77,19 @@ namespace Shield.Communication.Services
 
         public override async void ListenForBeacons()
         {
-            listener.MessageReceived += ListenerOnMessageReceived;
-            try
+            if (!beaconIsOn)
             {
-                await listener.BindServiceNameAsync(port.ToString());
-            }
-            catch (Exception)
-            {
-                //log
+                beaconIsOn = true;
+                listener.MessageReceived += ListenerOnMessageReceived;
+                try
+                {
+                    await listener.BindServiceNameAsync(port.ToString());
+                }
+                catch (Exception e)
+                {
+                    //log
+                    var i = 0;
+                }
             }
         }
 
@@ -189,7 +198,14 @@ namespace Shield.Communication.Services
                     peer.Port = port;
 
                     var connection = new Connection(name, peer);
-                    clients[ip] = connection;
+                    try
+                    {
+                        clients[ip] = connection;
+                    }
+                    catch (Exception e)
+                    {
+                        //?
+                    }
 
                     //add to clients in order to enumerate! (timeout too!)
                 }

@@ -83,6 +83,11 @@ namespace Shield.Communication.Services
                 if (deviceInfo != null)
                 {
                     var service = await RfcommDeviceService.FromIdAsync(deviceInfo.Id);
+                    if (service == null)
+                    {
+                        return false;
+                    }
+
                     hostName = service.ConnectionHostName;
                     remoteServiceName = service.ConnectionServiceName;
                 }

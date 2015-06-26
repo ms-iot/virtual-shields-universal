@@ -60,7 +60,7 @@ namespace Shield
 
         public static AppSettings Instance;
         private bool isLogging;
-        StringBuilder log = new StringBuilder();
+        private StringBuilder log = new StringBuilder();
 
         private bool isListening = false;
 
@@ -72,8 +72,17 @@ namespace Shield
             }
 
             var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
-            ConnectionStateText = new[] { loader.GetString("NotConnected"), loader.GetString("Connecting"), loader.GetString("Connected"), loader.GetString("CouldNotConnect"), loader.GetString("Disconnecting") };
-            DeviceNames = new List<string> { loader.GetString("Bluetooth"), loader.GetString("NetworkDiscovery"), loader.GetString("NetworkDirect") };
+            ConnectionStateText = new[]
+            {
+                loader.GetString("NotConnected"), loader.GetString("Connecting"), loader.GetString("Connected"),
+                loader.GetString("CouldNotConnect"), loader.GetString("Disconnecting")
+            };
+            DeviceNames = new List<string>
+            {
+                loader.GetString("Bluetooth"),
+                loader.GetString("NetworkDiscovery"),
+                loader.GetString("NetworkDirect")
+            };
 
             try
             {
@@ -116,7 +125,7 @@ namespace Shield
             // If the key exists, retrieve the value.
             if (localSettings.Values.ContainsKey(Key))
             {
-                value = (T)localSettings.Values[Key];
+                value = (T) localSettings.Values[Key];
             }
             else
             {
@@ -163,18 +172,81 @@ namespace Shield
 
         public bool ListVisible => ConnectionList != null && ConnectionList.Any();
 
-        public int ConnectionIndex
+
+        //public int ConnectionIndex
+        //{
+        //    get { return GetValueOrDefault(0); }
+        //    set {
+        //        if (value > -1)
+        //        {
+        //            AddOrUpdateValue(value);
+        //            OnPropertyChanged("BluetoothVisible");
+        //            OnPropertyChanged("NetworkVisible");
+        //            MainPage.Instance.SetService();
+        //        }
+        //    }
+        //}
+
+        public int ConnectionIndex => BluetoothVisible ? 0 : NetworkVisible ? 1 : NetworkDirectVisible ? 2 : -1;
+
+        public bool NotNetworkDirectVisible => !NetworkDirectVisible;
+
+        public bool BluetoothVisible
         {
-            get { return GetValueOrDefault(0); }
-            set { AddOrUpdateValue(value);
-                OnPropertyChanged("BluetoothVisible");
-                OnPropertyChanged("NetworkVisible");
+            get { return GetValueOrDefault(true); }
+            set
+            {
+                AddOrUpdateValue(value);
+                if (value)
+                {
+                    NetworkVisible = false;
+                    NetworkDirectVisible = false;
+                }
+
+                OnPropertyChanged("ConnectionIndex");
+                OnPropertyChanged("NetworkDirectVisible");
+                OnPropertyChanged("NotNetworkDirectVisible");
                 MainPage.Instance.SetService();
             }
         }
 
-        public bool BluetoothVisible => ConnectionIndex < 2;
-        public bool NetworkVisible => ConnectionIndex == 2;
+        public bool NetworkVisible
+        {
+            get { return GetValueOrDefault(false); }
+            set
+            {
+                AddOrUpdateValue(value);
+                if (value)
+                {
+                    BluetoothVisible = false;
+                    NetworkDirectVisible = false;
+                }
+
+                OnPropertyChanged("ConnectionIndex");
+                OnPropertyChanged("NetworkDirectVisible");
+                OnPropertyChanged("NotNetworkDirectVisible");
+                MainPage.Instance.SetService();
+            }
+        }
+
+        public bool NetworkDirectVisible
+        {
+            get { return GetValueOrDefault(false); }
+            set
+            {
+                AddOrUpdateValue(value);
+                if (value)
+                {
+                    BluetoothVisible = false;
+                    NetworkVisible = false;
+                }
+
+                OnPropertyChanged("ConnectionIndex");
+                OnPropertyChanged("NotNetworkDirectVisible");
+                MainPage.Instance.SetService();
+            }
+        }
+    
 
         public string Hostname
         {

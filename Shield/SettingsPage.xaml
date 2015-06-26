@@ -59,18 +59,18 @@
                         <RowDefinition Height="2*"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Row="0" x:Name="ConnectSelection" Orientation="Vertical">
-                        <ComboBox x:Name="connectionComboBox" Width="auto"
-                              SelectedIndex="{Binding Source={StaticResource appSettings}, Path=ConnectionIndex, Mode=TwoWay}"
-                              ItemsSource="{Binding Source={StaticResource appSettings}, Path=DeviceNames}">
-                        </ComboBox>
+                    <StackPanel Grid.Row="0" x:Name="ConnectSelection" Orientation="Horizontal">
+                        <RadioButton x:Name="radioBT" Content="Bluetooth" GroupName="Connections" IsChecked="{Binding Source={StaticResource appSettings}, Path=BluetoothVisible, Mode=TwoWay}"/>
+                        <RadioButton x:Name="radioNW" Content="Network" GroupName="Connections" IsChecked="{Binding Source={StaticResource appSettings}, Path=NetworkVisible, Mode=TwoWay}"/>
+                        <RadioButton x:Name="radioNWD" Content="Direct" GroupName="Connections" IsChecked="{Binding Source={StaticResource appSettings}, Path=NetworkDirectVisible, Mode=TwoWay}"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" x:Name="ConnectSettings" Orientation="Vertical" Visibility="{Binding Source={StaticResource appSettings}, Path=NetworkVisible, Converter={StaticResource BoolToVisConverter}}">
+                    
+                    <StackPanel Grid.Row="1" x:Name="ConnectSettings" Orientation="Vertical" Visibility="{Binding Source={StaticResource appSettings}, Path=NetworkDirectVisible, Converter={StaticResource BoolToVisConverter}}">
                         <TextBox x:Name="serverClientHostNameTextBox" PlaceholderText="HostName or IP address"  Width="auto" Text="{Binding Source={StaticResource appSettings}, Path=Hostname, Mode=TwoWay}" />
                         <TextBox x:Name="serverClientHostServiceTextBox" PlaceholderText="HostPort"  Width="auto" Text="{Binding Source={StaticResource appSettings}, Path=Hostport, Mode=TwoWay}" />
                     </StackPanel>
 
-                    <StackPanel Grid.Row="1" x:Name="ConnectStackParent" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Source={StaticResource appSettings}, Path=BluetoothVisible, Converter={StaticResource BoolToVisConverter}}">
+                    <StackPanel Grid.Row="1" x:Name="ConnectStackParent" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Source={StaticResource appSettings}, Path=NotNetworkDirectVisible, Converter={StaticResource BoolToVisConverter}}">
                         <TextBlock x:Name="ChooseMessage" FontSize="16" Width="Auto" VerticalAlignment="Bottom" TextWrapping="Wrap"
                                    Visibility="{Binding Source={StaticResource appSettings}, Path=ListVisible, Converter={StaticResource BoolToVisConverter}}"
                             x:Uid="Choose"/>

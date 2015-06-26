@@ -123,7 +123,7 @@ namespace Shield
 
             if (service != null)
             {
-                this.Disconnect();
+                //this.Disconnect();
 
                 service.OnConnect -= OnConnection;
                 service.OnDisconnected -= OnDisconnected;
@@ -325,10 +325,15 @@ namespace Shield
         {
             Connections list;
 
+            if (service == null)
+            {
+                return;
+            }
+
             try
             {
                 list = await service.GetConnections();
-                if (list == null)
+                if (list == null || list.Count == 0)
                 {
                     appSettings.ConnectionList.Clear();
                     return;

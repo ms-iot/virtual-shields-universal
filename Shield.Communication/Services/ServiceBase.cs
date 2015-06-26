@@ -67,7 +67,13 @@ namespace Shield.Communication.Services
 
         public void Initialize(bool isPrePairedDevice)
         {
+            if (socket != null)
+            {
+                socket.Dispose();
+            }
+
             socket = new StreamSocket();
+
             this.isPrePairedDevice = isPrePairedDevice;
         }
 
@@ -244,7 +250,7 @@ namespace Shield.Communication.Services
             {
                 Debug.WriteLine("Sending: " + data);
                 dataWriter.WriteString(data);
-                await dataWriter.StoreAsync();
+                await dataWriter.StoreAsync(); //fix here
                 await dataWriter.FlushAsync();
             }
         }

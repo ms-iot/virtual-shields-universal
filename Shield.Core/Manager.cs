@@ -46,7 +46,7 @@ namespace Shield.Core
         private long lastGoodMessage = 0;
         private long lastStartMessage = 0;
         private long maximumTimeToFullMessage = 1000;
-        private long lastCompleteMessage = 0;
+        private long lastCompleteMessage = System.Environment.TickCount;
         private bool isClosedMessage = false;
 
         public void Test()
@@ -138,6 +138,15 @@ namespace Shield.Core
             {
                 OnStringReceived(buffer.ToString());
                 buffer.Clear();
+            }
+
+            if (c == '}' && (System.Environment.TickCount - lastCompleteMessage > 1000 * 10))
+            {
+                //reset
+                buffer.Clear();
+                braceCount = 0;
+                isClosedMessage = false;
+                return;
             }
         }
 

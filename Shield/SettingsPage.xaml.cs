@@ -51,7 +51,7 @@ namespace Shield
 
             this.InitializeComponent();
 
-            appSettings.ConnectionIndex = Math.Max(0, index);
+            //appSettings.ConnectionIndex = Math.Max(0, index);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
