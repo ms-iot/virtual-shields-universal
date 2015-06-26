@@ -49,6 +49,7 @@ namespace Shield.Communication.Services
         public delegate void CharReceivedHandler(char message);
         public event CharReceivedHandler CharReceived;
         public int CharEventHandlerCount = 0;
+        internal Dictionary<string, Connection> clients = new Dictionary<string, Connection>();
 
         public bool IsClearToSend { get; set; }
 
@@ -75,6 +76,25 @@ namespace Shield.Communication.Services
             this.Dispose();
         }
 
+        public void SetClient(string name, Connection connection)
+        {
+            clients[name] = connection;
+        }
+
+        public void ClearClient(string name)
+        {
+            if (name == null)
+            {
+                clients.Clear();
+                return;
+            }
+
+            if (clients.ContainsKey(name))
+            {
+                clients.Remove(name);
+            }
+        }
+
         public virtual Task<Connections> GetConnections()
         {
             return new Task<Connections>(() => null);
@@ -92,6 +112,29 @@ namespace Shield.Communication.Services
             this.currentConnection = newConnection;
             this.OnConnect?.Invoke(newConnection);
             return false;
+        }
+
+        internal bool InstrumentSocket(StreamSocket socket)
+        {
+            var result = false;
+
+            try
+            {
+                dataReader = new DataReader(socket.InputStream);
+                this.isListening = true;
+#pragma warning disable 4014
+                Task.Run(() => { ReceiveMessages(); });
+                Task.Run(() => { SendMessages(); });
+#pragma warning restore 4014
+                dataWriter = new DataWriter(socket.OutputStream);
+                result = true;
+            }
+            catch (Exception)
+            {
+                //log
+            }
+
+            return result;
         }
 
         public async void ReceiveMessages()
@@ -215,6 +258,10 @@ namespace Shield.Communication.Services
                 isListening = false;
                 socket = null;
             }
+        }
+
+        public virtual void ListenForBeacons()
+        {
         }
     }
 }

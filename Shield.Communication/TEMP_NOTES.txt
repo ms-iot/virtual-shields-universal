@@ -99,7 +99,6 @@ void loop() {
 }
 
 /////-------------------------/////
-
 /*
     Copyright(c) Microsoft Open Technologies, Inc. All rights reserved.
 
@@ -140,48 +139,71 @@ WiFiStream wifi;
 VirtualShield shield;	          // identify the shield
 Text screen = Text(shield);	  // connect the screen
 
-void setup()
+void connectToWifi() 
 {
-  Serial.begin(9600);
-  Serial.println("starting");
+    Serial.begin(9600);
+    Serial.println("starting");
     status = wifi.begin(ssid, pass, 1235); 
+    wifi.setName("Jimduino", 8);
   
-  //status = WiFi.begin(ssid, pass); 
+    //status = WiFi.begin(ssid, pass); 
 
-  // if you're not connected, stop here:
-  if ( status != WL_CONNECTED) { 
-    Serial.println("Couldn't get a wifi connection");
-    while(true);
-  } 
-  // if you are connected, print out info about the connection:
-  else {
-    Serial.println("Connected to network");
-    IPAddress ip = WiFi.localIP();
-    Serial.println(ip);
-  }
-  
-    
-    shield.setStream( &wifi ); //reinterpret_cast<Stream *> (wifi)
-  
-    // begin Virtual Shields for Arduino communication. You may specify a baud rate as a parameter, default is 115200
-	shield.begin();
+    // if you're not connected, stop here:
+    if ( status != WL_CONNECTED) { 
+      Serial.println("Couldn't get a wifi connection");
+      while(true);
+    } 
+    // if you are connected, print out info about the connection:
+    else {
+      Serial.println("Connected to network");
+      IPAddress ip = WiFi.localIP();
+      Serial.println(ip);
+    }
+}
 
+void refresh(ShieldEvent* event) 
+{
     // clears the screen
 	screen.clear();
+Serial.print("refreshed");
+}
 
-      int y = 0;
-      while(1)
-      {
-	screen.printAt(y, "Hello Virtual Shields123");	 
-        y++;
-        if (y > 10)
-        {
-          y = 0;
-        }
-        delay(1000);
-      }
+int y = 0;
+
+void sendBeacon() {
+  wifi.broadcastBeacon(1235);
+}
+
+void screens(ShieldEvent* event) {
+}
+
+void connected1(ShieldEvent* event) {
+  Serial.print("connected");
+}
+
+void setup()
+{
+    connectToWifi();    
+    shield.setStream( &wifi ); 
+    
+    screen.setOnEvent(screens);
+    shield.setOnConnect(connected1);
+    shield.setOnRefresh(refresh);
+  
+    // begin Virtual Shields for Arduino communication. You may specify a baud rate as a parameter, default is 115200
+    shield.begin();
+    //shield.whenDisconnected(sendBeacon);
 }
 
 void loop()
 {
-}								
+    shield.checkSensors();
+    sendBeacon();
+    screen.printAt(y, "Hello Virtual Shields123");	 
+    y++;
+    if (y > 10)
+    {
+      y = 0;
+    }
+    delay(1000);
+}													

@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Networking;
 using Windows.System.Display;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -101,29 +102,66 @@ namespace Shield
 
         private bool isRunning = false;
 
+        private Dictionary<string, ServiceBase> services = new Dictionary<string, ServiceBase>();
+
+        public void SetService()
+        {
+            if (appSettings.ConnectionIndex < 0)
+            {
+                return;
+            }
+
+            ServiceBase.OnConnectHandler OnConnection = async connection =>
+            {
+                await SendResult(new SystemResultMessage("CONNECT"), "!!");
+            };
+
+            ServiceBase.OnConnectHandler OnDisconnected = connection =>
+            {
+                this.Disconnect();
+            };
+
+            if (service != null)
+            {
+                this.Disconnect();
+
+                service.OnConnect -= OnConnection;
+                service.OnDisconnected -= OnDisconnected;
+            }
+
+            if (appSettings.ConnectionIndex == 0)
+            {
+                service = services.ContainsKey("Bluetooth") ? services["Bluetooth"] : new Bluetooth();
+                services["Bluetooth"] = service;
+            }
+            else
+            {
+                service = services.ContainsKey("Wifi") ? services["Wifi"] : new Wifi();
+                services["Wifi"] = service;
+
+                if (appSettings.ConnectionIndex == 2 && !string.IsNullOrWhiteSpace(appSettings.Hostname))
+                {
+                    service.SetClient("added",
+                        new Connection("added",
+                            new RemotePeer(null, new HostName(appSettings.Hostname), "1235")));
+                }
+            }
+
+            service.OnConnect += OnConnection;
+            service.OnDisconnected += OnDisconnected;
+
+            service.Initialize(!appSettings.MissingBackButton);
+            ////service = new ServerClient(remoteHost, remoteService);
+            ////service.Initialize();
+
+            service.ListenForBeacons(); 
+
+            RefreshConnections();
+        }
+
         private void Initialize()
         {
             //blobHelper = new BlobHelper(blobAccountName, blobAccountKey);
-
-            service = new Wifi();
-            service.OnConnect +=
-                async connection =>
-                {
-                    await SendResult(new SystemResultMessage("CONNECT"), "!!");
-                };
-
-            service.OnDisconnected += connection =>
-            {
-                this.Disconnect();
-                // say disconnected... ? reconnecting ? onscreen or allow bt symbol to be all?
-            };
-
-            service.Initialize( !appSettings.MissingBackButton );
-            ////service = new ServerClient(remoteHost, remoteService);
-            ////service.Initialize(); 
-
-            RefreshConnections();
-
             destinations = new List<IDestination>();
 
             //ConnectionList = new Connections();

@@ -183,6 +183,15 @@
     <value>Keep alive</value>
     <comment>Keep app alive</comment>
   </data>
+  <data name="Network" xml:space="preserve">
+    <value>Network</value>
+  </data>
+  <data name="NetworkDirect" xml:space="preserve">
+    <value>Network Direct</value>
+  </data>
+  <data name="NetworkDiscovery" xml:space="preserve">
+    <value>Network Discovery</value>
+  </data>
   <data name="NoList.Text" xml:space="preserve">
     <value>No paired devices found. Check Device Settings to pair a device.</value>
   </data>

@@ -28,7 +28,6 @@ using System.Threading.Tasks;
 using Windows.Networking;
 using Windows.Networking.Proximity;
 using Windows.Networking.Sockets;
-using Windows.Storage.Streams;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Devices.Enumeration;
 
@@ -59,29 +58,12 @@ namespace Shield.Communication.Services
                     connections.Add(new Connection(peer.Name, peer));
                 }
 
-                //PeerFinder.AllowBluetooth = true;
-                //PeerFinder.AllowWiFiDirect = true;
-                //PeerFinder.DisplayName = "Virtual Shields";
-                //PeerFinder.Role = PeerRole.Peer;
-                //if (!isPrePairedDevice)
-                //{
-                //    PeerFinder.Start();
-                //}
-
-                //var peers = await PeerFinder.FindAllPeersAsync();
-                //var connections = new Connections();
-                //foreach (var peer in peers)
-                //{
-                //    connections.Add(new Connection(peer.DisplayName, peer));
-                //}
-
                 return connections;
             }
             catch (Exception e)
             {
                 return null;
             }
-
         }
 
         public override async Task<bool> Connect(Connection newConnection)
@@ -133,15 +115,7 @@ namespace Shield.Communication.Services
                         CancellationTokenSource cts = new CancellationTokenSource();
                         cts.CancelAfter(10000);
                         await socket.ConnectAsync(deviceHostName, remoteServiceName);
-                        dataReader = new DataReader(socket.InputStream);
-                        this.isListening = true;
-#pragma warning disable 4014
-                        Task.Run(() => { ReceiveMessages(); });
-                        Task.Run(() => { SendMessages(); });
-#pragma warning restore 4014
-                        dataWriter = new DataWriter(socket.OutputStream);
-
-                        return true;
+                        return InstrumentSocket(socket);
                     }
                     catch (Exception e)
                     {

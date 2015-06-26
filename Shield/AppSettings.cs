@@ -73,7 +73,7 @@ namespace Shield
 
             var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
             ConnectionStateText = new[] { loader.GetString("NotConnected"), loader.GetString("Connecting"), loader.GetString("Connected"), loader.GetString("CouldNotConnect"), loader.GetString("Disconnecting") };
-            DeviceNames = new List<string> { loader.GetString("Bluetooth"), loader.GetString("ServerClient") };
+            DeviceNames = new List<string> { loader.GetString("Bluetooth"), loader.GetString("NetworkDiscovery"), loader.GetString("NetworkDirect") };
 
             try
             {
@@ -169,11 +169,12 @@ namespace Shield
             set { AddOrUpdateValue(value);
                 OnPropertyChanged("BluetoothVisible");
                 OnPropertyChanged("NetworkVisible");
+                MainPage.Instance.SetService();
             }
         }
 
-        public bool BluetoothVisible { get { return ConnectionIndex == 0; } }
-        public bool NetworkVisible { get { return ConnectionIndex == 1; } }
+        public bool BluetoothVisible => ConnectionIndex < 2;
+        public bool NetworkVisible => ConnectionIndex == 2;
 
         public string Hostname
         {

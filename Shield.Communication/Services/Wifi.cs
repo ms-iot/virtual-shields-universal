@@ -23,21 +23,26 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Networking;
 using Windows.Networking.Proximity;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Devices.Enumeration;
-using Windows.Networking.Connectivity;
+using Windows.Networking.BackgroundTransfer;
 
 namespace Shield.Communication.Services
 {
     public class Wifi : ServiceBase
     {
         private int port = 1235;
+        DatagramSocket listener = new DatagramSocket(); 
+
         public Wifi()
         {
             isPollingToSend = true;
@@ -46,73 +51,217 @@ namespace Shield.Communication.Services
         public override async Task<Connections> GetConnections()
         {
             var connections = new Connections();
-            connections.Add(new Connection("Arduino", "192.168.173.17"));
-            await Task.Delay(0);
+            foreach (var client in clients)
+            {
+                var peer = client.Value.Source as RemotePeer;
+                if (peer != null)
+                {
+                    if (DateTime.Now.Subtract(peer.Pinged).TotalSeconds > 15)
+                    {
+                        continue;
+                    }
+                }
+
+                connections.Add(client.Value);
+            }
+
+            //connections.Add(new Connection("Arduino", "192.168.173.17:1235"));
+
+            await Task.FromResult(false);
             return connections;
         }
 
-        public override async Task<bool> Connect(Connection newConnection)
+        public override async void ListenForBeacons()
         {
-            //purposely connect to a destination
-            HostName hostName = null;
-            string remoteServiceName = null;
-
-            var peer = newConnection.Source as PeerInformation;
-            if (peer != null)
-            {
-                hostName = peer.HostName;
-                remoteServiceName = "1";
-            }
-            else
-            {
-                var deviceInfo = newConnection.Source as DeviceInformation;
-                if (deviceInfo != null)
-                {
-                    var service = await RfcommDeviceService.FromIdAsync(deviceInfo.Id);
-                    hostName = service.ConnectionHostName;
-                    remoteServiceName = service.ConnectionServiceName;
-                }
-                else
-                {
-                    var ip = newConnection.Source as string;
-                    if (ip != null)
-                    {
-                        hostName = new HostName(ip);
-                        remoteServiceName = "1235";
-                    }
-                }
-            }
-
-            bool result = false;
-
-            if (hostName != null)
-            {
-                result = await Connect(hostName, remoteServiceName);
-                await base.Connect(newConnection);
-            }
-
-            return result;
-        }
-
-        private bool InstrumentSocket(StreamSocket socket)
-        {
-            var result = false;
-
+            listener.MessageReceived += ListenerOnMessageReceived;
             try
             {
-                dataReader = new DataReader(socket.InputStream);
-                this.isListening = true;
-#pragma warning disable 4014
-                Task.Run(() => { ReceiveMessages(); });
-                Task.Run(() => { SendMessages(); });
-#pragma warning restore 4014
-                dataWriter = new DataWriter(socket.OutputStream);
-                result = true;
+                await listener.BindServiceNameAsync(port.ToString());
             }
             catch (Exception)
             {
                 //log
             }
+        }
+
+        private async void ListenerOnMessageReceived(DatagramSocket sender, DatagramSocketMessageReceivedEventArgs args)
+        {
+            object outObj;
+            if (CoreApplication.Properties.TryGetValue("remotePeer", out outObj))
+            {
+                EchoMessage((RemotePeer)outObj, args);
+                return;
+            }
+
+            // We do not have an output stream yet so create one.
+            try
+            {
+                IOutputStream outputStream = await listener.GetOutputStreamAsync(args.RemoteAddress, args.RemotePort);
+
+                // It might happen that the OnMessage was invoked more than once before the GetOutputStreamAsync completed.
+                // In this case we will end up with multiple streams - make sure we have just one of it.
+                RemotePeer peer;
+                lock (this)
+                {
+                    if (CoreApplication.Properties.TryGetValue("remotePeer", out outObj))
+                    {
+                        peer = (RemotePeer)outObj;
+                    }
+                    else
+                    {
+                        peer = new RemotePeer(outputStream, args.RemoteAddress, args.RemotePort);
+                        CoreApplication.Properties.Add("remotePeer", peer);
+                    }
+                }
+
+                EchoMessage(peer, args);
+            }
+            catch (Exception exception)
+            {
+                // If this is an unknown status it means that the error is fatal and retry will likely fail.
+                if (SocketError.GetStatus(exception.HResult) == SocketErrorStatus.Unknown)
+                {
+                    throw;
+                }
+
+               // NotifyUserFromAsyncThread("Connect failed with error: " + exception.Message, NotifyType.ErrorMessage);
+            }
+
+        }
+
+        async void EchoMessage(RemotePeer peer, DatagramSocketMessageReceivedEventArgs eventArguments)
+        {
+            if (!peer.IsMatching(eventArguments.RemoteAddress, eventArguments.RemotePort))
+            {
+                // In the sample we are communicating with just one peer. To communicate with multiple peers application
+                // should cache output streams (i.e. by using a hash map), because creating an output stream for each
+                //  received datagram is costly. Keep in mind though, that every cache requires logic to remove old
+                // or unused elements; otherwise cache turns into a memory leaking structure.
+                //NotifyUserFromAsyncThread(String.Format("Got datagram from {0}:{1}, but already 'connected' to {3}", eventArguments.RemoteAddress, eventArguments.RemotePort, peer), NotifyType.ErrorMessage);
+            }
+
+            try
+            {
+                var reader = eventArguments.GetDataReader();
+                var size = reader.UnconsumedBufferLength;
+                StringBuilder sb = new StringBuilder();
+                while (reader.UnconsumedBufferLength > 0)
+                {
+                    var b = reader.ReadByte();
+                    sb.Append((char) b);
+                }
+
+                var msg = sb.ToString();
+
+                if (msg.StartsWith("VS:"))
+                {
+                    msg = msg.Substring(3);
+                    var colon = msg.IndexOf(':');
+                    var typename = msg.Substring(0, colon);
+                    var equals = msg.IndexOf('=');
+                    var ip = msg.Substring(colon + 1, equals - colon - 1);
+                    var name = msg.Substring(equals + 1);
+                    var colon2 = name.IndexOf(':');
+
+                    if (colon2 > -1)
+                    {
+                        name = name.Substring(0, colon2);
+                    }
+
+                    if (string.IsNullOrWhiteSpace(name))
+                    {
+                        name = $"({typename}):{ip}";
+                    }
+
+                    var port = peer.Port;
+                    var portColon = ip.IndexOf(':');
+                    if (portColon > -1)
+                    {
+                        port = ip.Substring(portColon + 1);
+                        ip = ip.Substring(0, portColon);
+                    }
+
+                    peer.IP = ip;
+                    peer.Name = name;
+                    peer.Message = msg;
+                    peer.Pinged = DateTime.Now;
+                    peer.OriginalPort = peer.Port;
+                    peer.Port = port;
+
+                    var connection = new Connection(name, peer);
+                    clients[ip] = connection;
+
+                    //add to clients in order to enumerate! (timeout too!)
+                }
+
+                //await peer.OutputStream.WriteAsync(eventArguments.GetDataReader().DetachBuffer());
+            }
+            catch (Exception exception)
+            {
+                // If this is an unknown status it means that the error is fatal and retry will likely fail.
+                if (SocketError.GetStatus(exception.HResult) == SocketErrorStatus.Unknown)
+                {
+                    throw;
+                }
+
+                //NotifyUserFromAsyncThread("Send failed with error: " + exception.Message, NotifyType.ErrorMessage);
+            }
+        }
+
+        //private void NotifyUserFromAsyncThread(string strMessage, NotifyType type)
+        //{
+        //    var ignore = CoreApplication.MainView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => rootPage.NotifyUser(strMessage, type));
+        //}
+
+        private async Task<RemotePeer> GetHostNameAndService(object source)
+        {
+            var result = source as RemotePeer;
+
+            if (result != null)
+            {
+                return result;
+            }
+
+            var peer = source as PeerInformation;
+            if (peer != null)
+            {
+                return new RemotePeer(null, peer.HostName, "1");
+            }
+
+            var deviceInfo = source as DeviceInformation;
+            if (deviceInfo != null)
+            {
+                var service = await RfcommDeviceService.FromIdAsync(deviceInfo.Id);
+                return new RemotePeer(null, service.ConnectionHostName, service.ConnectionServiceName);
+            }
+
+            var ip = source as string;
+            if (ip != null)
+            {
+                var iponly = ip;
+                var port = "1235";
+                var colon = ip.IndexOf(':');
+                if (colon > -1)
+                {
+                    iponly = ip.Substring(0, colon);
+                    port = ip.Substring(colon + 1);
+                } 
+
+                return new RemotePeer(null, new HostName(iponly), port);
+            }
+
+            return null;
+        }
+
+        public override async Task<bool> Connect(Connection newConnection)
+        {
+            //purposely connect to a destination
+            var peer = await GetHostNameAndService(newConnection.Source);
+
+            if (peer?.HostName == null) return false;
+
+            var result = await Connect(peer.HostName, peer.Port);
+            await base.Connect(newConnection);
 
             return result;
         }
@@ -147,6 +296,44 @@ namespace Shield.Communication.Services
             {
                 return true;
             }
+        }
+    }
+
+
+    public class RemotePeer
+    {
+        IOutputStream outputStream;
+        public HostName HostName { get; set; }
+        
+        public string IP { get; set; }
+        public string Name { get; set; }
+        public string Key { get; set; }
+        public string Port { get; set; }
+
+        public RemotePeer(IOutputStream outputStream, HostName hostName, String port)
+        {
+            this.outputStream = outputStream;
+            this.HostName = hostName;
+            this.Port = port;
+        }
+
+        public bool IsMatching(HostName hostName, String port)
+        {
+            return (this.HostName == hostName && this.Port == port);
+        }
+
+        public IOutputStream OutputStream
+        {
+            get { return outputStream; }
+        }
+
+        public string Message { get; set; }
+        public DateTime Pinged { get; set; }
+        public string OriginalPort { get; set; }
+
+        public override String ToString()
+        {
+            return HostName + Port;
         }
     }
 }
