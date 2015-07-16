@@ -45,8 +45,8 @@ namespace Shield
         public Dictionary<string, string> Dictionary => this.dictionary;
         public bool IsDictionary { get; set; }
 
-        private XmlDocument doc;
-        private XmlNodeList nodes;
+        private Windows.Data.Xml.Dom.XmlDocument doc;
+        private Windows.Data.Xml.Dom.XmlNodeList nodes;
         private Dictionary<string, string> dictionary = new Dictionary<string, string>();
         private string keypart, valuepart;
 
@@ -129,7 +129,7 @@ namespace Shield
                         foreach (var node in nodes)
                         {
                             IXmlNode key = null;
-                            XmlNodeList valueset = null;
+                            Windows.Data.Xml.Dom.XmlNodeList valueset = null;
                             try
                             {
                                 key = node.SelectSingleNode(keypart);
@@ -281,7 +281,7 @@ namespace Shield
 
             try
             {
-                doc = new XmlDocument();
+                doc = new Windows.Data.Xml.Dom.XmlDocument();
                 doc.LoadXml(temp);
             }
             catch (Exception)  //backup leverage html agility pack
