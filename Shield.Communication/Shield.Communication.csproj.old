@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -11,8 +11,8 @@
     <AssemblyName>Shield.Communication</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.10240.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.10069.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.10069.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -108,22 +108,16 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
-  
   <ItemGroup>
-   <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-   <Content Include="ApplicationInsights.config">
-     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-   </Content>
-   <None Include="project.json" />
- </ItemGroup>
-<ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <Content Include="TEMP_NOTES.txt" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IDestination.cs" />
     <Compile Include="Destinations\AzureBlob.cs" />
     <Compile Include="Destinations\BlobHelper.cs" />
     <Compile Include="Destinations\RESTHelper.cs" />
+    <Compile Include="Services\Wifi.cs" />
     <Compile Include="Services\Bluetooth.cs" />
     <Compile Include="Connection.cs" />
     <Compile Include="Services\ServerClient.cs" />
