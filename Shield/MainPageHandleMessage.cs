@@ -319,7 +319,7 @@ namespace Shield
                     }
                     else
                     {
-                        TakePicture(message as CameraMessage);
+                        await TakePicture(message as CameraMessage);
                     }
 
                     break;
@@ -909,7 +909,7 @@ namespace Shield
             vibrationDevice.Vibrate(new TimeSpan(0, 0, 0, timingMessage.Ms/1000, timingMessage.Ms%1000));
         }
 
-        private async void TakePicture(CameraMessage cameraMessage)
+        private async Task TakePicture(CameraMessage cameraMessage)
         {
             if (isCameraInitializing)
             {
@@ -924,13 +924,8 @@ namespace Shield
                     keysInProcess["CAMERA"] = true;
                 }
 
-                if (!isCameraInitialized)
-                {
-                    isCameraInitializing = true;
-                    await InitializeCamera();
-                    isCameraInitializing = false;
-                }
-
+                await InitializeCamera();
+                
                 var imageName = "photo_" + DateTime.Now.Ticks + ".jpg";
                 foreach (
                     var destination in destinations.Where(destination => destination.CheckPrefix(cameraMessage.Url)))
@@ -939,7 +934,21 @@ namespace Shield
                     break;
                 }
 
-                var stream = await camera.Capture(imageName);
+                StorageFile stream = null;
+                try
+                {
+                    stream = await camera.Capture(imageName);
+                }
+                catch (Exception e)
+                {
+                    await SendResult(new ResultMessage(cameraMessage) {ResultId = -99, Result = e.Message });
+                    lock (keysInProcess)
+                    {
+                        keysInProcess["CAMERA"] = false;
+                    }
+
+                    return;
+                }
 
                 //stores the image in Azure BLOB Storage
                 var memStream = new MemoryStream();

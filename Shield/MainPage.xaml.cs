@@ -291,14 +291,23 @@ namespace Shield
         {
             try
             {
-                isCameraInitialized = true;
-                await
-                    dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                        async () => { await camera.InitializePreview(canvasBackground); });
+                if (!isCameraInitialized && !isCameraInitializing)
+                {
+                    await
+                        dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                            async () =>
+                            {
+                                await camera.InitializePreview(canvasBackground);
+                                isCameraInitialized = true;
+                                isCameraInitializing = false;
+                            });
+                }
             }
             catch (Exception)
             {
                 //camera not available
+                isCameraInitialized = false;
+                isCameraInitializing = false;
             }
         }
 
