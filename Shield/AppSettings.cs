@@ -30,8 +30,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
 
 namespace Shield
 {
@@ -187,7 +185,16 @@ namespace Shield
         //    }
         //}
 
-        public int ConnectionIndex => BluetoothVisible ? 0 : NetworkVisible ? 1 : NetworkDirectVisible ? 2 : -1;
+        public int ConnectionIndex
+        {
+            get { return BluetoothVisible ? 0 : NetworkVisible ? 1 : NetworkDirectVisible ? 2 : -1; }
+            set
+            {
+                BluetoothVisible = value == 0;
+                NetworkVisible = value == 1;
+                NetworkDirectVisible = value == 2;
+            }
+        }
 
         public bool NotNetworkDirectVisible => !NetworkDirectVisible;
 

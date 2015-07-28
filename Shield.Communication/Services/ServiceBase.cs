@@ -61,7 +61,7 @@ namespace Shield.Communication.Services
         private Connection currentConnection = null;
         internal bool isPrePairedDevice = false;
 
-        //JIM: Add a set of priorities with timestamps - send in order of : priority + oldest msg.
+        //todo: Add a set of priorities with timestamps - send in order of : priority + oldest msg.
         private Dictionary<string, PrioritizedMessage> queuedMessages = new Dictionary<string, PrioritizedMessage>();
         private Queue<string> queuedSends = new Queue<string>(); 
 

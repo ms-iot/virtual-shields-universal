@@ -154,8 +154,7 @@ namespace Shield
             ////service = new ServerClient(remoteHost, remoteService);
             ////service.Initialize();
 
-            service.ListenForBeacons(); 
-
+            service.ListenForBeacons();
             RefreshConnections();
         }
 

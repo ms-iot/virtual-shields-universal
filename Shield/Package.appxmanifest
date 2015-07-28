@@ -30,7 +30,11 @@
     <DeviceCapability Name="microphone" />
     <DeviceCapability Name="location" />
     <DeviceCapability Name="proximity" />
-    <DeviceCapability Name="bluetooth.rfcomm" />
+    <DeviceCapability Name="bluetooth.rfcomm">
+		<Device Id="any">
+			<Function Type="name:serialPort"/>
+		</Device>
+	</DeviceCapability>
     <DeviceCapability Name="webcam" />
   </Capabilities>
 </Package>

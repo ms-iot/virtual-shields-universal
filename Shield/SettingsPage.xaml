@@ -134,9 +134,9 @@
                     </StackPanel>
                     <StackPanel Grid.Row="1" Orientation="Vertical">
                         <TextBox x:Name="blobAccountNameTextBox" PlaceholderText="BlobAccountName" 
-                             Width="auto" Text="{Binding Source={StaticResource appSettings}, Path=BlobAccountName, Mode=TwoWay}" LostFocus="updateDestinations" />
+                             Width="auto" Text="{Binding Source={StaticResource appSettings}, Path=BlobAccountName, Mode=TwoWay}" LostFocus="UpdateDestinations" />
                         <TextBox x:Name="blobAccountKeyTextBox" PlaceholderText="BlobAccountKey" 
-                             Width="auto" Text="{Binding Source={StaticResource appSettings}, Path=BlobAccountKey, Mode=TwoWay}" LostFocus="updateDestinations" />
+                             Width="auto" Text="{Binding Source={StaticResource appSettings}, Path=BlobAccountKey, Mode=TwoWay}" LostFocus="UpdateDestinations" />
                     </StackPanel>
                 </Grid>
             </PivotItem>
