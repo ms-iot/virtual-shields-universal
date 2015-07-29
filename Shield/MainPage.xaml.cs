@@ -123,8 +123,6 @@ namespace Shield
 
             if (service != null)
             {
-                //this.Disconnect();
-
                 service.OnConnect -= OnConnection;
                 service.OnDisconnected -= OnDisconnected;
             }

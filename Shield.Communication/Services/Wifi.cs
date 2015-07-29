@@ -23,7 +23,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,7 +33,6 @@ using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Devices.Enumeration;
-using Windows.Networking.BackgroundTransfer;
 
 namespace Shield.Communication.Services
 {
@@ -69,8 +67,6 @@ namespace Shield.Communication.Services
                 }
             }
 
-            //connections.Add(new Connection("Arduino", "192.168.2.19:1235"));
-
             await Task.FromResult(false);
             return connections;
         }
@@ -87,8 +83,7 @@ namespace Shield.Communication.Services
                 }
                 catch (Exception e)
                 {
-                    //log
-                    var i = 0;
+                    // ignore dropped listen sockets
                 }
             }
         }
@@ -198,19 +193,11 @@ namespace Shield.Communication.Services
                     peer.Port = port;
 
                     var connection = new Connection(name, peer);
-                    try
+                    if (!clients.ContainsKey(ip))
                     {
                         clients[ip] = connection;
                     }
-                    catch (Exception e)
-                    {
-                        //?
-                    }
-
-                    //add to clients in order to enumerate! (timeout too!)
                 }
-
-                //await peer.OutputStream.WriteAsync(eventArguments.GetDataReader().DetachBuffer());
             }
             catch (Exception exception)
             {
@@ -219,15 +206,8 @@ namespace Shield.Communication.Services
                 {
                     throw;
                 }
-
-                //NotifyUserFromAsyncThread("Send failed with error: " + exception.Message, NotifyType.ErrorMessage);
             }
         }
-
-        //private void NotifyUserFromAsyncThread(string strMessage, NotifyType type)
-        //{
-        //    var ignore = CoreApplication.MainView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => rootPage.NotifyUser(strMessage, type));
-        //}
 
         private async Task<RemotePeer> GetHostNameAndService(object source)
         {
@@ -312,44 +292,6 @@ namespace Shield.Communication.Services
             {
                 return true;
             }
-        }
-    }
-
-
-    public class RemotePeer
-    {
-        IOutputStream outputStream;
-        public HostName HostName { get; set; }
-        
-        public string IP { get; set; }
-        public string Name { get; set; }
-        public string Key { get; set; }
-        public string Port { get; set; }
-
-        public RemotePeer(IOutputStream outputStream, HostName hostName, String port)
-        {
-            this.outputStream = outputStream;
-            this.HostName = hostName;
-            this.Port = port;
-        }
-
-        public bool IsMatching(HostName hostName, String port)
-        {
-            return (this.HostName == hostName && this.Port == port);
-        }
-
-        public IOutputStream OutputStream
-        {
-            get { return outputStream; }
-        }
-
-        public string Message { get; set; }
-        public DateTime Pinged { get; set; }
-        public string OriginalPort { get; set; }
-
-        public override String ToString()
-        {
-            return HostName + Port;
         }
     }
 }

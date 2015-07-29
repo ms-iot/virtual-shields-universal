@@ -170,21 +170,6 @@ namespace Shield
 
         public bool ListVisible => ConnectionList != null && ConnectionList.Any();
 
-
-        //public int ConnectionIndex
-        //{
-        //    get { return GetValueOrDefault(0); }
-        //    set {
-        //        if (value > -1)
-        //        {
-        //            AddOrUpdateValue(value);
-        //            OnPropertyChanged("BluetoothVisible");
-        //            OnPropertyChanged("NetworkVisible");
-        //            MainPage.Instance.SetService();
-        //        }
-        //    }
-        //}
-
         public int ConnectionIndex
         {
             get { return BluetoothVisible ? 0 : NetworkVisible ? 1 : NetworkDirectVisible ? 2 : -1; }

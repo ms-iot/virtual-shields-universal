@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -108,23 +108,19 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
-  
   <ItemGroup>
-   <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-   <Content Include="ApplicationInsights.config">
-     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-   </Content>
-   <None Include="project.json" />
- </ItemGroup>
-<ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <Content Include="TEMP_NOTES.txt" />
+    <Content Include="ApplicationInsights.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IDestination.cs" />
     <Compile Include="Destinations\AzureBlob.cs" />
     <Compile Include="Destinations\BlobHelper.cs" />
     <Compile Include="Destinations\RESTHelper.cs" />
+    <Compile Include="Services\RemotePeer.cs" />
     <Compile Include="Services\Wifi.cs" />
     <Compile Include="Services\Bluetooth.cs" />
     <Compile Include="Connection.cs" />
