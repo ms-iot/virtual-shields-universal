@@ -46,6 +46,8 @@ namespace Shield.Core
         private long lastGoodMessage = 0;
         private long lastStartMessage = 0;
         private long maximumTimeToFullMessage = 1000;
+        private long lastCompleteMessage = System.Environment.TickCount;
+        private bool isClosedMessage = false;
 
         public void Test()
         {
@@ -72,7 +74,8 @@ namespace Shield.Core
         private void OnCharReceived(char c)
         {
             var isComplete = false;
-            
+            var isPreClosedMessage = false;
+
             if (isEscaped)
             {
                 isEscaped = false;
@@ -93,6 +96,7 @@ namespace Shield.Core
             }
             else if (!quoted && c == '{')
             {
+                isPreClosedMessage = true;
                 if (braceCount++ == 1)
                 {
                     lastStartMessage = System.Environment.TickCount;
@@ -100,6 +104,15 @@ namespace Shield.Core
             }
             else if (!quoted && c == '}')
             {
+                if (isClosedMessage && buffer.Length > 1 && (System.Environment.TickCount - lastCompleteMessage > 1000*5))
+                {
+                    //reset
+                    buffer.Clear();
+                    braceCount = 0;
+                    isClosedMessage = false;
+                    return;
+                }
+
                 if (--braceCount < 1)
                 {
                     lastGoodMessage = System.Environment.TickCount;
@@ -118,16 +131,28 @@ namespace Shield.Core
                 isEscaped = true;
             }
 
+            isClosedMessage = isPreClosedMessage;
+
             buffer.Append(c);
             if (isComplete)
             {
                 OnStringReceived(buffer.ToString());
                 buffer.Clear();
             }
+
+            if (c == '}' && (System.Environment.TickCount - lastCompleteMessage > 1000 * 10))
+            {
+                //reset
+                buffer.Clear();
+                braceCount = 0;
+                isClosedMessage = false;
+                return;
+            }
         }
 
         public void OnStringReceived(string message)
         {
+            lastCompleteMessage = System.Environment.TickCount;
             Debug.WriteLine(message);
             StringReceived?.Invoke(message);
 

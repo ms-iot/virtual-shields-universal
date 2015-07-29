@@ -23,9 +23,7 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Networking;
 using Windows.Networking.Sockets;
@@ -40,8 +38,8 @@ namespace Shield.Communication.Services
         
         public ServerClient(string rHost, string rService)
         {
-          this.remoteHost = rHost;
-          this.remoteService = rService;
+            this.remoteHost = rHost;
+            this.remoteService = rService;
         }
 
         public override async Task<Connections> GetConnections()
@@ -84,6 +82,7 @@ namespace Shield.Communication.Services
                 }
                 catch (Exception)
                 {
+                    // multiple messages across protocols, all valid for not connecting
                 }
             }
 
