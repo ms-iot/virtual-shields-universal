@@ -136,9 +136,10 @@ namespace Shield.Communication.Services
                 dataWriter = new DataWriter(socket.OutputStream);
                 result = true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                //log
+                // socket failure can be recovered
+                Debug.WriteLine(e.Message);
             }
 
             return result;
@@ -268,7 +269,7 @@ namespace Shield.Communication.Services
             {
                 Debug.WriteLine("Sending: " + data);
                 dataWriter.WriteString(data);
-                await dataWriter.StoreAsync(); //fix here
+                await dataWriter.StoreAsync();
                 await dataWriter.FlushAsync();
             }
         }

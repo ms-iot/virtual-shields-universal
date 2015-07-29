@@ -149,8 +149,6 @@ namespace Shield
             service.OnDisconnected += OnDisconnected;
 
             service.Initialize(!appSettings.MissingBackButton);
-            ////service = new ServerClient(remoteHost, remoteService);
-            ////service.Initialize();
 
             service.ListenForBeacons();
             RefreshConnections();
@@ -158,15 +156,10 @@ namespace Shield
 
         private void Initialize()
         {
-            //blobHelper = new BlobHelper(blobAccountName, blobAccountKey);
             destinations = new List<IDestination>();
-
-            //ConnectionList = new Connections();
-            //connectList.ItemsSource = ConnectionList;
 
             DataContext = model;
             model.Sensors = new Sensors(dispatcher);
-            //SensorStack.ItemsSource = model.Sensors.ItemsList;
 
             MessageFactory.LoadClasses();
 
@@ -177,7 +170,6 @@ namespace Shield
             camera = new Camera();
             audio = new Audio();
 
-            CheckSensors();
             Sensors.OnSensorUpdated += Sensors_OnSensorUpdated;
             Sensors.Start();
 
@@ -272,15 +264,6 @@ namespace Shield
             await service.SendMessage(builder.ToString(), data.Tag, 20);
         }
 
-        private void CheckSensors()
-        {
-            //this.noAcc.Visibility = Accelerometer.GetDefault() == null ? Visibility.Visible : Visibility.Collapsed;
-            //this.noGyro.Visibility = Gyrometer.GetDefault() == null ? Visibility.Visible : Visibility.Collapsed;
-            //this.noCom.Visibility = Compass.GetDefault() == null ? Visibility.Visible : Visibility.Collapsed;
-            //this.noLoc.Visibility = (new Geolocator()) == null ? Visibility.Visible : Visibility.Collapsed;
-            //this.noQuan.Visibility = OrientationSensor.GetDefault() == null ? Visibility.Visible : Visibility.Collapsed;
-        }
-
         private void InitializeManager()
         {
             manager = new Manager();
@@ -351,7 +334,6 @@ namespace Shield
             }
             catch (Exception ex)
             {
-                //ConnectMessage.Text = "Service not available or supported.";
                 telemetry.TrackException(ex);
                 return;
             }
@@ -422,7 +404,6 @@ namespace Shield
                 {
                     worked = await service.Connect(selectedConnection);
 
-                    //Refresh.IsEnabled = true;
                     if (!worked)
                     {
                         appSettings.CurrentConnectionState = (int)ConnectionState.CouldNotConnect;
@@ -558,12 +539,6 @@ namespace Shield
             destinations.Add(blobDestination);
         }
 
-
-        //public void ReInitalizeCommunicationService()
-        //{
-        //    service.Initialize();
-        //    RefreshConnections();
-        //}
         public async void OnLaunchWhileActive(string arguments)
         {
             try
