@@ -81,11 +81,11 @@ namespace Shield
         {
             Instance = this;
 
+            appSettings = (AppSettings)App.Current.Resources["appSettings"];
+
             InitializeComponent();
             model = new MainViewModel();
             dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
-
-            appSettings = (AppSettings) App.Current.Resources["appSettings"];
 
             Initialize();
 
@@ -197,7 +197,11 @@ namespace Shield
 
             isRunning = true;
 #pragma warning disable 4014
-            Task.Run(() => { AutoReconnect(); });
+            Task.Run(() =>
+            {
+                SetService();
+                AutoReconnect();
+            });
             Task.Run(() => { ProcessMessages(); });
 #pragma warning restore 4014
         }
@@ -358,8 +362,6 @@ namespace Shield
             {
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    //ConnectMessage.Text =
-                    //    "No devices found.";
                     telemetry.TrackEvent("VirtualShieldConnectionEnumerationFail");
                 });
 
@@ -373,8 +375,11 @@ namespace Shield
                 connections.Add(item);
             }
 
-            appSettings.ConnectionList = connections;
-            telemetry.TrackEvent("VirtualShieldConnectionEnumerationSuccess");
+            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                appSettings.ConnectionList = connections;
+                telemetry.TrackEvent("VirtualShieldConnectionEnumerationSuccess");
+            });
         }
 
         public async void Disconnect()
@@ -393,6 +398,7 @@ namespace Shield
                 {
                     appSettings.CurrentConnectionState = (int)ConnectionState.NotConnected;
                 });
+
                 telemetry.TrackEvent("VirtualShieldDisconnect");
             }
         }
@@ -408,15 +414,16 @@ namespace Shield
 
             try
             {
+                bool worked = false;
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     appSettings.CurrentConnectionState = (int)ConnectionState.Connecting;
                 });
 
-                var worked = await service.Connect(selectedConnection);
-
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
+                    worked = await service.Connect(selectedConnection);
+
                     //Refresh.IsEnabled = true;
                     if (!worked)
                     {

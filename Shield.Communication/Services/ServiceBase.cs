@@ -79,6 +79,7 @@ namespace Shield.Communication.Services
 
         public void Terminate()
         {
+            isListening = false;
             this.Dispose();
         }
 
@@ -149,7 +150,22 @@ namespace Shield.Communication.Services
             {
                 while (isListening)
                 {
-                    uint sizeFieldCount = await dataReader.LoadAsync(1);
+                    uint sizeFieldCount = 0;
+                    try
+                    {
+                        sizeFieldCount = await dataReader.LoadAsync(1);
+                    }
+                    catch (Exception e)
+                    {
+                        // ignore normal socket disconnections
+                        if (e.HResult != -2147023901)
+                        {
+                            throw;
+                        }
+
+                        continue;
+                    }
+
                     if (sizeFieldCount != 1)
                     {
                         isListening = false;
@@ -167,6 +183,7 @@ namespace Shield.Communication.Services
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+                this.Terminate();
             }
         }
 
@@ -226,6 +243,7 @@ namespace Shield.Communication.Services
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+                this.Terminate();
             }
         }
 

@@ -174,6 +174,20 @@ namespace Shield
         {
             Log("R: " + message._Source + "\r\n");
 
+            try
+            {
+                if (message.Service != "SYSTEM")
+                {
+                    var dictionary = new Dictionary<string, string> {{"Type", message.Service}};
+                    telemetry.TrackEvent("MessageInfo", dictionary);
+                }
+            }
+            catch (Exception)
+            {
+                //ignore telemetry errors if any
+
+            }
+
             switch (message.Service)
             {
                 case "SYSTEM":
@@ -731,6 +745,8 @@ namespace Shield
 
         private async void Log(string message)
         {
+            Debug.WriteLine(message);
+
             if (appSettings.IsLogging)
             {
                 var now = DateTime.Now;
@@ -844,9 +860,10 @@ namespace Shield
                     sensorsMessage.Type = 'A';
                     if (Accelerometer.GetDefault() == null)
                     {
-                        throw new UnsupportedSensorException();
+                        throw new UnsupportedSensorException("Accelerometer does not exist");
                     }
 
+                    telemetry.TrackEvent("Sensor", new Dictionary<string, string> {{"A", sensorItem.A.Value.ToString()}});
                     Sensors.SensorSwitches.A = sensorItem.A.Value;
                 }
                 else if (sensorItem.G != null)
@@ -854,9 +871,10 @@ namespace Shield
                     sensorsMessage.Type = 'G';
                     if (Gyrometer.GetDefault() == null)
                     {
-                        throw new UnsupportedSensorException();
+                        throw new UnsupportedSensorException("Gyrometer does not exist");
                     }
 
+                    telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "G", sensorItem.G.Value.ToString() } });
                     Sensors.SensorSwitches.G = sensorItem.G.Value;
                 }
                 else if (sensorItem.M != null)
@@ -864,9 +882,10 @@ namespace Shield
                     sensorsMessage.Type = 'M';
                     if (Compass.GetDefault() == null)
                     {
-                        throw new UnsupportedSensorException();
+                        throw new UnsupportedSensorException("Compass does not exist");
                     }
 
+                    telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "M", sensorItem.M.Value.ToString() } });
                     Sensors.SensorSwitches.M = sensorItem.M.Value;
                 }
                 else if (sensorItem.L != null)
@@ -879,9 +898,10 @@ namespace Shield
                     sensorsMessage.Type = 'Q';
                     if (OrientationSensor.GetDefault() == null)
                     {
-                        throw new UnsupportedSensorException();
+                        throw new UnsupportedSensorException("OrientationSensor does not exist");
                     }
 
+                    telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "Q", sensorItem.Q.Value.ToString() } });
                     Sensors.SensorSwitches.Q = sensorItem.Q.Value;
                 }
                 else if (sensorItem.P != null)
@@ -889,9 +909,10 @@ namespace Shield
                     sensorsMessage.Type = 'P';
                     if (LightSensor.GetDefault() == null)
                     {
-                        throw new UnsupportedSensorException();
+                        throw new UnsupportedSensorException("LightSensor does not exist");
                     }
 
+                    telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "P", sensorItem.P.Value.ToString() } });
                     Sensors.SensorSwitches.P = sensorItem.P.Value;
                 }
 
@@ -937,6 +958,12 @@ namespace Shield
                 StorageFile stream = null;
                 try
                 {
+                    var timeout = DateTime.Now.AddSeconds(5);
+                    while (!camera.isPreviewing && DateTime.Now < timeout)
+                    {
+                        await Task.Delay(250);
+                    }
+
                     stream = await camera.Capture(imageName);
                 }
                 catch (Exception e)
