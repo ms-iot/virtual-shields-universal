@@ -26,10 +26,10 @@ using Shield.Communication;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using Shield.Core;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -51,7 +51,17 @@ namespace Shield
 
             this.InitializeComponent();
 
-            appSettings.ConnectionIndex = Math.Max(0, index);
+            Task.Delay(500).ContinueWith(async t =>
+            {
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, (() =>
+                {
+                    appSettings.ConnectionIndex = Math.Max(0, index);
+                    if (appSettings.BluetoothVisible)
+                    {
+                        main.RefreshConnections();
+                    }
+                }));
+            });
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -130,7 +140,7 @@ namespace Shield
             main.CheckAlwaysRunning();
         }
 
-        private void updateDestinations(object sender, RoutedEventArgs e)
+        private void UpdateDestinations(object sender, RoutedEventArgs e)
         {
             main.UpdateDestinations();
         }

@@ -8,7 +8,7 @@
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
-    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.10042.0" MaxVersionTested="10.0.10106.0" />
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.10042.0" MaxVersionTested="10.0.10240.0" />
   </Dependencies>
   <Resources>
     <Resource Language="x-generate" />
@@ -21,20 +21,20 @@
     </Application>
   </Applications>
   <Capabilities>
-    <uap:Capability Name="picturesLibrary" />
-    <uap:Capability Name="videosLibrary" />
-    <uap:Capability Name="musicLibrary" />
     <Capability Name="internetClient" />
     <Capability Name="internetClientServer" />
     <Capability Name="privateNetworkClientServer" />
+    <uap:Capability Name="picturesLibrary" />
+    <uap:Capability Name="videosLibrary" />
+    <uap:Capability Name="musicLibrary" />
     <DeviceCapability Name="microphone" />
     <DeviceCapability Name="location" />
     <DeviceCapability Name="proximity" />
     <DeviceCapability Name="bluetooth.rfcomm">
-      <Device Id="any">
-        <Function Type="name:serialPort" />
-      </Device>
-    </DeviceCapability>
+		<Device Id="any">
+			<Function Type="name:serialPort"/>
+		</Device>
+	</DeviceCapability>
     <DeviceCapability Name="webcam" />
   </Capabilities>
 </Package>

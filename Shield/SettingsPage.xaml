@@ -47,29 +47,30 @@
         <Pivot Grid.Row="2" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
             <PivotItem>
                 <PivotItem.Header>
-                    <TextBlock Text="Bluetooth" FontSize="48" FontFamily="Segoe UI Light"  FontWeight="Thin" Margin="0,0,0,-18"/>
+                    <TextBlock Text="Connections" FontSize="48" FontFamily="Segoe UI Light"  FontWeight="Thin" Margin="0,0,0,-18"/>
                 </PivotItem.Header>
                 <Grid  Margin="0,20,0,0">
                     <Grid.RowDefinitions>
                         <!--<RowDefinition Height="1*"/>-->
+                        <RowDefinition Height="1*"/>
                         <RowDefinition Height="6*"/>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="15"/>
                         <RowDefinition Height="2*"/>
                     </Grid.RowDefinitions>
 
-                    <!--<StackPanel Grid.Row="0" x:Name="ConnectSelection" Orientation="Vertical">
-                        <ComboBox x:Name="connectionComboBox" Width="auto"
-                              SelectedIndex="{Binding Source={StaticResource appSettings}, Path=ConnectionIndex, Mode=TwoWay}"
-                              ItemsSource="{Binding Source={StaticResource appSettings}, Path=DeviceNames}">
-                        </ComboBox>
-                    </StackPanel>-->
-                    <!--<StackPanel Grid.Row="2" x:Name="ConnectSettings" Orientation="Vertical" Visibility="{Binding Source={StaticResource appSettings}, Path=NetworkVisible, Converter={StaticResource BoolToVisConverter}}">
+                    <StackPanel Grid.Row="0" x:Name="ConnectSelection" Orientation="Horizontal">
+                        <RadioButton x:Name="radioBT" Content="Bluetooth" GroupName="Connections" IsChecked="{Binding Source={StaticResource appSettings}, Path=BluetoothVisible, Mode=TwoWay}"/>
+                        <RadioButton x:Name="radioNW" Content="Network" GroupName="Connections" IsChecked="{Binding Source={StaticResource appSettings}, Path=NetworkVisible, Mode=TwoWay}"/>
+                        <RadioButton x:Name="radioNWD" Content="Direct" GroupName="Connections" IsChecked="{Binding Source={StaticResource appSettings}, Path=NetworkDirectVisible, Mode=TwoWay}"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Row="1" x:Name="ConnectSettings" Orientation="Vertical" Visibility="{Binding Source={StaticResource appSettings}, Path=NetworkDirectVisible, Converter={StaticResource BoolToVisConverter}}">
                         <TextBox x:Name="serverClientHostNameTextBox" PlaceholderText="HostName or IP address"  Width="auto" Text="{Binding Source={StaticResource appSettings}, Path=Hostname, Mode=TwoWay}" />
                         <TextBox x:Name="serverClientHostServiceTextBox" PlaceholderText="HostPort"  Width="auto" Text="{Binding Source={StaticResource appSettings}, Path=Hostport, Mode=TwoWay}" />
-                    </StackPanel>-->
+                    </StackPanel>
 
-                    <StackPanel Grid.Row="0" x:Name="ConnectStackParent" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <StackPanel Grid.Row="1" x:Name="ConnectStackParent" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Source={StaticResource appSettings}, Path=NotNetworkDirectVisible, Converter={StaticResource BoolToVisConverter}}">
                         <TextBlock x:Name="ChooseMessage" FontSize="16" Width="Auto" VerticalAlignment="Bottom" TextWrapping="Wrap"
                                    Visibility="{Binding Source={StaticResource appSettings}, Path=ListVisible, Converter={StaticResource BoolToVisConverter}}"
                             x:Uid="Choose"/>
@@ -97,11 +98,11 @@
                         </Grid>
                     </StackPanel>
 
-                    <TextBlock Grid.Row="1"
+                    <TextBlock Grid.Row="2"
                         x:Name="ConnectMessage" FontSize="18" Width="Auto" VerticalAlignment="Bottom" 
                            Text="{Binding Source={StaticResource appSettings}, Path=CurrentConnectionStateText}"/>
 
-                    <Grid Grid.Row="3">
+                    <Grid Grid.Row="4">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
@@ -133,9 +134,9 @@
                     </StackPanel>
                     <StackPanel Grid.Row="1" Orientation="Vertical">
                         <TextBox x:Name="blobAccountNameTextBox" PlaceholderText="BlobAccountName" 
-                             Width="auto" Text="{Binding Source={StaticResource appSettings}, Path=BlobAccountName, Mode=TwoWay}" LostFocus="updateDestinations" />
+                             Width="auto" Text="{Binding Source={StaticResource appSettings}, Path=BlobAccountName, Mode=TwoWay}" LostFocus="UpdateDestinations" />
                         <TextBox x:Name="blobAccountKeyTextBox" PlaceholderText="BlobAccountKey" 
-                             Width="auto" Text="{Binding Source={StaticResource appSettings}, Path=BlobAccountKey, Mode=TwoWay}" LostFocus="updateDestinations" />
+                             Width="auto" Text="{Binding Source={StaticResource appSettings}, Path=BlobAccountKey, Mode=TwoWay}" LostFocus="UpdateDestinations" />
                     </StackPanel>
                 </Grid>
             </PivotItem>
