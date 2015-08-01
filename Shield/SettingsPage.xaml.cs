@@ -50,18 +50,6 @@ namespace Shield
             var index = appSettings.ConnectionIndex;
 
             this.InitializeComponent();
-
-            Task.Delay(500).ContinueWith(async t =>
-            {
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, (() =>
-                {
-                    appSettings.ConnectionIndex = Math.Max(0, index);
-                    if (appSettings.BluetoothVisible)
-                    {
-                        main.RefreshConnections();
-                    }
-                }));
-            });
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
