@@ -231,6 +231,10 @@ namespace Shield
                         }
                     }
                 }
+                else
+                {
+                    await Task.Delay(5000);
+                }
             }
         }
 
