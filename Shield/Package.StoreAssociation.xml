@@ -350,8 +350,8 @@
   <ProductReservedInfo>
     <MainPackageIdentityName>Microsoft.WindowsVirtualShieldsforIoTMakers</MainPackageIdentityName>
     <ReservedNames>
-      <ReservedName>Windows Virtual Shields for IoT Makers</ReservedName>
       <ReservedName>Windows Virtual Shields for Arduino</ReservedName>
+      <ReservedName>Windows Virtual Shields for IoT Makers</ReservedName>
     </ReservedNames>
   </ProductReservedInfo>
   <AccountPackageIdentityNames>
@@ -382,10 +382,15 @@
     <MainPackageIdentityName>Microsoft.AccountsControl</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ActivityContinuity</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ALJan17AppXv2</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.AllJoynExplorer</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.AmazonXboxOneCountdown</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.AmbientComputing</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.AmbientComputingTest</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.AndroidCompanion</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.AnswerDesk</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ApolloFBApp</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.App10</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Appconnector</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.App1818</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.AppLinkTest81</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.AppLinkTestJupiter</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.AppStudioContosoSampleApp</MainPackageIdentityName>
@@ -400,6 +405,7 @@
     <MainPackageIdentityName>Microsoft.BatteryPowerSense</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.BetaCompanyPortal</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.BetaSstpPluginApp</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftWallet</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Bing</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.BingFinance</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.BingFoodAndDrink</MainPackageIdentityName>
@@ -424,10 +430,13 @@
     <MainPackageIdentityName>microsoft.build</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Build2012</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.CairoFC</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.CallExtras</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Camera</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.CameraBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsCamera</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.CertificateManager</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Channel9</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.CheckMyPhone</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.CityArtSearch</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Cityzen</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.CloudExperienceHost</MainPackageIdentityName>
@@ -440,11 +449,12 @@
     <MainPackageIdentityName>Microsoft.ContactsandMessageBackup</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ContentDeliveryManager</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.226835C6D7368</MainPackageIdentityName>
+    <MainPackageIdentityName>microsoft.controllertest</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ControlsBasics-DX</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.CoordinateMappingBasics-HTML</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Copper</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Cortana</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.CRMforphonesexpress</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.CricFlic</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.CSRWNS</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.d7541746-28b0-4a87-99e5-3e0b557e3182</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.DataMartAlpha</MainPackageIdentityName>
@@ -460,11 +470,15 @@
     <MainPackageIdentityName>Microsoft.DynamicsAX2012Expenses</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.DynamicsAX2012Timesheets</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.DynamicsC5</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.CRMforphonesexpress</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.DynamicsCRMTest</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.DynamicsNAV</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.DynamicsNAVBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.DynamicsNAVCorfuBeta1</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ECIXboxOneCountdown</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.EventExperience</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.EventExperienceMicrosoft</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.Excel</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.FaceBasics-HTML</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.FaceBasicsUnity</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.FacebookTrialBuild</MainPackageIdentityName>
@@ -474,13 +488,15 @@
     <MainPackageIdentityName>Microsoft.FoundryCambridgeSettingsTest</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.FreshPaint</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.FreshPaint8.1Preview</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.FreshPaintWindows10Preview</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.FxVCLibs</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.GameXboxOneCountdown</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.GamestopXboxOneCountdown</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.GearUp</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.gecai1118a</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.Getstarted</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.GigJam</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.GroupMe</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.GroupMeWindows10Preview</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Groups</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.HDFaceBasicsUnity-Test</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.HDFaceBasics-XAMLCPP</MainPackageIdentityName>
@@ -491,16 +507,20 @@
     <MainPackageIdentityName>Microsoft.HelpAndTipsBlue</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Hollyapp</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Hollydevice</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.HomeTeam</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Hover</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.HyperlapseMobile</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.IEDataSavings</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.IETileManager</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ImageAnnotator</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.InsiderHub</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.InputTestAppWIN</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.InstaNote</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Iridias</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Iridias2.0</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.JBHiFiXboxOneCountdown</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.KinectEvolution</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.KinectView-XAML</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Getstarted</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.languages1210</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.LIBROXboxOneCountdown</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.LifeCamDashboard</MainPackageIdentityName>
@@ -513,10 +533,13 @@
     <MainPackageIdentityName>Microsoft.7925F3F9209F</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.LyncMX</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Maker</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsCalculator</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Maps3DPreview</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MediaMarktXboxOneCountdown</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MementoMobile</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Messaging</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MessagingSkype</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MessagingLite</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftProjectSiena</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftBooks</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftBuilder</MainPackageIdentityName>
@@ -530,6 +553,9 @@
     <MainPackageIdentityName>Microsoft.MicrosoftDynamicsBusinessAnalyzer</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.microsoftdynamicscrm</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftDynamicsCRMforWindows8.1</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.DynamicsTimeManagement</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftEdge</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftEdgeBeta</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftEducationDeliveryforTablets</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftFeedback</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftITAcademy</MainPackageIdentityName>
@@ -538,9 +564,10 @@
     <MainPackageIdentityName>Microsoft.MicrosoftMaker</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftMath</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftMuseum</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftOfficeHub</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftPodcast</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.MicrosoftPowerBIForWindows</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftPressGuidedTours</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftRemoteDesktopPreview</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftRetailDemoProvisioning</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftRetailMode</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftStartupDirectory</MainPackageIdentityName>
@@ -548,7 +575,6 @@
     <MainPackageIdentityName>Microsoft.MicrosoftTechCompanion</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftVenturesStartupDirectory</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftVPN</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.MicrosoftWallet</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftWiFi</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.SurfaceWirelessDisplayAdapter</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.CheckM8</MainPackageIdentityName>
@@ -573,6 +599,7 @@
     <MainPackageIdentityName>Microsoft.MSDNVoiceSearch</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MSFacebook</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MSFacebookBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MSFTLumiaInsider</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MSKAPP</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.msrathena</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MusicDeals</MainPackageIdentityName>
@@ -580,6 +607,7 @@
     <MainPackageIdentityName>Microsoft.Music.Preview</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MyServer</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MyServer2012R2</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.NearbyNumbers</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.NeonCarrot</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.NetworkOne</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.NetworkThree</MainPackageIdentityName>
@@ -587,6 +615,7 @@
     <MainPackageIdentityName>Microsoft.NewsstandPreview</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.NotebooksbilligersXboxOneCountdown</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.NovaBacon</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.O365Groups</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Office365Admin</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Office365PartnerAdmin</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.OfficeLens</MainPackageIdentityName>
@@ -621,37 +650,48 @@
     <MainPackageIdentityName>Microsoft.Office.9</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Office.Atlanta</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Office.Calendar</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.Office.Excel</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Office.Mail</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.SkyDriveProMXApp</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Office.Outlook</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Office.People</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.Office.PowerPoint</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Office.Rio</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.Office.Word</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.Sway</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office365.RAVE</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Officetestnameexample</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.OHelloWorld</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.OneDriveSyncing</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Office.OneNote</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.OperationalInsights</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.OutlookGroups</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.People</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Windows.Photos</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Piano</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Pictate</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftPowerBIForWindows</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.PowerAppsPlayer</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.PowerAppsPlayerBeta</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.PowerBI</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.PowerPoint</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.PPIProjection</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.PPISensorView</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.PPIShellExperienceHost</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.PPIWelcome</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.PPISkype</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ProjectBravern</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ProMock</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.QuizToWin</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.RaconteurPreview</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ReachmeaMicrosoftGarageproject</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Reader</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Reading3225</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Reading3227</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ReceiptTracker</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.RemoteDesktop</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ReservedName</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Riaz</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.RMSSharing</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.RtcPowerGates</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.sawhorse</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.SharePoint2013Newsfeed</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ShopToXboxOneCountdown</MainPackageIdentityName>
     <MainPackageIdentityName>microsoft.microsoftskydrive</MainPackageIdentityName>
@@ -661,7 +701,10 @@
     <MainPackageIdentityName>Microsoft.SmythsXboxOneCountdown</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.SnapGold</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Socialite</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SocialJupiterTestApp</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SocialJupiterTestApplication</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Solitaire</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SonosController</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.SoundStack</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Spartan</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.SpartanBeta</MainPackageIdentityName>
@@ -669,11 +712,18 @@
     <MainPackageIdentityName>Microsoft.StudentPlanner</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.SurfaceHub</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.SurfaceMusicKit</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SwitchToWindowsPhonesnewpreview</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SwitchToWindowsPhones</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.SwitchTo</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.TechNetEdgeShow</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Test8989</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.test1203a</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.test1209a</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Test34345</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.test7615</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.TestAppIDExample</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.TestPackage17</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Testuap17</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.TestUnity-Win8.0</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.TestUnity-Win8.1</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.TetraLockscreen</MainPackageIdentityName>
@@ -683,27 +733,29 @@
     <MainPackageIdentityName>Microsoft.uapFramework1120</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.uapStoreMobile1124</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.uapStoreMobile1124b</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.UpdateBlocker</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.UpdateAdvisor</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Upload1029</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Upprv</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Foonmetgesel</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.VBGTestUnity</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.VenueSurvey</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.VenueSurvey2UAP</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.VenueSurveyUAP</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.VGBTestUnity</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.VGBTestUnity-Win8.1</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Video.Preview</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WayfindingAlpha</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Whatupsm</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.WindowsAlarms</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsAppStudioSample</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsAppStudioSampleApp</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsAssignedAccessLockScreen</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.WindowsCalculator</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.WindowsCamera</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsCommunications</MainPackageIdentityName>
     <MainPackageIdentityName>microsoft.windowscommunicationsapps</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsDefaultLockScreen</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsDVDPlayer</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsEmulatorbyMicrosoft</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.WindowsMaps</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.InsiderHub</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsMapsChinaNavigation</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsPhone</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsPhoneCASVC</MainPackageIdentityName>
@@ -713,20 +765,24 @@
     <MainPackageIdentityName>microsoft.windowsphotos</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsReadingList</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsScan</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.WindowsSoundRecorder</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.WindowsStore</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsVoiceNotes</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.Windows.Photos</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsAlarms</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Windows.ShellExperienceHost</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsDVDPlayer2</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsMaps</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsPhoneFileProvider</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsSoundRecorder</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsStore1121</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsStore1121b</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.Word</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WorkItemStudio</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WorldSearch</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WPAdControl</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WPDiet</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.wpdevBeta</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.XblAuthManager</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.XboxApp</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XboxAppBeta</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.XboxCompanion</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.XboxLIVECompanion</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.XboxLIVEGames</MainPackageIdentityName>
@@ -734,6 +790,8 @@
     <MainPackageIdentityName>Microsoft.XboxOneSmartGlass</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.XboxOneSmartGlassBeta</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.XboxOneVideo</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XboxBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XboxDevices</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.XboxGameCallableUI</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.XboxIdentityProvider</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.XboxTestGame1</MainPackageIdentityName>
@@ -743,13 +801,16 @@
     <MainPackageIdentityName>Microsoft.XboxTestGame5</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.XtravisionXboxOneCountdown</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Yammer-dogfood</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Yangtze</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.YourWeather</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.zMaps</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.zMicrosoftEdge</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.zSpartan</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ZuneMusic</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ZuneVideo</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.5220175982889</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsStore</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.BingDictionary</MainPackageIdentityName>
   </AccountPackageIdentityNames>
-  <PackageInfoList LandingUrl="https://appdev.microsoft.com:443/StorePortals/Developer/Catalog/ReleaseAnchor/825ce4f7-8806-4b98-aca0-38fed259e6d8" />
+  <PackageInfoList LandingUrl="https://dev.windows.com/dashboard/Application?appId=9NBLGGGZ0MLD" />
 </StoreAssociation>
