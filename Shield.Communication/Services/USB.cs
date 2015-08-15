@@ -43,12 +43,11 @@ namespace Shield.Communication.Services
 
         public override async Task<Connections> GetConnections()
         {
-            var selectionString = "ALL";
             var identifyingSubstring = "VID_2341";
 
             try
             {
-                var devices = SerialDevice.GetDeviceSelector(selectionString);
+                var devices = SerialDevice.GetDeviceSelector();
                 var peers = await DeviceInformation.FindAllAsync(devices);
 
                 var connections = new Connections();
@@ -82,14 +81,13 @@ namespace Shield.Communication.Services
                 }
 
                 service.BaudRate = 115200;
-                service.Parity = SerialParity.None;
-                service.DataBits = 8;
                 service.StopBits = SerialStopBitCount.One;
                 service.Handshake = SerialHandshake.None;
                 service.ReadTimeout = TimeSpan.FromSeconds(5);
                 service.WriteTimeout = TimeSpan.FromSeconds(5);
-                service.Handshake = SerialHandshake.RequestToSendXOnXOff;
                 service.IsDataTerminalReadyEnabled = true;
+
+                result = true;
             }
  
             return result;
