@@ -35,6 +35,11 @@
 	        <Function Type="name:serialPort"/>
 	    </Device>
 	</DeviceCapability>
+	<DeviceCapability Name="serialcommunication" > 
+      <Device Id="any"> 
+        <Function Type="name:serialPort"/> 
+      </Device> 
+    </DeviceCapability> 
     <DeviceCapability Name="webcam" />
   </Capabilities>
 </Package>
