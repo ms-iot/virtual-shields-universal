@@ -129,8 +129,10 @@ namespace Shield
 
             if (appSettings.ConnectionIndex == 0)
             {
-                service = services.ContainsKey("Bluetooth") ? services["Bluetooth"] : new Bluetooth();
-                services["Bluetooth"] = service;
+                //hardcode - temporarily testing of USB before presenting a chosen UI
+                service = new USB();
+                //service = services.ContainsKey("Bluetooth") ? services["Bluetooth"] : new Bluetooth();
+                //services["Bluetooth"] = service;
             }
             else
             {
