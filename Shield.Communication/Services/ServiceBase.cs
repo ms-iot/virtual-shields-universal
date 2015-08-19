@@ -108,8 +108,9 @@ namespace Shield.Communication.Services
             return new Task<Connections>(() => null);
         }
 
-        public void Disconnect(Connection connection)
+        public virtual void Disconnect(Connection connection)
         {
+            this.OnDisconnected?.Invoke(connection);
             Terminate();
         }
 
@@ -175,8 +176,7 @@ namespace Shield.Communication.Services
 
                     if (sizeFieldCount != 1)
                     {
-                        isListening = false;
-                        this.OnDisconnected?.Invoke(this.currentConnection);
+                        this.Disconnect(this.currentConnection);
                         break;
                     }
 
