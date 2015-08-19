@@ -36,6 +36,8 @@ namespace Shield.Communication.Services
 {
     public class USB : ServiceBase
     {
+        public SerialDevice service { get; private set; }
+
         public USB()
         {
             isPollingToSend = true;
@@ -74,7 +76,7 @@ namespace Shield.Communication.Services
             var deviceInfo = newConnection.Source as DeviceInformation;
             if (deviceInfo != null)
             {
-                var service = await SerialDevice.FromIdAsync(deviceInfo.Id);
+                service = await SerialDevice.FromIdAsync(deviceInfo.Id);
                 if (service == null)
                 {
                     return false;
@@ -93,6 +95,13 @@ namespace Shield.Communication.Services
             }
  
             return result;
+        }
+
+        public override void Dispose()
+        {
+            service?.Dispose();
+            base.Dispose();
+            service = null;
         }
     }
 }

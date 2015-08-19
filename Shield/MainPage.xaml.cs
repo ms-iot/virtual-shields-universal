@@ -104,7 +104,9 @@ namespace Shield
 
         private Dictionary<string, ServiceBase> services = new Dictionary<string, ServiceBase>();
 
-        public void SetService()
+        private int lastConnection = -1;
+
+        public async void SetService()
         {
             if (appSettings.ConnectionIndex < 0)
             {
@@ -121,29 +123,63 @@ namespace Shield
                 this.Disconnect();
             };
 
+            if (lastConnection != appSettings.ConnectionIndex)
+            {
+                await
+                        dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                            () =>
+                            {
+                                appSettings.CurrentConnectionState = (int)ConnectionState.Disconnecting;
+                            });
+
+                this.Disconnect();
+                lastConnection = appSettings.ConnectionIndex;
+
+                await
+                        dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                            () =>
+                            {
+                                appSettings.CurrentConnectionState = (int)ConnectionState.NotConnected;
+                            });
+            }
+
             if (service != null)
             {
                 service.OnConnect -= OnConnection;
                 service.OnDisconnected -= OnDisconnected;
             }
 
-            if (appSettings.ConnectionIndex == 0)
+            switch (appSettings.ConnectionIndex)
             {
-                //hardcode - temporarily testing of USB before presenting a chosen UI
-                service = new USB();
-                //service = services.ContainsKey("Bluetooth") ? services["Bluetooth"] : new Bluetooth();
-                //services["Bluetooth"] = service;
-            }
-            else
-            {
-                service = services.ContainsKey("Wifi") ? services["Wifi"] : new Wifi();
-                services["Wifi"] = service;
-
-                if (appSettings.ConnectionIndex == 2 && !string.IsNullOrWhiteSpace(appSettings.Hostname))
+                case AppSettings.CONNECTION_BLUETOOTH:
                 {
-                    service.SetClient("added",
-                        new Connection("added",
-                            new RemotePeer(null, new HostName(appSettings.Hostname), "1235")));
+                        service = services.ContainsKey("Bluetooth") ? services["Bluetooth"] : new Bluetooth();
+                        services["Bluetooth"] = service;
+                        break;
+                }
+                case AppSettings.CONNECTION_WIFI:
+                case AppSettings.CONNECTION_MANUAL:
+                {
+                        service = services.ContainsKey("Wifi") ? services["Wifi"] : new Wifi(AppSettings.BroadcastPort);
+                        services["Wifi"] = service;
+
+                        if (appSettings.ConnectionIndex == 2 && !string.IsNullOrWhiteSpace(appSettings.Hostname))
+                        {
+                            service.SetClient("added",
+                                new Connection("added",
+                                    new RemotePeer(null, new HostName(appSettings.Hostname), AppSettings.BroadcastPort.ToString() )));
+                        }
+                        break;
+                }
+                case AppSettings.CONNECTION_USB:
+                {
+                        service = new USB();
+                        break;
+                }
+                default:
+                {
+                    throw new NotImplementedException("Connection type (" + appSettings.ConnectionIndex +
+                                                      ") not supported");
                 }
             }
 
@@ -218,7 +254,7 @@ namespace Shield
             var isConnecting = false;
             while (isRunning)
             {
-                if (!isConnecting && this.currentConnection == null && !IsInSettings)
+                if (!isConnecting && this.currentConnection == null && !IsInSettings && appSettings.AutoConnect)
                 {
                     var previousConnection = appSettings.PreviousConnectionName;
                     if (!string.IsNullOrWhiteSpace(previousConnection) && appSettings.ConnectionList.Count > 0)

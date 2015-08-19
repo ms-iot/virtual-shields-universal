@@ -26,7 +26,6 @@ using Shield.Communication;
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -50,6 +49,8 @@ namespace Shield
             var index = appSettings.ConnectionIndex;
 
             this.InitializeComponent();
+
+            this.ConnectSelection.SelectedIndex = index;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -136,6 +137,11 @@ namespace Shield
         private void NavBack(object sender, RoutedEventArgs e)
         {
             this.Frame.GoBack();
+        }
+
+        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            appSettings.ConnectionIndex = ((ComboBox) sender).SelectedIndex;
         }
     }
 }
