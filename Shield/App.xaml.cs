@@ -64,7 +64,7 @@ namespace Shield
                 HardwareButtons.BackPressed += HardwareButtons_BackPressed;
             }
 
-            TileUpdateManager.CreateTileUpdaterForApplication().EnableNotificationQueue(true);
+            //TileUpdateManager.CreateTileUpdaterForApplication().EnableNotificationQueue(true);
         }
 
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
