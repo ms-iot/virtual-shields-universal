@@ -83,11 +83,13 @@ namespace Shield.Communication.Services
                 service.BaudRate = 115200;
                 service.StopBits = SerialStopBitCount.One;
                 service.Handshake = SerialHandshake.None;
+                service.DataBits = 8;
+           
                 service.ReadTimeout = TimeSpan.FromSeconds(5);
                 service.WriteTimeout = TimeSpan.FromSeconds(5);
-                service.IsDataTerminalReadyEnabled = true;
+                service.IsDataTerminalReadyEnabled = false;
 
-                result = true;
+                return InstrumentSocket(service.InputStream, service.OutputStream);
             }
  
             return result;
