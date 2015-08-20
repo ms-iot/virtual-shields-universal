@@ -195,3 +195,11 @@ FakesAssemblies/
 # Visual Studio 6 workspace options file
 *.opt
 project.lock.json
+Shield/BundleArtifacts/Upload/arm.txt
+Shield/BundleArtifacts/Upload/x64.txt
+Shield/BundleArtifacts/Upload/x86.txt
+Shield/BundleArtifacts/arm.txt
+Shield/BundleArtifacts/x64.txt
+Shield/BundleArtifacts/x86.txt
+Shield/_pkginfo.txt
+Shield/_scale-100.appx

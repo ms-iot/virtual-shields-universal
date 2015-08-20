@@ -38,12 +38,13 @@ namespace Shield.Communication.Services
 {
     public class Wifi : ServiceBase
     {
-        private int port = 1235;
+        private int broadcastPort;
         private bool beaconIsOn = false;
         DatagramSocket listener = new DatagramSocket(); 
 
-        public Wifi()
+        public Wifi(int broadcastPort)
         {
+            this.broadcastPort = broadcastPort;
             isPollingToSend = true;
         }
 
@@ -79,7 +80,7 @@ namespace Shield.Communication.Services
                 listener.MessageReceived += ListenerOnMessageReceived;
                 try
                 {
-                    await listener.BindServiceNameAsync(port.ToString());
+                    await listener.BindServiceNameAsync(broadcastPort.ToString());
                 }
                 catch (Exception e)
                 {
@@ -235,7 +236,7 @@ namespace Shield.Communication.Services
             if (ip != null)
             {
                 var iponly = ip;
-                var port = "1235";
+                var port = broadcastPort.ToString();
                 var colon = ip.IndexOf(':');
                 if (colon > -1)
                 {

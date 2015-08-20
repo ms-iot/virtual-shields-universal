@@ -26,7 +26,6 @@ using Shield.Communication;
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -51,17 +50,7 @@ namespace Shield
 
             this.InitializeComponent();
 
-            Task.Delay(500).ContinueWith(async t =>
-            {
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, (() =>
-                {
-                    appSettings.ConnectionIndex = Math.Max(0, index);
-                    if (appSettings.BluetoothVisible)
-                    {
-                        main.RefreshConnections();
-                    }
-                }));
-            });
+            this.ConnectSelection.SelectedIndex = index;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -148,6 +137,11 @@ namespace Shield
         private void NavBack(object sender, RoutedEventArgs e)
         {
             this.Frame.GoBack();
+        }
+
+        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            appSettings.ConnectionIndex = ((ComboBox) sender).SelectedIndex;
         }
     }
 }
