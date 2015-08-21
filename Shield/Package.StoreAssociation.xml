@@ -378,6 +378,7 @@
     <MainPackageIdentityName>Microsoft.1MSQFT</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.3DBuilder</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.3DMaker</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.3DScanner</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.AAD.BrokerPlugin</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.AccountsControl</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ActivityContinuity</MainPackageIdentityName>
@@ -403,7 +404,9 @@
     <MainPackageIdentityName>Microsoft.BasicAttractLoop</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.BasicDemoHub</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.BatteryPowerSense</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Beihai</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.BetaCompanyPortal</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.BetaTranslator</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.BetaSstpPluginApp</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftWallet</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Bing</MainPackageIdentityName>
@@ -476,6 +479,7 @@
     <MainPackageIdentityName>Microsoft.DynamicsNAVBeta</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.DynamicsNAVCorfuBeta1</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ECIXboxOneCountdown</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.EventChat</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.EventExperience</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.EventExperienceMicrosoft</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Office.Excel</MainPackageIdentityName>
@@ -483,6 +487,7 @@
     <MainPackageIdentityName>Microsoft.FaceBasicsUnity</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.FacebookTrialBuild</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.FaceViewUnity-Test-Win8.1</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.FitChallenge</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.FloatzaMicrosoftGarageproject</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.FNACXboxOneCountdown</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.FoundryCambridgeSettingsTest</MainPackageIdentityName>
@@ -536,14 +541,14 @@
     <MainPackageIdentityName>Microsoft.WindowsCalculator</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Maps3DPreview</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MediaMarktXboxOneCountdown</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.MementoMobile</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Messaging</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MessagingSkype</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MessagingLite</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftProjectSiena</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftAuthenticator</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftBooks</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftBuilder</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.MicrosoftDataGathering</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.27989AA74550C</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftDemo1</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftDemo2</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftDemo3</MainPackageIdentityName>
@@ -663,7 +668,9 @@
     <MainPackageIdentityName>Microsoft.Office.OneNote</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.OperationalInsights</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.OutlookGroups</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.PasspointProfileInstaller</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.People</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.PhotoStory</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Windows.Photos</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Piano</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Pictate</MainPackageIdentityName>
@@ -677,8 +684,10 @@
     <MainPackageIdentityName>Microsoft.PPIShellExperienceHost</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.PPIWelcome</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.PPISkype</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.PresentationTrainer</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ProjectBravern</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ProMock</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.PulseInsights</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.QuizToWin</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.RaconteurPreview</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ReachmeaMicrosoftGarageproject</MainPackageIdentityName>
@@ -728,6 +737,7 @@
     <MainPackageIdentityName>Microsoft.TestUnity-Win8.1</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.TetraLockscreen</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.TouchDevelop</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Translator10Beta</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Skype</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.TypeNameHere</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.uapFramework1120</MainPackageIdentityName>
@@ -764,6 +774,7 @@
     <MainPackageIdentityName>Microsoft.WindowsPhoneMPNService</MainPackageIdentityName>
     <MainPackageIdentityName>microsoft.windowsphotos</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsReadingList</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsRemoteArduinoExperience</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsScan</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsVoiceNotes</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsAlarms</MainPackageIdentityName>
@@ -790,6 +801,7 @@
     <MainPackageIdentityName>Microsoft.XboxOneSmartGlass</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.XboxOneSmartGlassBeta</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.XboxOneVideo</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.XboxTCUItestdriver</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.XboxBeta</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.XboxDevices</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.XboxGameCallableUI</MainPackageIdentityName>

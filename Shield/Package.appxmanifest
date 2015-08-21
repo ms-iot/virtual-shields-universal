@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m10="http://schemas.microsoft.com/appx/2010/manifest" IgnorableNamespaces="uap mp">
-  <Identity Name="Microsoft.WindowsVirtualShieldsforIoTMakers" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" Version="1.1.2.0" />
+  <Identity Name="Microsoft.WindowsVirtualShieldsforIoTMakers" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" Version="1.1.8.0" />
   <mp:PhoneIdentity PhoneProductId="2edd12c1-0444-4708-88fe-2cf9d473d726" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Windows Virtual Shields for IoT Makers</DisplayName>
@@ -15,12 +15,8 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Shield.App">
-      <uap:VisualElements DisplayName="Virtual Shields for Arduino" 
-                          Square150x150Logo="Assets\Logo.scale-100.png" 
-                          Square44x44Logo="Assets\SmallLogo.scale-100.png" 
-                          Description="Virtual Shields for Arduino" 
-                          BackgroundColor="transparent">
-        <uap:SplashScreen Image="Assets\SplashScreen.scale-100.png" />
+      <uap:VisualElements DisplayName="Virtual Shields for Arduino" Square150x150Logo="Assets\Logo.png" Square44x44Logo="Assets\SmallLogo.png" Description="Virtual Shields for Arduino" BackgroundColor="transparent">
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
     </Application>
   </Applications>
@@ -34,16 +30,8 @@
     <DeviceCapability Name="microphone" />
     <DeviceCapability Name="location" />
     <DeviceCapability Name="proximity" />
-    <DeviceCapability Name="bluetooth.rfcomm">
-	    <Device Id="any">
-	        <Function Type="name:serialPort"/>
-	    </Device>
-	</DeviceCapability>
-	<DeviceCapability Name="serialcommunication" > 
-      <Device Id="any"> 
-        <Function Type="name:serialPort"/> 
-      </Device> 
-    </DeviceCapability> 
+    <DeviceCapability Name="bluetooth.rfcomm" />
+    <DeviceCapability Name="serialcommunication" />
     <DeviceCapability Name="webcam" />
   </Capabilities>
 </Package>
