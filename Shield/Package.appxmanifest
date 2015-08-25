@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m10="http://schemas.microsoft.com/appx/2010/manifest" IgnorableNamespaces="uap mp">
-  <Identity Name="Microsoft.WindowsVirtualShieldsforIoTMakers" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" Version="1.1.8.0" />
+  <Identity Name="Microsoft.WindowsVirtualShieldsforIoTMakers" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" Version="1.1.12.0" />
   <mp:PhoneIdentity PhoneProductId="2edd12c1-0444-4708-88fe-2cf9d473d726" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>Windows Virtual Shields for IoT Makers</DisplayName>
+    <DisplayName>Windows Virtual Shields for Arduino</DisplayName>
     <PublisherDisplayName>Microsoft Corporation</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.scale-100.png</Logo>
+    <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.10042.0" MaxVersionTested="10.0.10240.0" />
@@ -30,8 +30,16 @@
     <DeviceCapability Name="microphone" />
     <DeviceCapability Name="location" />
     <DeviceCapability Name="proximity" />
-    <DeviceCapability Name="bluetooth.rfcomm" />
-    <DeviceCapability Name="serialcommunication" />
     <DeviceCapability Name="webcam" />
+    <DeviceCapability Name="bluetooth.rfcomm">
+      <Device Id="any">
+        <Function Type="name:serialPort" />
+      </Device>
+    </DeviceCapability>
+    <DeviceCapability Name="serialcommunication">
+      <Device Id="any">
+        <Function Type="name:serialPort" />
+      </Device>
+    </DeviceCapability>
   </Capabilities>
 </Package>
