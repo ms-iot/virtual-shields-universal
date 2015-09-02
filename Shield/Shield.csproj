@@ -22,6 +22,7 @@
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <PackageCertificateThumbprint>4102783C48AB585FC76AA855A6AE11EDC5152C79</PackageCertificateThumbprint>
+    <AppxBundle>Always</AppxBundle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -139,6 +140,11 @@
     <Content Include="Assets\close.png" />
     <Content Include="Assets\control.png" />
     <Content Include="Assets\down.png" />
+    <Content Include="Assets\en-US\Logo.scale-100.png" />
+    <Content Include="Assets\en-US\SmallLogo.scale-100.png" />
+    <Content Include="Assets\en-US\SplashScreen.scale-100.png" />
+    <Content Include="Assets\en-US\StoreLogo.scale-100.png" />
+    <Content Include="Assets\en-US\WideLogo.scale-100.png" />
     <Content Include="Assets\fullscreen.png" />
     <Content Include="Assets\left.png" />
     <Content Include="Assets\leftcircle.png" />
@@ -193,6 +199,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
