@@ -241,7 +241,7 @@ namespace Shield.Services
                         {
                             element = new TextBox
                             {
-                                Text = lcdt.Message,
+                                Text = lcdt.Message ?? string.Empty,
                                 FontSize = lcdt.Size ?? DefaultFontSize,
                                 TextWrapping = TextWrapping.Wrap,
                                 Foreground = textForgroundBrush,
