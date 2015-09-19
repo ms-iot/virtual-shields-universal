@@ -440,7 +440,7 @@ namespace Shield.Services
         {
             IEnumerable<UIElement> lines =
                 mainPage.canvas.Children.Where(
-                    t => t is TextBlock && ((TextBlock)t).Tag.Equals(y.ToString()));
+                    t => t is TextBlock && ( (TextBlock)t ).Tag != null && ( (TextBlock)t).Tag.Equals(y.ToString()));
             foreach (var line in lines)
             {
                 mainPage.canvas.Children.Remove(line);
