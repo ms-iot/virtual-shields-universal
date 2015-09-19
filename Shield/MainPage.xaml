@@ -94,7 +94,7 @@
             <Image Grid.Row="0" Grid.RowSpan="2" x:Name="backgroundImage"  x:FieldModifier="Internal" Height="800" Width="480"/>
             <CaptureElement Grid.Row="0" Grid.RowSpan="2" x:Name="canvasBackground"  x:FieldModifier="Internal" Visibility="Collapsed"/>
             <TextBlock Grid.Row="0" Grid.RowSpan="2" x:Name="text"  x:FieldModifier="Internal" FontSize="32" />
-            <MediaElement Grid.Row="0" Grid.RowSpan="2" Name="player" x:FieldModifier="Internal" AutoPlay="True" Height="800" Width="480"/>
+            <MediaElement Grid.Row="0" Grid.RowSpan="2" Name="player" x:FieldModifier="Internal" AutoPlay="True" Height="Auto" Width="Auto"/>
             <Canvas Grid.Row="0" Grid.RowSpan="2" x:Name="canvas" x:FieldModifier="Internal"  ManipulationMode="All" />
 
             <Grid Height="16" Margin="0,2,2,0" x:Name="Statusbar" Grid.Row="0" Visibility="{Binding Source={StaticResource appSettings}, Path=IsListening, Converter={StaticResource BoolToVisConverter}}">

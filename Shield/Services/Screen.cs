@@ -241,7 +241,7 @@ namespace Shield.Services
                         {
                             element = new TextBox
                             {
-                                Text = lcdt.Message,
+                                Text = lcdt.Message ?? string.Empty,
                                 FontSize = lcdt.Size ?? DefaultFontSize,
                                 TextWrapping = TextWrapping.Wrap,
                                 Foreground = textForgroundBrush,
@@ -440,7 +440,7 @@ namespace Shield.Services
         {
             IEnumerable<UIElement> lines =
                 mainPage.canvas.Children.Where(
-                    t => t is TextBlock && ((TextBlock)t).Tag.Equals(y.ToString()));
+                    t => t is TextBlock && ( (TextBlock)t ).Tag != null && ( (TextBlock)t).Tag.Equals(y.ToString()));
             foreach (var line in lines)
             {
                 mainPage.canvas.Children.Remove(line);
