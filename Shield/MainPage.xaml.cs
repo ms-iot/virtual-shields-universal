@@ -72,7 +72,6 @@ namespace Shield
         private AppSettings appSettings = null;
 
         public static MainPage Instance = null;
-        private TelemetryClient telemetry = new TelemetryClient();
 
         private Screen screen;
         private Web web;
@@ -376,7 +375,7 @@ namespace Shield
             }
             catch (Exception ex)
             {
-                telemetry.TrackException(ex);
+                App.Telemetry.TrackException(ex);
                 return;
             }
 
@@ -384,7 +383,7 @@ namespace Shield
             {
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    telemetry.TrackEvent("VirtualShieldConnectionEnumerationFail");
+                    App.Telemetry.TrackEvent("VirtualShieldConnectionEnumerationFail");
                 });
 
                 return;
@@ -400,7 +399,7 @@ namespace Shield
             await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 appSettings.ConnectionList = connections;
-                telemetry.TrackEvent("VirtualShieldConnectionEnumerationSuccess");
+                App.Telemetry.TrackEvent("VirtualShieldConnectionEnumerationSuccess");
             });
         }
 
@@ -421,7 +420,7 @@ namespace Shield
                     appSettings.CurrentConnectionState = (int)ConnectionState.NotConnected;
                 });
 
-                telemetry.TrackEvent("VirtualShieldDisconnect");
+                App.Telemetry.TrackEvent("VirtualShieldDisconnect");
             }
         }
 
@@ -449,14 +448,14 @@ namespace Shield
                     if (!worked)
                     {
                         appSettings.CurrentConnectionState = (int)ConnectionState.CouldNotConnect;
-                        telemetry.TrackEvent("VirtualShieldConnectionFail");
+                        App.Telemetry.TrackEvent("VirtualShieldConnectionFail");
                     }
                     else
                     {
                         appSettings.CurrentConnectionState = (int)ConnectionState.Connected;
                         currentConnection = selectedConnection;
                         appSettings.PreviousConnectionName = currentConnection.DisplayName;
-                        telemetry.TrackEvent("VirtualShieldConnectionSuccess");
+                        App.Telemetry.TrackEvent("VirtualShieldConnectionSuccess");
                         result = true;
                     }
                 });
@@ -475,7 +474,7 @@ namespace Shield
                 {
                     appSettings.CurrentConnectionState = (int)ConnectionState.CouldNotConnect;
                 });
-                telemetry.TrackException(e);
+                App.Telemetry.TrackException(e);
             }
 
             return result;
@@ -483,6 +482,7 @@ namespace Shield
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            App.Telemetry.TrackPageView("MainPage");
             InitializeManager();
 
             if ((!appSettings.AutoConnect || string.IsNullOrWhiteSpace(appSettings.PreviousConnectionName))
