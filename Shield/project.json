@@ -1,4 +1,4 @@
-{
+﻿{
   "dependencies": {
     "HtmlAgilityPack": "1.4.9",
     "Microsoft.ApplicationInsights": "1.0.0",
