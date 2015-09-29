@@ -37,6 +37,7 @@ using Windows.Storage;
 using Windows.UI.Notifications;
 using Shield.Core.Models;
 using System.IO;
+using Microsoft.ApplicationInsights;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=402347&clcid=0x409
 
@@ -72,6 +73,8 @@ namespace Shield
             {
                 // on device which doesn't have it... (core)
             }
+
+            Telemetry = new TelemetryClient();
         }
 
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -212,6 +215,10 @@ namespace Shield
             deferral.Complete();
         }
 
-        
+        public static TelemetryClient Telemetry
+        {
+            get;
+            private set;
+        }
     }
 }
