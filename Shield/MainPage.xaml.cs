@@ -24,9 +24,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Devices.Enumeration;
 using Windows.Networking;
 using Windows.System.Display;
 using Windows.UI.Core;
@@ -68,6 +70,7 @@ namespace Shield
         private long sentPingTick;
         public ServiceBase service;
         public bool IsInSettings = false;
+        private Stopwatch connectionStopwatch = new Stopwatch();
 
         private AppSettings appSettings = null;
 
@@ -154,6 +157,8 @@ namespace Shield
                 {
                         service = services.ContainsKey("Bluetooth") ? services["Bluetooth"] : new Bluetooth();
                         services["Bluetooth"] = service;
+                        App.Telemetry.Context.Properties["connection.type"] = "Bluetooth";
+
                         break;
                 }
                 case AppSettings.CONNECTION_WIFI:
@@ -161,6 +166,7 @@ namespace Shield
                 {
                         service = services.ContainsKey("Wifi") ? services["Wifi"] : new Wifi(AppSettings.BroadcastPort);
                         services["Wifi"] = service;
+                        App.Telemetry.Context.Properties["connection.type"] = "Wifi";
 
                         if (appSettings.ConnectionIndex == 2 && !string.IsNullOrWhiteSpace(appSettings.Hostname))
                         {
@@ -173,6 +179,7 @@ namespace Shield
                 case AppSettings.CONNECTION_USB:
                 {
                         service = new USB();
+                        App.Telemetry.Context.Properties["connection.type"] = "USB";
                         break;
                 }
                 default:
@@ -410,6 +417,7 @@ namespace Shield
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     appSettings.CurrentConnectionState = (int)ConnectionState.Disconnecting;
+                    App.Telemetry.Context.Properties["connection.state"] = ConnectionState.Disconnecting.ToString();
                 });
                 
                 service.Disconnect(currentConnection);
@@ -418,9 +426,11 @@ namespace Shield
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     appSettings.CurrentConnectionState = (int)ConnectionState.NotConnected;
+                    App.Telemetry.Context.Properties["connection.state"] = ConnectionState.NotConnected.ToString();
+
                 });
 
-                App.Telemetry.TrackEvent("VirtualShieldDisconnect");
+                App.Telemetry.TrackEvent("Disconnect");
             }
         }
 
@@ -436,28 +446,38 @@ namespace Shield
             try
             {
                 bool worked = false;
+                connectionStopwatch.Reset();
+                connectionStopwatch.Start();
+
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     appSettings.CurrentConnectionState = (int)ConnectionState.Connecting;
+                    App.Telemetry.Context.Properties["connection.state"] = ConnectionState.Connecting.ToString();
+                    App.Telemetry.Context.Properties["connection.name"] = selectedConnection.DisplayName;
+                    App.Telemetry.Context.Properties["connection.detail"] = GetConnectionDetail(selectedConnection);
                 });
 
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
+                    App.Telemetry.TrackEvent("Connection_Attempt");
                     worked = await service.Connect(selectedConnection);
+                    connectionStopwatch.Stop();
 
                     if (!worked)
                     {
                         appSettings.CurrentConnectionState = (int)ConnectionState.CouldNotConnect;
-                        App.Telemetry.TrackEvent("VirtualShieldConnectionFail");
+                        App.Telemetry.Context.Properties["connection.state"] = "Failed";
                     }
                     else
                     {
                         appSettings.CurrentConnectionState = (int)ConnectionState.Connected;
                         currentConnection = selectedConnection;
                         appSettings.PreviousConnectionName = currentConnection.DisplayName;
-                        App.Telemetry.TrackEvent("VirtualShieldConnectionSuccess");
+                        App.Telemetry.Context.Properties["connection.state"] = ConnectionState.Connected.ToString();
                         result = true;
                     }
+
+                    App.Telemetry.TrackEvent("Connection");
                 });
 
                 if (service.CharEventHandlerCount == 0)
@@ -482,7 +502,6 @@ namespace Shield
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            App.Telemetry.TrackPageView("MainPage");
             InitializeManager();
 
             if ((!appSettings.AutoConnect || string.IsNullOrWhiteSpace(appSettings.PreviousConnectionName))
@@ -605,6 +624,37 @@ namespace Shield
             catch (Exception e)
             {
                 this.Log("Toast:" + e.Message);
+            }
+        }
+
+        private static string GetConnectionDetail(Connection connection)
+        {
+            if (null == connection.Source)
+            {
+                return null;
+            }
+
+            if (connection.Source is DeviceInformation)
+            {
+                return (connection.Source as DeviceInformation).Id;
+            }
+            else if (connection.Source is EndpointPair)
+            {
+                var source = connection.Source as EndpointPair;
+                return string.Format("{0}:{1}", source.RemoteHostName, source.RemoteServiceName);
+            }
+            else if (connection.Source is RemotePeer)
+            {
+                var source = connection.Source as RemotePeer;
+                return source.ToString();
+            }
+            else if (connection.Source is string)
+            {
+                return connection.Source as string;
+            }
+            else
+            {
+                return connection.Source.ToString();
             }
         }
     }
