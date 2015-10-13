@@ -863,7 +863,7 @@ namespace Shield
                         throw new UnsupportedSensorException("Accelerometer does not exist");
                     }
 
-                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> {{"A", sensorItem.A.Value.ToString()}});
+                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> {{"sensor.type", sensorsMessage.Type.ToString()}, { "sensor.value", sensorItem.A.Value.ToString()}});
                     Sensors.SensorSwitches.A = sensorItem.A.Value;
                 }
                 else if (sensorItem.G != null)
@@ -874,7 +874,7 @@ namespace Shield
                         throw new UnsupportedSensorException("Gyrometer does not exist");
                     }
 
-                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "G", sensorItem.G.Value.ToString() } });
+                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "sensor.type", sensorsMessage.Type.ToString() }, { "sensor.value", sensorItem.G.Value.ToString() } });
                     Sensors.SensorSwitches.G = sensorItem.G.Value;
                 }
                 else if (sensorItem.M != null)
@@ -885,13 +885,13 @@ namespace Shield
                         throw new UnsupportedSensorException("Compass does not exist");
                     }
 
-                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "M", sensorItem.M.Value.ToString() } });
-                    Sensors.SensorSwitches.M = sensorItem.M.Value;
+                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "sensor.type", sensorsMessage.Type.ToString() }, { "sensor.value", sensorItem.M.Value.ToString() } }); Sensors.SensorSwitches.M = sensorItem.M.Value;
                 }
                 else if (sensorItem.L != null)
                 {
                     sensorsMessage.Type = 'L';
                     Sensors.SensorSwitches.L = sensorItem.L.Value;
+                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "sensor.type", sensorsMessage.Type.ToString() }, { "sensor.value", sensorItem.L.Value.ToString() } });
                 }
                 else if (sensorItem.Q != null)
                 {
@@ -901,7 +901,7 @@ namespace Shield
                         throw new UnsupportedSensorException("OrientationSensor does not exist");
                     }
 
-                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "Q", sensorItem.Q.Value.ToString() } });
+                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "sensor.type", sensorsMessage.Type.ToString() }, { "sensor.value", sensorItem.Q.Value.ToString() } });
                     Sensors.SensorSwitches.Q = sensorItem.Q.Value;
                 }
                 else if (sensorItem.P != null)
@@ -912,7 +912,7 @@ namespace Shield
                         throw new UnsupportedSensorException("LightSensor does not exist");
                     }
 
-                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "P", sensorItem.P.Value.ToString() } });
+                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "sensor.type", sensorsMessage.Type.ToString() }, { "sensor.value", sensorItem.P.Value.ToString() } });
                     Sensors.SensorSwitches.P = sensorItem.P.Value;
                 }
 
