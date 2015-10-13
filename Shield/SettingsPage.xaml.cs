@@ -55,7 +55,6 @@ namespace Shield
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            App.Telemetry.TrackPageView("SettingsPage");
             main.IsInSettings = true;
             main.RefreshConnections();
             base.OnNavigatedTo(e);
