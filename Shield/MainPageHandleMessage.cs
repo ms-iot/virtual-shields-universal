@@ -885,6 +885,7 @@ namespace Shield
                         throw new UnsupportedSensorException("Compass does not exist");
                     }
 
+                    Sensors.SensorSwitches.M = sensorItem.M.Value;
                     App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "sensor.type", sensorsMessage.Type.ToString() }, { "sensor.value", sensorItem.M.Value.ToString() } }); Sensors.SensorSwitches.M = sensorItem.M.Value;
                 }
                 else if (sensorItem.L != null)
