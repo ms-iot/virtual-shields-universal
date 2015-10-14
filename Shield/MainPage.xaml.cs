@@ -453,8 +453,8 @@ namespace Shield
                 {
                     appSettings.CurrentConnectionState = (int)ConnectionState.Connecting;
                     App.Telemetry.Context.Properties["connection.state"] = ConnectionState.Connecting.ToString();
-                    App.Telemetry.Context.Properties["connection.name"] = selectedConnection.DisplayName;
-                    App.Telemetry.Context.Properties["connection.detail"] = GetConnectionDetail(selectedConnection);
+                    App.Telemetry.Context.Properties["connection.name"] = String.Format("{0:X}", selectedConnection.DisplayName.GetHashCode());
+                    App.Telemetry.Context.Properties["connection.detail"] = String.Format("{0:X}", GetConnectionDetail(selectedConnection).GetHashCode());
                 });
 
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
@@ -631,9 +631,9 @@ namespace Shield
         {
             if (null == connection.Source)
             {
-                return null;
+                return string.Empty;
             }
-
+            
             if (connection.Source is DeviceInformation)
             {
                 return (connection.Source as DeviceInformation).Id;
@@ -642,15 +642,6 @@ namespace Shield
             {
                 var source = connection.Source as EndpointPair;
                 return string.Format("{0}:{1}", source.RemoteHostName, source.RemoteServiceName);
-            }
-            else if (connection.Source is RemotePeer)
-            {
-                var source = connection.Source as RemotePeer;
-                return source.ToString();
-            }
-            else if (connection.Source is string)
-            {
-                return connection.Source as string;
             }
             else
             {
