@@ -285,7 +285,19 @@ namespace Shield.Services
 
         public async void NewLoc(Geolocator sender, PositionChangedEventArgs args)
         {
-            var reading = args == null ? (sender == null ? null : (await sender.GetGeopositionAsync())) : args.Position;
+            Geoposition reading = null;
+
+            try
+            {
+                reading = args == null ? ( sender == null ? null : ( await sender.GetGeopositionAsync() ) ) : args.Position;
+            }
+            catch (UnauthorizedAccessException uae)
+            {
+                //throw new UnsupportedSensorException("Geolocator not enabled : "+uae.Message);
+                //ignore??
+                return;
+            }
+
             await
                 dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                     () =>
@@ -336,92 +348,212 @@ namespace Shield.Services
         public async void Start()
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            if (SensorSwitches.A != null)
+            try
             {
-                if (SensorSwitches.A.Value > 0)
+                ToggleAccelerometer();
+            }
+            catch (Exception e)
+            {
+                throw new UnsupportedSensorException( "Accelerometer error: "+e.Message );
+            }
+
+            try
+            {
+                ToggleGyrometer();
+            }
+            catch( Exception e )
+            {
+                throw new UnsupportedSensorException( "Gyrometer error: " + e.Message );
+            }
+
+            try
+            {
+                ToggleCompass();
+            }
+            catch( Exception e )
+            {
+                throw new UnsupportedSensorException( "Compass error: " + e.Message );
+            }
+
+            try
+            {
+                ToggleGeolocator();
+            }
+            catch( Exception e )
+            {
+                throw new UnsupportedSensorException( "Geolocator error: " + e.Message );
+            }
+
+            try
+            {
+                ToggleOrientation();
+            }
+            catch( Exception e )
+            {
+                throw new UnsupportedSensorException( "Orientation error: " + e.Message );
+            }
+
+            try
+            {
+                ToggleLightSensor();
+            }
+            catch( Exception e )
+            {
+                throw new UnsupportedSensorException( "LightSensor error: " + e.Message );
+            }
+        }
+
+        private void ToggleLightSensor()
+        {
+            if (SensorSwitches.P != null)
+            {
+                if (SensorSwitches.P.Value > 0)
                 {
-                    if (accelerometer == null)
+                    if (lightSensor == null)
                     {
-                        accelerometer = Accelerometer.GetDefault();
+                        lightSensor = LightSensor.GetDefault();
                     }
 
-                    if (accelerometer != null)
+                    if (lightSensor != null)
                     {
-                        accelerometer.ReportInterval = Math.Max(Math.Max(baseMinimum, (uint) SensorSwitches.Interval), accelerometer.MinimumReportInterval);
-                        if (SensorSwitches.A.Value != 1)
+                        this[LIGHTSENSOR].Id = SensorSwitches.Id;
+                        this[LIGHTSENSOR].Delta = SensorSwitches.Delta;
+
+                        lightSensor.ReportInterval = Math.Max(Math.Max(baseMinimum, (uint) SensorSwitches.Interval),
+                            lightSensor.MinimumReportInterval);
+                        if (SensorSwitches.P.Value != 1)
                         {
-                            accelerometer.ReadingChanged += NewAcc;
+                            lightSensor.ReadingChanged += NewLight;
                         }
 
-                        this[ACCELERATOR].Id = SensorSwitches.Id;
-                        this[ACCELERATOR].Delta = SensorSwitches.Delta;
-
-                        if (SensorSwitches.A.Value != 3)
+                        if (SensorSwitches.P.Value != 3)
                         {
-                            SensorSwitches.A = null;
-                            NewAcc(accelerometer, null);
+                            SensorSwitches.P = null;
+                            NewLight(lightSensor, null);
                         }
                         else
                         {
-                            SensorSwitches.A = null;
+                            SensorSwitches.P = null;
                         }
                     }
                 }
                 else
                 {
-                    if (accelerometer != null)
+                    if (lightSensor != null)
                     {
-                        accelerometer.ReadingChanged -= NewAcc;
-                        NewAcc(null, null);
+                        lightSensor.ReadingChanged -= NewLight;
+                        NewQuan(null, null);
                     }
 
-                    SensorSwitches.A = null;
+                    SensorSwitches.P = null;
                 }
             }
+        }
 
-            if (SensorSwitches.G != null)
+        private void ToggleOrientation()
+        {
+            if (SensorSwitches.Q != null)
             {
-                if (SensorSwitches.G.Value > 0)
+                if (SensorSwitches.Q.Value > 0)
                 {
-                    if (gyrometer == null)
+                    if (orientation == null)
                     {
-                        gyrometer = Gyrometer.GetDefault();
+                        orientation = OrientationSensor.GetDefault();
                     }
 
-                    if (gyrometer != null)
+                    if (orientation != null)
                     {
-                        gyrometer.ReportInterval = Math.Max(Math.Max(baseMinimum, (uint)SensorSwitches.Interval), gyrometer.MinimumReportInterval);
-                        if (SensorSwitches.G.Value != 1)
+                        this[QUANTIZATION].Id = SensorSwitches.Id;
+                        this[QUANTIZATION].Delta = SensorSwitches.Delta;
+
+                        orientation.ReportInterval = Math.Max(Math.Max(baseMinimum, (uint) SensorSwitches.Interval),
+                            orientation.MinimumReportInterval);
+                        if (SensorSwitches.Q.Value != 1)
                         {
-                            gyrometer.ReadingChanged += NewGyro;
+                            orientation.ReadingChanged += NewQuan;
                         }
 
-                        this[GYROSCOPE].Id = SensorSwitches.Id;
-                        this[GYROSCOPE].Delta = SensorSwitches.Delta;
-
-                        if (SensorSwitches.G.Value != 3)
+                        if (SensorSwitches.Q.Value != 3)
                         {
-                            SensorSwitches.G = null;
-                            NewGyro(gyrometer, null);
+                            SensorSwitches.Q = null;
+                            NewQuan(orientation, null);
                         }
                         else
                         {
-                            SensorSwitches.G = null;
+                            SensorSwitches.Q = null;
                         }
                     }
                 }
                 else
                 {
-                    if (gyrometer != null)
+                    if (orientation != null)
                     {
-                        gyrometer.ReadingChanged -= NewGyro;
-                        NewGyro(null, null);
+                        orientation.ReadingChanged -= NewQuan;
+                        NewQuan(null, null);
                     }
 
-                    SensorSwitches.G = null;
+                    SensorSwitches.Q = null;
                 }
             }
+        }
 
+        private void ToggleGeolocator()
+        {
+            if (SensorSwitches.L != null)
+            {
+                if (SensorSwitches.L.Value > 0)
+                {
+                    if (geolocator == null)
+                    {
+                        geolocator = new Geolocator();
+                    }
+
+                    if (geolocator != null)
+                    {
+                        geolocator.ReportInterval = 30*60*1000;
+
+                        this[LOCATION].Id = SensorSwitches.Id;
+                        this[LOCATION].Delta = SensorSwitches.Delta;
+
+                        if (SensorSwitches.L.Value != 1)
+                        {
+                            geolocator.PositionChanged += NewLoc;
+                        }
+
+                        if (SensorSwitches.L.Value != 3)
+                        {
+                            SensorSwitches.L = null;
+                            try
+                            {
+                                NewLoc( geolocator, null );
+                            }
+                            catch (UnsupportedSensorException use)
+                            {
+                                //record
+                                SensorSwitches.L = null;
+                            }
+                        }
+                        else
+                        {
+                            SensorSwitches.L = null;
+                        }
+                    }
+                }
+                else
+                {
+                    if (geolocator != null)
+                    {
+                        geolocator.PositionChanged -= NewLoc;
+                        NewLoc(null, null);
+                    }
+
+                    SensorSwitches.L = null;
+                }
+            }
+        }
+
+        private void ToggleCompass()
+        {
             if (SensorSwitches.M != null)
             {
                 if (SensorSwitches.M.Value > 0)
@@ -433,7 +565,8 @@ namespace Shield.Services
 
                     if (compass != null)
                     {
-                        compass.ReportInterval = Math.Max(Math.Max(baseMinimum, (uint)SensorSwitches.Interval), compass.MinimumReportInterval);
+                        compass.ReportInterval = Math.Max(Math.Max(baseMinimum, (uint) SensorSwitches.Interval),
+                            compass.MinimumReportInterval);
 
                         if (SensorSwitches.M.Value != 1)
                         {
@@ -465,134 +598,98 @@ namespace Shield.Services
                     SensorSwitches.M = null;
                 }
             }
+        }
 
-            if (SensorSwitches.L != null)
+        private void ToggleGyrometer()
+        {
+            if (SensorSwitches.G != null)
             {
-                if (SensorSwitches.L.Value > 0)
+                if (SensorSwitches.G.Value > 0)
                 {
-                    if (geolocator == null)
+                    if (gyrometer == null)
                     {
-                        geolocator = new Geolocator();
+                        gyrometer = Gyrometer.GetDefault();
                     }
 
-                    if (geolocator != null)
+                    if (gyrometer != null)
                     {
-                        geolocator.ReportInterval = 30*60*1000;
-
-                        this[LOCATION].Id = SensorSwitches.Id;
-                        this[LOCATION].Delta = SensorSwitches.Delta;
-
-                        if (SensorSwitches.L.Value != 1)
+                        gyrometer.ReportInterval = Math.Max(Math.Max(baseMinimum, (uint) SensorSwitches.Interval),
+                            gyrometer.MinimumReportInterval);
+                        if (SensorSwitches.G.Value != 1)
                         {
-                            geolocator.PositionChanged += NewLoc;
+                            gyrometer.ReadingChanged += NewGyro;
                         }
 
-                        if (SensorSwitches.L.Value != 3)
+                        this[GYROSCOPE].Id = SensorSwitches.Id;
+                        this[GYROSCOPE].Delta = SensorSwitches.Delta;
+
+                        if (SensorSwitches.G.Value != 3)
                         {
-                            SensorSwitches.L = null;
-                            NewLoc(geolocator, null);
+                            SensorSwitches.G = null;
+                            NewGyro(gyrometer, null);
                         }
                         else
                         {
-                            SensorSwitches.L = null;
+                            SensorSwitches.G = null;
                         }
                     }
                 }
                 else
                 {
-                    if (geolocator != null)
+                    if (gyrometer != null)
                     {
-                        geolocator.PositionChanged -= NewLoc;
-                        NewLoc(null, null);
+                        gyrometer.ReadingChanged -= NewGyro;
+                        NewGyro(null, null);
                     }
 
-                    SensorSwitches.L = null;
+                    SensorSwitches.G = null;
                 }
             }
+        }
 
-            if (SensorSwitches.Q != null)
+        private void ToggleAccelerometer()
+        {
+            if (SensorSwitches.A != null)
             {
-                if (SensorSwitches.Q.Value > 0)
+                if (SensorSwitches.A.Value > 0)
                 {
-                    if (orientation == null)
+                    if (accelerometer == null)
                     {
-                        orientation = OrientationSensor.GetDefault();
+                        accelerometer = Accelerometer.GetDefault();
                     }
 
-                    if (orientation != null)
+                    if (accelerometer != null)
                     {
-                        this[QUANTIZATION].Id = SensorSwitches.Id;
-                        this[QUANTIZATION].Delta = SensorSwitches.Delta;
-
-                        orientation.ReportInterval = Math.Max(Math.Max(baseMinimum, (uint)SensorSwitches.Interval), orientation.MinimumReportInterval);
-                        if (SensorSwitches.Q.Value != 1)
+                        accelerometer.ReportInterval = Math.Max(Math.Max(baseMinimum, (uint) SensorSwitches.Interval),
+                            accelerometer.MinimumReportInterval);
+                        if (SensorSwitches.A.Value != 1)
                         {
-                            orientation.ReadingChanged += NewQuan;
+                            accelerometer.ReadingChanged += NewAcc;
                         }
 
-                        if (SensorSwitches.Q.Value != 3)
+                        this[ACCELERATOR].Id = SensorSwitches.Id;
+                        this[ACCELERATOR].Delta = SensorSwitches.Delta;
+
+                        if (SensorSwitches.A.Value != 3)
                         {
-                            SensorSwitches.Q = null;
-                            NewQuan(orientation, null);
+                            SensorSwitches.A = null;
+                            NewAcc(accelerometer, null);
                         }
                         else
                         {
-                            SensorSwitches.Q = null;
+                            SensorSwitches.A = null;
                         }
                     }
                 }
                 else
                 {
-                    if (orientation != null)
+                    if (accelerometer != null)
                     {
-                        orientation.ReadingChanged -= NewQuan;
-                        NewQuan(null, null);
+                        accelerometer.ReadingChanged -= NewAcc;
+                        NewAcc(null, null);
                     }
 
-                    SensorSwitches.Q = null;
-                }
-            }
-
-            if (SensorSwitches.P != null)
-            {
-                if (SensorSwitches.P.Value > 0)
-                {
-                    if (lightSensor == null)
-                    {
-                        lightSensor = LightSensor.GetDefault();
-                    }
-
-                    if (lightSensor != null)
-                    {
-                        this[LIGHTSENSOR].Id = SensorSwitches.Id;
-                        this[LIGHTSENSOR].Delta = SensorSwitches.Delta;
-
-                        lightSensor.ReportInterval = Math.Max(Math.Max(baseMinimum, (uint)SensorSwitches.Interval), lightSensor.MinimumReportInterval);
-                        if (SensorSwitches.P.Value != 1)
-                        {
-                            lightSensor.ReadingChanged += NewLight;
-                        }
-
-                        if (SensorSwitches.P.Value != 3)
-                        {
-                            SensorSwitches.P = null;
-                            NewLight(lightSensor, null);
-                        }
-                        else
-                        {
-                            SensorSwitches.P = null;
-                        }
-                    }
-                }
-                else
-                {
-                    if (lightSensor != null)
-                    {
-                        lightSensor.ReadingChanged -= NewLight;
-                        NewQuan(null, null);
-                    }
-
-                    SensorSwitches.P = null;
+                    SensorSwitches.A = null;
                 }
             }
         }

@@ -163,6 +163,11 @@ namespace Shield.Communication.Services
                     {
                         sizeFieldCount = await dataReader.LoadAsync(1);
                     }
+                    catch (UnsupportedSensorException use)
+                    {
+                        //send message otherlocation
+                        var i = 0;
+                    }
                     catch (Exception e)
                     {
                         // ignore normal socket disconnections
