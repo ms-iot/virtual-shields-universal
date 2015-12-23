@@ -1,56 +1,58 @@
-// /*
-//     Copyright(c) Microsoft Open Technologies, Inc. All rights reserved.
-// 
-//     The MIT License(MIT)
-// 
-//     Permission is hereby granted, free of charge, to any person obtaining a copy
-//     of this software and associated documentation files(the "Software"), to deal
-//     in the Software without restriction, including without limitation the rights
-//     to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
-//     copies of the Software, and to permit persons to whom the Software is
-//     furnished to do so, subject to the following conditions :
-// 
-//     The above copyright notice and this permission notice shall be included in
-//     all copies or substantial portions of the Software.
-// 
-//     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
-//     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//     THE SOFTWARE.
-// */
+/*
+    Copyright(c) Microsoft Open Technologies, Inc. All rights reserved.
 
-using System;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
-using Windows.Devices.Bluetooth.Rfcomm;
-using Windows.Devices.Enumeration;
-using Windows.Networking;
-using Windows.Networking.Proximity;
-using Windows.Networking.Sockets;
+    The MIT License(MIT)
 
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files(the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions :
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.
+*/
 namespace Shield.Communication.Services
 {
+    using System;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    using Windows.ApplicationModel.Core;
+    using Windows.Devices.Bluetooth.Rfcomm;
+    using Windows.Devices.Enumeration;
+    using Windows.Networking;
+    using Windows.Networking.Proximity;
+    using Windows.Networking.Sockets;
+
     public class Wifi : ServiceBase
     {
-        private bool beaconIsOn;
         private readonly int broadcastPort;
+
         private readonly DatagramSocket listener = new DatagramSocket();
+
+        private bool beaconIsOn;
 
         public Wifi(int broadcastPort)
         {
             this.broadcastPort = broadcastPort;
-            isPollingToSend = true;
+            this.isPollingToSend = true;
         }
 
         public override async Task<Connections> GetConnections()
         {
             var connections = new Connections();
-            foreach (var client in clients)
+            foreach (var client in this.clients)
             {
                 if (client.Value != null && client.Value.Source != null)
                 {
@@ -73,13 +75,13 @@ namespace Shield.Communication.Services
 
         public override async void ListenForBeacons()
         {
-            if (!beaconIsOn)
+            if (!this.beaconIsOn)
             {
-                beaconIsOn = true;
-                listener.MessageReceived += ListenerOnMessageReceived;
+                this.beaconIsOn = true;
+                this.listener.MessageReceived += this.ListenerOnMessageReceived;
                 try
                 {
-                    await listener.BindServiceNameAsync(broadcastPort.ToString());
+                    await this.listener.BindServiceNameAsync(this.broadcastPort.ToString());
                 }
                 catch (Exception)
                 {
@@ -93,14 +95,14 @@ namespace Shield.Communication.Services
             object outObj;
             if (CoreApplication.Properties.TryGetValue("remotePeer", out outObj))
             {
-                EchoMessage((RemotePeer) outObj, args);
+                this.EchoMessage((RemotePeer)outObj, args);
                 return;
             }
 
             // We do not have an output stream yet so create one.
             try
             {
-                var outputStream = await listener.GetOutputStreamAsync(args.RemoteAddress, args.RemotePort);
+                var outputStream = await this.listener.GetOutputStreamAsync(args.RemoteAddress, args.RemotePort);
 
                 // It might happen that the OnMessage was invoked more than once before the GetOutputStreamAsync completed.
                 // In this case we will end up with multiple streams - make sure we have just one of it.
@@ -109,7 +111,7 @@ namespace Shield.Communication.Services
                 {
                     if (CoreApplication.Properties.TryGetValue("remotePeer", out outObj))
                     {
-                        peer = (RemotePeer) outObj;
+                        peer = (RemotePeer)outObj;
                     }
                     else
                     {
@@ -118,7 +120,7 @@ namespace Shield.Communication.Services
                     }
                 }
 
-                EchoMessage(peer, args);
+                this.EchoMessage(peer, args);
             }
             catch (Exception exception)
             {
@@ -138,9 +140,9 @@ namespace Shield.Communication.Services
             {
                 // In the sample we are communicating with just one peer. To communicate with multiple peers application
                 // should cache output streams (i.e. by using a hash map), because creating an output stream for each
-                //  received datagram is costly. Keep in mind though, that every cache requires logic to remove old
+                // received datagram is costly. Keep in mind though, that every cache requires logic to remove old
                 // or unused elements; otherwise cache turns into a memory leaking structure.
-                //NotifyUserFromAsyncThread(String.Format("Got datagram from {0}:{1}, but already 'connected' to {3}", eventArguments.RemoteAddress, eventArguments.RemotePort, peer), NotifyType.ErrorMessage);
+                // NotifyUserFromAsyncThread(String.Format("Got datagram from {0}:{1}, but already 'connected' to {3}", eventArguments.RemoteAddress, eventArguments.RemotePort, peer), NotifyType.ErrorMessage);
             }
 
             try
@@ -151,7 +153,7 @@ namespace Shield.Communication.Services
                 while (reader.UnconsumedBufferLength > 0)
                 {
                     var b = reader.ReadByte();
-                    sb.Append((char) b);
+                    sb.Append((char)b);
                 }
 
                 var msg = sb.ToString();
@@ -192,9 +194,9 @@ namespace Shield.Communication.Services
                     peer.Port = port;
 
                     var connection = new Connection(name, peer);
-                    if (!clients.ContainsKey(ip))
+                    if (!this.clients.ContainsKey(ip))
                     {
-                        clients[ip] = connection;
+                        this.clients[ip] = connection;
                     }
                 }
             }
@@ -234,7 +236,7 @@ namespace Shield.Communication.Services
             if (ip != null)
             {
                 var iponly = ip;
-                var port = broadcastPort.ToString();
+                var port = this.broadcastPort.ToString();
                 var colon = ip.IndexOf(':');
                 if (colon > -1)
                 {
@@ -250,12 +252,15 @@ namespace Shield.Communication.Services
 
         public override async Task<bool> Connect(Connection newConnection)
         {
-            //purposely connect to a destination
-            var peer = await GetHostNameAndService(newConnection.Source);
+            // purposely connect to a destination
+            var peer = await this.GetHostNameAndService(newConnection.Source);
 
-            if (peer?.HostName == null) return false;
+            if (peer?.HostName == null)
+            {
+                return false;
+            }
 
-            var result = await Connect(peer.HostName, peer.Port);
+            var result = await this.Connect(peer.HostName, peer.Port);
             await base.Connect(newConnection);
 
             return result;
@@ -263,25 +268,25 @@ namespace Shield.Communication.Services
 
         private async Task<bool> Connect(HostName deviceHostName, string remoteServiceName)
         {
-            if (!isListening)
+            if (!this.isListening)
             {
-                if (socket == null)
+                if (this.socket == null)
                 {
-                    socket = new StreamSocket();
+                    this.socket = new StreamSocket();
                 }
 
-                if (socket != null)
+                if (this.socket != null)
                 {
                     try
                     {
                         var cts = new CancellationTokenSource();
                         cts.CancelAfter(10000);
-                        await socket.ConnectAsync(deviceHostName, remoteServiceName);
-                        return InstrumentSocket(socket);
+                        await this.socket.ConnectAsync(deviceHostName, remoteServiceName);
+                        return this.InstrumentSocket(this.socket);
                     }
                     catch (Exception e)
                     {
-                        OnThreadedException(e);
+                        this.OnThreadedException(e);
                     }
                 }
 

@@ -21,13 +21,13 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
-using Windows.System.Profile;
-using Microsoft.ApplicationInsights.Channel;
-using Microsoft.ApplicationInsights.Extensibility;
-
 namespace Shield
 {
+    using Microsoft.ApplicationInsights.Channel;
+    using Microsoft.ApplicationInsights.Extensibility;
+
+    using Windows.System.Profile;
+
     /// <summary>
     /// TelemetryInitializer to improve Device Family and Device Type telemetry for ApplicationInsights
     /// </summary>

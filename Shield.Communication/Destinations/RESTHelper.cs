@@ -1,47 +1,47 @@
-// /*
-//     Copyright(c) Microsoft Open Technologies, Inc. All rights reserved.
-// 
-//     The MIT License(MIT)
-// 
-//     Permission is hereby granted, free of charge, to any person obtaining a copy
-//     of this software and associated documentation files(the "Software"), to deal
-//     in the Software without restriction, including without limitation the rights
-//     to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
-//     copies of the Software, and to permit persons to whom the Software is
-//     furnished to do so, subject to the following conditions :
-// 
-//     The above copyright notice and this permission notice shall be included in
-//     all copies or substantial portions of the Software.
-// 
-//     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
-//     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//     THE SOFTWARE.
-// */
+/*
+    Copyright(c) Microsoft Open Technologies, Inc. All rights reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-using Windows.Security.Cryptography;
-using Windows.Security.Cryptography.Core;
-using Windows.Web.Http;
-using Windows.Web.Http.Headers;
+    The MIT License(MIT)
 
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files(the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions :
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.
+*/
 namespace Shield.Communication
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+
+    using Windows.Security.Cryptography;
+    using Windows.Security.Cryptography.Core;
+    using Windows.Web.Http;
+    using Windows.Web.Http.Headers;
+
     public class RESTHelper
     {
         public RESTHelper(string endpoint, string storageAccount, string storageKey)
         {
-            Endpoint = endpoint;
-            StorageAccount = storageAccount;
-            StorageKey = storageKey;
+            this.Endpoint = endpoint;
+            this.StorageAccount = storageAccount;
+            this.StorageKey = storageKey;
         }
 
         protected bool IsTableStorage { get; set; }
@@ -52,31 +52,33 @@ namespace Shield.Communication
 
         public string StorageKey { get; internal set; }
 
-        //{
+        // {
 
-        //public static T Retry<T>(RetryDelegate<T> del)
+        // public static T Retry<T>(RetryDelegate<T> del)
 
         //// Retry delegate with default retry settings.
-        //const int retryIntervalMS = 200;
+        // const int retryIntervalMS = 200;
 
-        //const int retryCount = 3;
-        //public delegate void RetryDelegate();
+        // const int retryCount = 3;
+        // public delegate void RetryDelegate();
 
-        //public delegate T RetryDelegate<T>();
+        // public delegate T RetryDelegate<T>();
 
-        //#region Retry Delegate
-
+        // #region Retry Delegate
         #region REST HTTP Request Helper Methods
 
         // Construct and issue a REST request and return the response.
-
-        public HttpRequestMessage CreateRESTRequest(string method, string resource, string requestBody = null,
-            Dictionary<string, string> headers = null,
-            string ifMatch = "", string md5 = "")
+        public HttpRequestMessage CreateRESTRequest(
+            string method, 
+            string resource, 
+            string requestBody = null, 
+            Dictionary<string, string> headers = null, 
+            string ifMatch = "", 
+            string md5 = "")
         {
             byte[] byteArray = null;
             var now = DateTime.UtcNow;
-            var uri = new Uri(Endpoint + resource);
+            var uri = new Uri(this.Endpoint + resource);
             var httpMethod = new HttpMethod(method);
             var contentLength = 0;
 
@@ -84,9 +86,9 @@ namespace Shield.Communication
             var request = new HttpRequestMessage(httpMethod, uri);
             request.Headers.Add("x-ms-date", now.ToString("R", CultureInfo.InvariantCulture));
             request.Headers.Add("x-ms-version", "2009-09-19");
-            //Debug.WriteLine(now.ToString("R", System.Globalization.CultureInfo.InvariantCulture));
 
-            if (IsTableStorage)
+            // Debug.WriteLine(now.ToString("R", System.Globalization.CultureInfo.InvariantCulture));
+            if (this.IsTableStorage)
             {
                 request.Content.Headers.ContentType = new HttpMediaTypeHeaderValue("application/atom+xml");
 
@@ -115,18 +117,22 @@ namespace Shield.Communication
                 contentLength = byteArray.Length;
             }
 
-            var authorizationHeader = AuthorizationHeader(method, now, request, contentLength, ifMatch, md5);
+            var authorizationHeader = this.AuthorizationHeader(method, now, request, contentLength, ifMatch, md5);
             request.Headers.Authorization = authorizationHeader;
 
             return request;
         }
 
-        public HttpRequestMessage CreateStreamRESTRequest(string method, string resource,
-            MemoryStream requestBody = null, Dictionary<string, string> headers = null,
-            string ifMatch = "", string md5 = "")
+        public HttpRequestMessage CreateStreamRESTRequest(
+            string method, 
+            string resource, 
+            MemoryStream requestBody = null, 
+            Dictionary<string, string> headers = null, 
+            string ifMatch = "", 
+            string md5 = "")
         {
             var now = DateTime.UtcNow;
-            var uri = new Uri(Endpoint + resource);
+            var uri = new Uri(this.Endpoint + resource);
             var httpMethod = new HttpMethod(method);
             long contentLength = 0;
 
@@ -134,9 +140,9 @@ namespace Shield.Communication
             var request = new HttpRequestMessage(httpMethod, uri);
             request.Headers.Add("x-ms-date", now.ToString("R", CultureInfo.InvariantCulture));
             request.Headers.Add("x-ms-version", "2009-09-19");
-            //Debug.WriteLine(now.ToString("R", System.Globalization.CultureInfo.InvariantCulture));
 
-            if (IsTableStorage)
+            // Debug.WriteLine(now.ToString("R", System.Globalization.CultureInfo.InvariantCulture));
+            if (this.IsTableStorage)
             {
                 request.Content.Headers.ContentType = new HttpMediaTypeHeaderValue("application/atom+xml");
 
@@ -163,59 +169,64 @@ namespace Shield.Communication
                 contentLength = requestBody.Length;
             }
 
-            var authorizationHeader = AuthorizationHeader(method, now, request, contentLength, ifMatch, md5);
+            var authorizationHeader = this.AuthorizationHeader(method, now, request, contentLength, ifMatch, md5);
             request.Headers.Authorization = authorizationHeader;
 
             return request;
         }
 
-
         // Generate an authorization header.
-
-        public HttpCredentialsHeaderValue AuthorizationHeader(string method, DateTime now, HttpRequestMessage request,
-            long contentLength, string ifMatch = "", string md5 = "")
+        public HttpCredentialsHeaderValue AuthorizationHeader(
+            string method, 
+            DateTime now, 
+            HttpRequestMessage request, 
+            long contentLength, 
+            string ifMatch = "", 
+            string md5 = "")
         {
             string MessageSignature;
 
-            if (IsTableStorage)
+            if (this.IsTableStorage)
             {
-                MessageSignature = string.Format("{0}\n\n{1}\n{2}\n{3}",
-                    method,
-                    "application/atom+xml",
-                    now.ToString("R", CultureInfo.InvariantCulture),
-                    GetCanonicalizedResource(request.RequestUri, StorageAccount)
-                    );
+                MessageSignature = string.Format(
+                    "{0}\n\n{1}\n{2}\n{3}", 
+                    method, 
+                    "application/atom+xml", 
+                    now.ToString("R", CultureInfo.InvariantCulture), 
+                    this.GetCanonicalizedResource(request.RequestUri, this.StorageAccount));
             }
             else
             {
-                MessageSignature = string.Format("{0}\n\n\n{1}\n{5}\n\n\n\n{2}\n\n\n\n{3}{4}",
-                    method,
-                    (method == "GET" || method == "HEAD") ? string.Empty : contentLength.ToString(),
-                    ifMatch,
-                    GetCanonicalizedHeaders(request),
-                    GetCanonicalizedResource(request.RequestUri, StorageAccount),
-                    md5
-                    );
+                MessageSignature = string.Format(
+                    "{0}\n\n\n{1}\n{5}\n\n\n\n{2}\n\n\n\n{3}{4}", 
+                    method, 
+                    (method == "GET" || method == "HEAD") ? string.Empty : contentLength.ToString(), 
+                    ifMatch, 
+                    this.GetCanonicalizedHeaders(request), 
+                    this.GetCanonicalizedResource(request.RequestUri, this.StorageAccount), 
+                    md5);
             }
 
-            //Debug.WriteLine(MessageSignature);
-            var key = CryptographicBuffer.DecodeFromBase64String(StorageKey);
+            // Debug.WriteLine(MessageSignature);
+            var key = CryptographicBuffer.DecodeFromBase64String(this.StorageKey);
             var msg = CryptographicBuffer.ConvertStringToBinary(MessageSignature, BinaryStringEncoding.Utf8);
 
             var objMacProv = MacAlgorithmProvider.OpenAlgorithm(MacAlgorithmNames.HmacSha256);
-            //CryptographicKey cryptKey = objMacProv.CreateKey(key);
-            //var buff = CryptographicEngine.Sign(cryptKey, msg);
+
+            // CryptographicKey cryptKey = objMacProv.CreateKey(key);
+            // var buff = CryptographicEngine.Sign(cryptKey, msg);
             var hash = objMacProv.CreateHash(key);
             hash.Append(msg);
 
-            var authorizationHeader = new HttpCredentialsHeaderValue("SharedKey",
-                StorageAccount + ":" + CryptographicBuffer.EncodeToBase64String(hash.GetValueAndReset()));
-            //Debug.WriteLine(authorizationHeader.ToString());
+            var authorizationHeader = new HttpCredentialsHeaderValue(
+                "SharedKey", 
+                this.StorageAccount + ":" + CryptographicBuffer.EncodeToBase64String(hash.GetValueAndReset()));
+
+            // Debug.WriteLine(authorizationHeader.ToString());
             return authorizationHeader;
         }
 
         // Get canonicalized headers.
-
         public string GetCanonicalizedHeaders(HttpRequestMessage request)
         {
             var headerNameList = new List<string>();
@@ -227,26 +238,28 @@ namespace Shield.Communication
                     headerNameList.Add(headerName.ToLowerInvariant());
                 }
             }
+
             headerNameList.Sort();
             foreach (var headerName in headerNameList)
             {
                 var builder = new StringBuilder(headerName);
                 var separator = ":";
-                foreach (var headerValue in GetHeaderValues(request.Headers, headerName))
+                foreach (var headerValue in this.GetHeaderValues(request.Headers, headerName))
                 {
                     var trimmedValue = headerValue.Replace("\r\n", string.Empty);
                     builder.Append(separator);
                     builder.Append(trimmedValue);
                     separator = ",";
                 }
+
                 sb.Append(builder);
                 sb.Append("\n");
             }
+
             return sb.ToString();
         }
 
         // Get header values.
-
         public List<string> GetHeaderValues(HttpRequestHeaderCollection headers, string headerName)
         {
             var list = new List<string>();
@@ -257,11 +270,11 @@ namespace Shield.Communication
             {
                 list.Add(str.TrimStart(null));
             }
+
             return list;
         }
 
         // Get canonicalized resource.
-
         public string GetCanonicalizedResource(Uri address, string accountName)
         {
             var str = new StringBuilder();
@@ -271,7 +284,7 @@ namespace Shield.Communication
             str.Append(builder);
             var values2 = new Dictionary<string, string>();
 
-            if (!IsTableStorage)
+            if (!this.IsTableStorage)
             {
                 var values = new List<KeyValuePair<string, string>>();
 
@@ -300,11 +313,14 @@ namespace Shield.Communication
                         {
                             builder2.Append(",");
                         }
+
                         builder2.Append(obj2);
                     }
+
                     values2.Add((str2 == null) ? str2 : str2.ToLowerInvariant(), builder2.ToString());
                 }
             }
+
             var list2 = new List<string>(values2.Keys);
             list2.Sort();
             foreach (var str3 in list2)
@@ -316,80 +332,10 @@ namespace Shield.Communication
                 str.Append("\n");
                 str.Append(builder3);
             }
+
             return str.ToString();
         }
 
         #endregion
-
-        //    return Retry<T>(del, retryCount, retryIntervalMS);
-        //}
-
-        //// Retry delegate.
-
-        //public static T Retry<T>(RetryDelegate<T> del, int numberOfRetries, int msPause)
-        //{
-        //    int counter = 0;
-        //    RetryLabel:
-
-        //    try
-        //    {
-        //        counter++;
-        //        return del.Invoke();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        if (counter > numberOfRetries)
-        //        {
-        //            throw ex;
-        //        }
-        //        else
-        //        {
-        //            if (msPause > 0)
-        //            {
-        //                Thread.Sleep(msPause);
-        //            }
-        //            goto RetryLabel;
-        //        }
-        //    }
-        //}
-
-
-        //// Retry delegate with default retry settings.
-
-        //public static bool Retry(RetryDelegate del)
-        //{
-        //    return Retry(del, retryCount, retryIntervalMS);
-        //}
-
-
-        //public static bool Retry(RetryDelegate del, int numberOfRetries, int msPause)
-        //{
-        //    int counter = 0;
-
-        //    RetryLabel:
-        //    try
-        //    {
-        //        counter++;
-        //        del.Invoke();
-        //        return true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        if (counter > numberOfRetries)
-        //        {
-        //            throw ex;
-        //        }
-        //        else
-        //        {
-        //            if (msPause > 0)
-        //            {
-        //                Thread.Sleep(msPause);
-        //            }
-        //            goto RetryLabel;
-        //        }
-        //    }
-        //}
-
-        //#endregion
     }
 }

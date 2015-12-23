@@ -21,18 +21,18 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
 namespace Shield.Core
 {
-    [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = true)]
+    using System;
 
-    public class Service : System.Attribute
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+    public class Service : Attribute
     {
-        public string Id { get; private set; }
-
         public Service(string id)
         {
             this.Id = id;
         }
+
+        public string Id { get; private set; }
     }
 }

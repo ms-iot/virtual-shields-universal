@@ -1,51 +1,51 @@
-// /*
-//     Copyright(c) Microsoft Open Technologies, Inc. All rights reserved.
-// 
-//     The MIT License(MIT)
-// 
-//     Permission is hereby granted, free of charge, to any person obtaining a copy
-//     of this software and associated documentation files(the "Software"), to deal
-//     in the Software without restriction, including without limitation the rights
-//     to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
-//     copies of the Software, and to permit persons to whom the Software is
-//     furnished to do so, subject to the following conditions :
-// 
-//     The above copyright notice and this permission notice shall be included in
-//     all copies or substantial portions of the Software.
-// 
-//     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
-//     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//     THE SOFTWARE.
-// */
+/*
+    Copyright(c) Microsoft Open Technologies, Inc. All rights reserved.
 
-using System;
-using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
-using Windows.Devices.Bluetooth.Rfcomm;
-using Windows.Devices.Enumeration;
-using Windows.Networking;
-using Windows.Networking.Proximity;
-using Windows.Networking.Sockets;
+    The MIT License(MIT)
 
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files(the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions :
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.
+*/
 namespace Shield.Communication.Services
 {
+    using System;
+    using System.Diagnostics;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    using Windows.Devices.Bluetooth.Rfcomm;
+    using Windows.Devices.Enumeration;
+    using Windows.Networking;
+    using Windows.Networking.Proximity;
+    using Windows.Networking.Sockets;
+
     public class Bluetooth : ServiceBase
     {
         public Bluetooth()
         {
-            isPollingToSend = true;
+            this.isPollingToSend = true;
         }
 
         public override async Task<Connections> GetConnections()
         {
-            if (isPrePairedDevice)
+            if (this.isPrePairedDevice)
             {
-                PeerFinder.AlternateIdentities["Bluetooth:Paired"] = "";
+                PeerFinder.AlternateIdentities["Bluetooth:Paired"] = string.Empty;
             }
 
             try
@@ -99,7 +99,7 @@ namespace Shield.Communication.Services
 
             if (hostName != null)
             {
-                result = await Connect(hostName, remoteServiceName);
+                result = await this.Connect(hostName, remoteServiceName);
                 await base.Connect(newConnection);
             }
 
@@ -108,21 +108,21 @@ namespace Shield.Communication.Services
 
         private async Task<bool> Connect(HostName deviceHostName, string remoteServiceName)
         {
-            if (!isListening)
+            if (!this.isListening)
             {
-                if (socket == null)
+                if (this.socket == null)
                 {
-                    socket = new StreamSocket();
+                    this.socket = new StreamSocket();
                 }
 
-                if (socket != null)
+                if (this.socket != null)
                 {
                     try
                     {
                         var cts = new CancellationTokenSource();
                         cts.CancelAfter(10000);
-                        await socket.ConnectAsync(deviceHostName, remoteServiceName);
-                        return InstrumentSocket(socket);
+                        await this.socket.ConnectAsync(deviceHostName, remoteServiceName);
+                        return this.InstrumentSocket(this.socket);
                     }
                     catch (Exception e)
                     {

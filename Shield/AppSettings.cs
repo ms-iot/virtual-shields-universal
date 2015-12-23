@@ -21,44 +21,57 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using Windows.ApplicationModel.Resources;
-using Windows.Foundation.Metadata;
-using Windows.Storage;
-using Shield.Communication;
-
 namespace Shield
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using System.Text;
+
+    using Shield.Communication;
+
+    using Windows.ApplicationModel.Resources;
+    using Windows.Foundation.Metadata;
+    using Windows.Storage;
+
     public enum ConnectionState
     {
-        NotConnected = 0,
-        Connecting = 1,
-        Connected = 2,
-        CouldNotConnect = 3,
+        NotConnected = 0, 
+
+        Connecting = 1, 
+
+        Connected = 2, 
+
+        CouldNotConnect = 3, 
+
         Disconnecting = 4
     }
 
     public class AppSettings : INotifyPropertyChanged
     {
         internal const int CONNECTION_BLUETOOTH = 0;
+
         internal const int CONNECTION_WIFI = 1;
+
         internal const int CONNECTION_MANUAL = 2;
+
         internal const int CONNECTION_USB = 3;
 
         public static AppSettings Instance;
+
         internal static readonly int BroadcastPort = 1235;
+
         private readonly string[] ConnectionStateText;
+
         private readonly ApplicationDataContainer localSettings;
+
         private Connections connectionList;
 
         private bool isListening;
+
         private bool isLogging;
 
         public AppSettings()
@@ -69,23 +82,24 @@ namespace Shield
             }
 
             var loader = new ResourceLoader();
-            ConnectionStateText = new[]
-            {
-                loader.GetString("NotConnected"), loader.GetString("Connecting"), loader.GetString("Connected"),
-                loader.GetString("CouldNotConnect"), loader.GetString("Disconnecting")
-            };
-            DeviceNames = new List<string>
-            {
-                loader.GetString("Bluetooth"),
-                loader.GetString("NetworkDiscovery"),
-                loader.GetString("NetworkDirect")
-            };
+            this.ConnectionStateText = new[]
+                                           {
+                                               loader.GetString("NotConnected"), loader.GetString("Connecting"), 
+                                               loader.GetString("Connected"), loader.GetString("CouldNotConnect"), 
+                                               loader.GetString("Disconnecting")
+                                           };
+            this.DeviceNames = new List<string>
+                                   {
+                                       loader.GetString("Bluetooth"), 
+                                       loader.GetString("NetworkDiscovery"), 
+                                       loader.GetString("NetworkDirect")
+                                   };
 
             try
             {
-                localSettings = ApplicationData.Current.LocalSettings;
+                this.localSettings = ApplicationData.Current.LocalSettings;
 
-                connectionList = new Connections();
+                this.connectionList = new Connections();
             }
             catch (Exception e)
             {
@@ -96,162 +110,273 @@ namespace Shield
 
         public bool AutoConnect
         {
-            get { return GetValueOrDefault(true); }
-            set { AddOrUpdateValue(value); }
+            get
+            {
+                return this.GetValueOrDefault(true);
+            }
+
+            set
+            {
+                this.AddOrUpdateValue(value);
+            }
         }
 
         public bool IsListening
         {
-            get { return isListening; }
+            get
+            {
+                return this.isListening;
+            }
+
             set
             {
-                isListening = value;
-                OnPropertyChanged("IsListening");
+                this.isListening = value;
+                this.OnPropertyChanged("IsListening");
             }
         }
 
         public bool AlwaysRunning
         {
-            get { return GetValueOrDefault(true); }
-            set { AddOrUpdateValue(value); }
+            get
+            {
+                return this.GetValueOrDefault(true);
+            }
+
+            set
+            {
+                this.AddOrUpdateValue(value);
+            }
         }
 
-        public bool NoListVisible => !ListVisible;
+        public bool NoListVisible => !this.ListVisible;
 
-        public bool ListVisible => ConnectionList != null && ConnectionList.Any();
+        public bool ListVisible => this.ConnectionList != null && this.ConnectionList.Any();
 
         public int ConnectionIndex
         {
-            get { return GetValueOrDefault(0); }
+            get
+            {
+                return this.GetValueOrDefault(0);
+            }
+
             set
             {
-                AddOrUpdateValue(value);
+                this.AddOrUpdateValue(value);
 
-                OnPropertyChanged("BluetoothVisible");
-                OnPropertyChanged("NetworkDirectVisible");
-                OnPropertyChanged("NotNetworkDirectVisible");
+                this.OnPropertyChanged("BluetoothVisible");
+                this.OnPropertyChanged("NetworkDirectVisible");
+                this.OnPropertyChanged("NotNetworkDirectVisible");
 
                 MainPage.Instance.SetService();
             }
         }
 
-        public string[] ConnectionItems => new[] {"Bluetooth", "Network", "Manual", "USB"};
+        public string[] ConnectionItems => new[] { "Bluetooth", "Network", "Manual", "USB" };
 
-        public bool NotNetworkDirectVisible => !NetworkDirectVisible;
+        public bool NotNetworkDirectVisible => !this.NetworkDirectVisible;
 
-        public bool BluetoothVisible => ConnectionIndex == 0;
+        public bool BluetoothVisible => this.ConnectionIndex == 0;
 
-        public bool NetworkVisible => ConnectionIndex == 1;
+        public bool NetworkVisible => this.ConnectionIndex == 1;
 
-        public bool NetworkDirectVisible => ConnectionIndex == 2;
+        public bool NetworkDirectVisible => this.ConnectionIndex == 2;
 
-        public bool USBVisible => ConnectionIndex == 3;
+        public bool USBVisible => this.ConnectionIndex == 3;
 
         public string Hostname
         {
-            get { return GetValueOrDefault(""); }
-            set { AddOrUpdateValue(value); }
+            get
+            {
+                return this.GetValueOrDefault(string.Empty);
+            }
+
+            set
+            {
+                this.AddOrUpdateValue(value);
+            }
         }
 
         public string UserInfo1
         {
-            get { return GetValueOrDefault(""); }
-            set { AddOrUpdateValue(value); }
+            get
+            {
+                return this.GetValueOrDefault(string.Empty);
+            }
+
+            set
+            {
+                this.AddOrUpdateValue(value);
+            }
         }
 
         public string UserInfo2
         {
-            get { return GetValueOrDefault(""); }
-            set { AddOrUpdateValue(value); }
+            get
+            {
+                return this.GetValueOrDefault(string.Empty);
+            }
+
+            set
+            {
+                this.AddOrUpdateValue(value);
+            }
         }
 
         public string UserInfo3
         {
-            get { return GetValueOrDefault(""); }
-            set { AddOrUpdateValue(value); }
+            get
+            {
+                return this.GetValueOrDefault(string.Empty);
+            }
+
+            set
+            {
+                this.AddOrUpdateValue(value);
+            }
         }
 
         public string UserInfo4
         {
-            get { return GetValueOrDefault(""); }
-            set { AddOrUpdateValue(value); }
+            get
+            {
+                return this.GetValueOrDefault(string.Empty);
+            }
+
+            set
+            {
+                this.AddOrUpdateValue(value);
+            }
         }
 
         public int Hostport
         {
-            get { return GetValueOrDefault(0); }
-            set { AddOrUpdateValue(value); }
+            get
+            {
+                return this.GetValueOrDefault(0);
+            }
+
+            set
+            {
+                this.AddOrUpdateValue(value);
+            }
         }
 
         public string PreviousConnectionName
         {
-            get { return GetValueOrDefault(""); }
-            set { AddOrUpdateValue(value); }
+            get
+            {
+                return this.GetValueOrDefault(string.Empty);
+            }
+
+            set
+            {
+                this.AddOrUpdateValue(value);
+            }
         }
 
         public string BlobAccountName
         {
-            get { return GetValueOrDefault(""); }
-            set { AddOrUpdateValue(value); }
+            get
+            {
+                return this.GetValueOrDefault(string.Empty);
+            }
+
+            set
+            {
+                this.AddOrUpdateValue(value);
+            }
         }
 
         public string BlobAccountKey
         {
-            get { return GetValueOrDefault(""); }
-            set { AddOrUpdateValue(value); }
+            get
+            {
+                return this.GetValueOrDefault(string.Empty);
+            }
+
+            set
+            {
+                this.AddOrUpdateValue(value);
+            }
         }
 
         public Connections ConnectionList
         {
-            get { return connectionList; }
+            get
+            {
+                return this.connectionList;
+            }
+
             set
             {
-                connectionList = value;
-                OnPropertyChanged("ConnectionList");
-                OnPropertyChanged("ListVisible");
-                OnPropertyChanged("NoListVisible");
+                this.connectionList = value;
+                this.OnPropertyChanged("ConnectionList");
+                this.OnPropertyChanged("ListVisible");
+                this.OnPropertyChanged("NoListVisible");
             }
         }
 
         public bool IsFullscreen
         {
-            get { return GetValueOrDefault(true); }
+            get
+            {
+                return this.GetValueOrDefault(true);
+            }
+
             set
             {
-                AddOrUpdateValue(value);
-                OnPropertyChanged("IsFullscreen");
-                OnPropertyChanged("IsControlscreen");
+                this.AddOrUpdateValue(value);
+                this.OnPropertyChanged("IsFullscreen");
+                this.OnPropertyChanged("IsControlscreen");
             }
         }
 
         public bool IsControlscreen
         {
-            get { return !IsFullscreen; }
-            set { IsFullscreen = !value; }
+            get
+            {
+                return !this.IsFullscreen;
+            }
+
+            set
+            {
+                this.IsFullscreen = !value;
+            }
         }
 
         public bool IsLogging
         {
-            get { return isLogging; }
+            get
+            {
+                return this.isLogging;
+            }
+
             set
             {
-                isLogging = value;
-                OnPropertyChanged("IsLoggingSwitchText");
+                this.isLogging = value;
+                this.OnPropertyChanged("IsLoggingSwitchText");
             }
         }
 
         public string IsLoggingSwitchText
         {
-            get { return isLogging ? "Turn OFF" : "Turn ON"; }
+            get
+            {
+                return this.isLogging ? "Turn OFF" : "Turn ON";
+            }
         }
 
         public string LogText
         {
-            get { return Log.ToString(); }
+            get
+            {
+                return this.Log.ToString();
+            }
+
             set
             {
-                Log.Append(value);
-                OnPropertyChanged("LogText");
+                this.Log.Append(value);
+                this.OnPropertyChanged("LogText");
             }
         }
 
@@ -259,17 +384,24 @@ namespace Shield
 
         public int CurrentConnectionState
         {
-            get { return GetValueOrDefault((int) ConnectionState.NotConnected); }
+            get
+            {
+                return this.GetValueOrDefault((int)ConnectionState.NotConnected);
+            }
+
             set
             {
-                AddOrUpdateValue(value);
-                OnPropertyChanged("CurrentConnectionStateText");
+                this.AddOrUpdateValue(value);
+                this.OnPropertyChanged("CurrentConnectionStateText");
             }
         }
 
         public string CurrentConnectionStateText
         {
-            get { return ConnectionStateText[CurrentConnectionState]; }
+            get
+            {
+                return this.ConnectionStateText[this.CurrentConnectionState];
+            }
         }
 
         public List<string> DeviceNames { get; set; }
@@ -280,7 +412,7 @@ namespace Shield
 
         protected void OnPropertyChanged(string propertyName)
         {
-            var handler = PropertyChanged;
+            var handler = this.PropertyChanged;
             handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
@@ -288,17 +420,17 @@ namespace Shield
         {
             var valueChanged = false;
 
-            if (localSettings.Values.ContainsKey(Key))
+            if (this.localSettings.Values.ContainsKey(Key))
             {
-                if (localSettings.Values[Key] != value)
+                if (this.localSettings.Values[Key] != value)
                 {
-                    localSettings.Values[Key] = value;
+                    this.localSettings.Values[Key] = value;
                     valueChanged = true;
                 }
             }
             else
             {
-                localSettings.Values.Add(Key, value);
+                this.localSettings.Values.Add(Key, value);
                 valueChanged = true;
             }
 
@@ -310,11 +442,11 @@ namespace Shield
             T value;
 
             // If the key exists, retrieve the value.
-            if (localSettings.Values.ContainsKey(Key))
+            if (this.localSettings.Values.ContainsKey(Key))
             {
                 try
                 {
-                    value = (T) localSettings.Values[Key];
+                    value = (T)this.localSettings.Values[Key];
                 }
                 catch (InvalidCastException)
                 {
@@ -331,9 +463,9 @@ namespace Shield
 
         public bool Remove(object value, [CallerMemberName] string Key = null)
         {
-            if (localSettings.Values.ContainsKey(Key))
+            if (this.localSettings.Values.ContainsKey(Key))
             {
-                localSettings.DeleteContainer(Key);
+                this.localSettings.DeleteContainer(Key);
                 return true;
             }
 
@@ -342,7 +474,7 @@ namespace Shield
 
         public void ReportChanged(string key)
         {
-            OnPropertyChanged(key);
+            this.OnPropertyChanged(key);
         }
     }
 }

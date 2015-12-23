@@ -21,14 +21,15 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
 namespace Shield.Core.Models
 {
     [Service("CAMERA")]
     public class CameraMessage : MessageBase, IAddressable
     {
-        public string Url { get; set; }
         public string Message { get; set; }
+
         public bool? Keep { get; set; }
+
+        public string Url { get; set; }
     }
 }

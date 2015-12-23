@@ -21,83 +21,104 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Devices.Enumeration;
-using Windows.Foundation.Metadata;
-using Windows.Networking;
-using Windows.System.Display;
-using Windows.UI.Core;
-using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
-using Newtonsoft.Json;
-using Shield.Communication;
-using Shield.Communication.Destinations;
-using Shield.Communication.Services;
-using Shield.Core;
-using Shield.Core.Models;
-using Shield.Services;
-using Shield.ViewModels;
-
 namespace Shield
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using Newtonsoft.Json;
+
+    using Shield.Communication;
+    using Shield.Communication.Destinations;
+    using Shield.Communication.Services;
+    using Shield.Core;
+    using Shield.Core.Models;
+    using Shield.Services;
+    using Shield.ViewModels;
+
+    using Windows.Devices.Enumeration;
+    using Windows.Foundation.Metadata;
+    using Windows.Networking;
+    using Windows.System.Display;
+    using Windows.UI.Core;
+    using Windows.UI.ViewManagement;
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Input;
+    using Windows.UI.Xaml.Navigation;
+
     public sealed partial class MainPage : Page
     {
-        private const long pingCheck = 60*10000000; //1min
+        private const long pingCheck = 60 * 10000000; // 1min
 
         public static MainPage Instance;
 
         private readonly AppSettings appSettings;
+
         private readonly Stopwatch connectionStopwatch = new Stopwatch();
+
         internal readonly CoreDispatcher dispatcher;
+
         private readonly MainViewModel model;
+
         internal readonly Dictionary<string, int> sensors = new Dictionary<string, int>();
 
         private readonly Dictionary<string, ServiceBase> services = new Dictionary<string, ServiceBase>();
+
         private Audio audio;
+
         private Camera camera;
+
         public Connection currentConnection;
+
         private List<IDestination> destinations;
+
         private bool isCameraInitialized;
+
         public bool IsInSettings = false;
 
         private bool isRunning;
 
         private bool IsWelcomeMessageShowing = true;
+
         private DisplayRequest keepScreenOnRequest;
 
         private int lastConnection = -1;
+
         private Manager manager;
+
         private long nextPingCheck = DateTime.UtcNow.Ticks;
+
         private long recentStringReceivedTick;
+
         // Setup for ServerClient Connection
         public string remoteHost = "SERVER_IP_OR_ADDRESS";
+
         public string remoteService = "SERVER_PORT";
 
         private Screen screen;
+
         private long sentPingTick;
+
         public ServiceBase service;
+
         private Web web;
 
         public MainPage()
         {
             Instance = this;
 
-            appSettings = (AppSettings) Application.Current.Resources["appSettings"];
+            this.appSettings = (AppSettings)Application.Current.Resources["appSettings"];
 
-            InitializeComponent();
-            model = new MainViewModel();
-            dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
+            this.InitializeComponent();
+            this.model = new MainViewModel();
+            this.dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 
-            Initialize();
+            this.Initialize();
 
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.ViewManagement.StatusBar"))
             {
@@ -112,175 +133,196 @@ namespace Shield
 
         public async void SetService()
         {
-            if (appSettings.ConnectionIndex < 0)
+            if (this.appSettings.ConnectionIndex < 0)
             {
                 return;
             }
 
-            ServiceBase.OnConnectHandler OnConnection =
-                async connection =>
+            ServiceBase.OnConnectHandler OnConnection = async connection =>
                 {
-                    if (IsWelcomeMessageShowing)
+                    if (this.IsWelcomeMessageShowing)
                     {
-                        IsWelcomeMessageShowing = false;
+                        this.IsWelcomeMessageShowing = false;
                         await
-                            dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                                () => { backgroundImage.ClearValue(Image.SourceProperty); });
+                            this.dispatcher.RunAsync(
+                                CoreDispatcherPriority.Normal, 
+                                () => { this.backgroundImage.ClearValue(Image.SourceProperty); });
                     }
-                    await SendResult(new SystemResultMessage("CONNECT"), "!!");
+
+                    await this.SendResult(new SystemResultMessage("CONNECT"), "!!");
                 };
 
-            ServiceBase.OnConnectHandler OnDisconnected = connection => { Disconnect(); };
+            ServiceBase.OnConnectHandler OnDisconnected = connection => { this.Disconnect(); };
 
-            if (lastConnection != appSettings.ConnectionIndex)
+            if (this.lastConnection != this.appSettings.ConnectionIndex)
             {
                 await
-                    dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                        () => { appSettings.CurrentConnectionState = (int) ConnectionState.Disconnecting; });
+                    this.dispatcher.RunAsync(
+                        CoreDispatcherPriority.Normal, 
+                        () => { this.appSettings.CurrentConnectionState = (int)ConnectionState.Disconnecting; });
 
-                Disconnect();
-                lastConnection = appSettings.ConnectionIndex;
+                this.Disconnect();
+                this.lastConnection = this.appSettings.ConnectionIndex;
 
                 await
-                    dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                        () => { appSettings.CurrentConnectionState = (int) ConnectionState.NotConnected; });
+                    this.dispatcher.RunAsync(
+                        CoreDispatcherPriority.Normal, 
+                        () => { this.appSettings.CurrentConnectionState = (int)ConnectionState.NotConnected; });
             }
 
-            if (service != null)
+            if (this.service != null)
             {
-                service.OnConnect -= OnConnection;
-                service.OnDisconnected -= OnDisconnected;
+                this.service.OnConnect -= OnConnection;
+                this.service.OnDisconnected -= OnDisconnected;
             }
 
-            switch (appSettings.ConnectionIndex)
+            switch (this.appSettings.ConnectionIndex)
             {
                 case AppSettings.CONNECTION_BLUETOOTH:
-                {
-                    service = services.ContainsKey("Bluetooth") ? services["Bluetooth"] : new Bluetooth();
-                    services["Bluetooth"] = service;
-                    App.Telemetry.Context.Properties["connection.type"] = "Bluetooth";
+                    {
+                        this.service = this.services.ContainsKey("Bluetooth")
+                                           ? this.services["Bluetooth"]
+                                           : new Bluetooth();
+                        this.services["Bluetooth"] = this.service;
+                        App.Telemetry.Context.Properties["connection.type"] = "Bluetooth";
 
-                    break;
-                }
+                        break;
+                    }
+
                 case AppSettings.CONNECTION_WIFI:
                 case AppSettings.CONNECTION_MANUAL:
-                {
-                    service = services.ContainsKey("Wifi") ? services["Wifi"] : new Wifi(AppSettings.BroadcastPort);
-                    services["Wifi"] = service;
-                    App.Telemetry.Context.Properties["connection.type"] = "Wifi";
-
-                    if (appSettings.ConnectionIndex == 2 && !string.IsNullOrWhiteSpace(appSettings.Hostname))
                     {
-                        service.SetClient("added",
-                            new Connection("added",
-                                new RemotePeer(null, new HostName(appSettings.Hostname),
-                                    AppSettings.BroadcastPort.ToString())));
+                        this.service = this.services.ContainsKey("Wifi")
+                                           ? this.services["Wifi"]
+                                           : new Wifi(AppSettings.BroadcastPort);
+                        this.services["Wifi"] = this.service;
+                        App.Telemetry.Context.Properties["connection.type"] = "Wifi";
+
+                        if (this.appSettings.ConnectionIndex == 2
+                            && !string.IsNullOrWhiteSpace(this.appSettings.Hostname))
+                        {
+                            this.service.SetClient(
+                                "added", 
+                                new Connection(
+                                    "added", 
+                                    new RemotePeer(
+                                        null, 
+                                        new HostName(this.appSettings.Hostname), 
+                                        AppSettings.BroadcastPort.ToString())));
+                        }
+
+                        break;
                     }
-                    break;
-                }
+
                 case AppSettings.CONNECTION_USB:
-                {
-                    service = new USB();
-                    App.Telemetry.Context.Properties["connection.type"] = "USB";
-                    break;
-                }
+                    {
+                        this.service = new USB();
+                        App.Telemetry.Context.Properties["connection.type"] = "USB";
+                        break;
+                    }
+
                 default:
-                {
-                    throw new NotImplementedException("Connection type (" + appSettings.ConnectionIndex +
-                                                      ") not supported");
-                }
+                    {
+                        throw new NotImplementedException(
+                            "Connection type (" + this.appSettings.ConnectionIndex + ") not supported");
+                    }
             }
 
-            service.OnConnect += OnConnection;
-            service.OnDisconnected += OnDisconnected;
-            service.ThreadedException += Service_ThreadedException;
+            this.service.OnConnect += OnConnection;
+            this.service.OnDisconnected += OnDisconnected;
+            this.service.ThreadedException += this.Service_ThreadedException;
 
-            service.Initialize(!appSettings.MissingBackButton);
+            if (!this.service.IsConnected)
+            {
+                this.service.Initialize( !this.appSettings.MissingBackButton );
+            }
 
-            service.ListenForBeacons();
-            RefreshConnections();
+            this.service.ListenForBeacons();
+            this.RefreshConnections();
         }
 
         private async void Service_ThreadedException(Exception exception)
         {
             if (exception is UnsupportedSensorException)
             {
-                await SendResult(new ResultMessage {ResultId = -1, Result = "Unsupported Sensor"});
+                await this.SendResult(new ResultMessage { ResultId = -1, Result = "Unsupported Sensor" });
             }
         }
 
         private void Initialize()
         {
-            destinations = new List<IDestination>();
+            this.destinations = new List<IDestination>();
 
-            DataContext = model;
-            model.Sensors = new Sensors(dispatcher);
+            this.DataContext = this.model;
+            this.model.Sensors = new Sensors(this.dispatcher);
 
             MessageFactory.LoadClasses();
 
-            Sensors = model.Sensors;
+            this.Sensors = this.model.Sensors;
 
             // the Azure BLOB storage helper is handed to both Camera and audio for stream options
             // if it is not used, no upload will to Azure BLOB will be done
-            camera = new Camera();
-            audio = new Audio();
+            this.camera = new Camera();
+            this.audio = new Audio();
 
-            Sensors.OnSensorUpdated += Sensors_OnSensorUpdated;
-            Sensors.Start();
+            this.Sensors.OnSensorUpdated += this.Sensors_OnSensorUpdated;
+            this.Sensors.Start();
 
-            NavigationCacheMode = NavigationCacheMode.Required;
+            this.NavigationCacheMode = NavigationCacheMode.Required;
 
-            canvas.PointerPressed += async (s, a) => await SendEvent(s, a, "pressed");
-            canvas.PointerReleased += async (s, a) => await SendEvent(s, a, "released");
+            this.canvas.PointerPressed += async (s, a) => await this.SendEvent(s, a, "pressed");
+            this.canvas.PointerReleased += async (s, a) => await this.SendEvent(s, a, "released");
 
-            Display.PointerPressed += async (s, a) => await SendEvent(s, a, "pressed");
-            Display.PointerReleased += async (s, a) => await SendEvent(s, a, "released");
+            this.Display.PointerPressed += async (s, a) => await this.SendEvent(s, a, "pressed");
+            this.Display.PointerReleased += async (s, a) => await this.SendEvent(s, a, "released");
 
-            screen = new Screen(this);
-            web = new Web(this);
-            CheckAlwaysRunning();
+            this.screen = new Screen(this);
+            this.web = new Web(this);
+            this.CheckAlwaysRunning();
 
-            isRunning = true;
+            this.isRunning = true;
 #pragma warning disable 4014
-            Task.Run(() =>
-            {
-                SetService();
-                AutoReconnect();
-            });
-            Task.Run(() => { ProcessMessages(); });
+            Task.Run(
+                () =>
+                    {
+                        this.SetService();
+                        this.AutoReconnect();
+                    });
+            Task.Run(() => { this.ProcessMessages(); });
 #pragma warning restore 4014
         }
 
-
         public void CheckAlwaysRunning(bool? force = null)
         {
-            if ((force.HasValue && force.Value) || appSettings.AlwaysRunning)
+            if ((force.HasValue && force.Value) || this.appSettings.AlwaysRunning)
             {
-                keepScreenOnRequest = new DisplayRequest();
-                keepScreenOnRequest.RequestActive();
+                this.keepScreenOnRequest = new DisplayRequest();
+                this.keepScreenOnRequest.RequestActive();
             }
-            else if (keepScreenOnRequest != null)
+            else if (this.keepScreenOnRequest != null)
             {
-                keepScreenOnRequest.RequestRelease();
-                keepScreenOnRequest = null;
+                this.keepScreenOnRequest.RequestRelease();
+                this.keepScreenOnRequest = null;
             }
         }
 
         private async void AutoReconnect()
         {
             var isConnecting = false;
-            while (isRunning)
+            while (this.isRunning)
             {
-                if (!isConnecting && currentConnection == null && !IsInSettings && appSettings.AutoConnect)
+                if (!isConnecting && this.currentConnection == null && !this.IsInSettings
+                    && this.appSettings.AutoConnect)
                 {
-                    var previousConnection = appSettings.PreviousConnectionName;
-                    if (!string.IsNullOrWhiteSpace(previousConnection) && appSettings.ConnectionList.Count > 0)
+                    var previousConnection = this.appSettings.PreviousConnectionName;
+                    if (!string.IsNullOrWhiteSpace(previousConnection) && this.appSettings.ConnectionList.Count > 0)
                     {
-                        var item = appSettings.ConnectionList.FirstOrDefault(c => c.DisplayName == previousConnection);
+                        var item =
+                            this.appSettings.ConnectionList.FirstOrDefault(c => c.DisplayName == previousConnection);
                         if (item != null)
                         {
                             isConnecting = true;
-                            await Connect(item);
+                            await this.Connect(item);
                             await Task.Delay(30000);
                             isConnecting = false;
                         }
@@ -296,11 +338,12 @@ namespace Shield
         public async Task SendResult(ResultMessage resultMessage, string key = null)
         {
             key = key ?? resultMessage.Type.ToString();
-            var priority = GetPriorityOnKey(key);
-            var json = JsonConvert.SerializeObject(resultMessage,
-                new JsonSerializerSettings {NullValueHandling = NullValueHandling.Ignore});
-            await service.SendMessage(json, key, priority);
-            Log("S: " + json + "\r\n");
+            var priority = this.GetPriorityOnKey(key);
+            var json = JsonConvert.SerializeObject(
+                resultMessage, 
+                new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            await this.service.SendMessage(json, key, priority);
+            this.Log("S: " + json + "\r\n");
         }
 
         private int GetPriorityOnKey(string key)
@@ -320,55 +363,55 @@ namespace Shield
 
             builder.Append("}");
 
-            await service.SendMessage(builder.ToString(), data.Tag, 20);
+            await this.service.SendMessage(builder.ToString(), data.Tag, 20);
         }
 
         private void InitializeManager()
         {
-            manager = new Manager();
-            manager.StringReceived += StringReceived;
-            manager.MessageReceived += QueueMessage;
+            this.manager = new Manager();
+            this.manager.StringReceived += this.StringReceived;
+            this.manager.MessageReceived += this.QueueMessage;
         }
 
         private async Task InitializeCamera()
         {
             try
             {
-                if (!isCameraInitialized && !isCameraInitializing)
+                if (!this.isCameraInitialized && !this.isCameraInitializing)
                 {
-                    await
-                        dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                            async () =>
+                    await this.dispatcher.RunAsync(
+                        CoreDispatcherPriority.Normal, 
+                        async () =>
                             {
-                                await camera.InitializePreview(canvasBackground);
-                                isCameraInitialized = true;
-                                isCameraInitializing = false;
+                                await this.camera.InitializePreview(this.canvasBackground);
+                                this.isCameraInitialized = true;
+                                this.isCameraInitializing = false;
                             });
                 }
             }
             catch (Exception)
             {
-                //camera not available
-                isCameraInitialized = false;
-                isCameraInitializing = false;
+                // camera not available
+                this.isCameraInitialized = false;
+                this.isCameraInitializing = false;
             }
         }
 
         private async void StringReceived(string message)
         {
-            recentStringReceivedTick = DateTime.UtcNow.Ticks;
+            this.recentStringReceivedTick = DateTime.UtcNow.Ticks;
 
             if (message.Equals("{}"))
             {
-                //indicates ready for messages
-                service.IsClearToSend = true;
+                // indicates ready for messages
+                this.service.IsClearToSend = true;
                 var ticks = DateTime.UtcNow.Ticks;
 
-                if (ticks > nextPingCheck)
+                if (ticks > this.nextPingCheck)
                 {
-                    nextPingCheck = long.MaxValue - pingCheck < ticks ? 0 : ticks + pingCheck;
-                    sentPingTick = DateTime.UtcNow.Ticks;
-                    await SendResult(new SystemResultMessage("PING"));
+                    this.nextPingCheck = long.MaxValue - pingCheck < ticks ? 0 : ticks + pingCheck;
+                    this.sentPingTick = DateTime.UtcNow.Ticks;
+                    await this.SendResult(new SystemResultMessage("PING"));
                 }
             }
         }
@@ -377,17 +420,17 @@ namespace Shield
         {
             Connections list;
 
-            if (service == null)
+            if (this.service == null)
             {
                 return;
             }
 
             try
             {
-                list = await service.GetConnections();
+                list = await this.service.GetConnections();
                 if (list == null || list.Count == 0)
                 {
-                    appSettings.ConnectionList.Clear();
+                    this.appSettings.ConnectionList.Clear();
                     return;
                 }
             }
@@ -400,7 +443,8 @@ namespace Shield
             if (!list.Any())
             {
                 await
-                    dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    this.dispatcher.RunAsync(
+                        CoreDispatcherPriority.Normal, 
                         () => { App.Telemetry.TrackEvent("VirtualShieldConnectionEnumerationFail"); });
 
                 return;
@@ -413,31 +457,39 @@ namespace Shield
                 connections.Add(item);
             }
 
-            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                appSettings.ConnectionList = connections;
-                App.Telemetry.TrackEvent("VirtualShieldConnectionEnumerationSuccess");
-            });
+            await this.dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal, 
+                () =>
+                    {
+                        this.appSettings.ConnectionList = connections;
+                        App.Telemetry.TrackEvent("VirtualShieldConnectionEnumerationSuccess");
+                    });
         }
 
         public async void Disconnect()
         {
-            if (currentConnection != null)
+            if (this.currentConnection != null)
             {
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    appSettings.CurrentConnectionState = (int) ConnectionState.Disconnecting;
-                    App.Telemetry.Context.Properties["connection.state"] = ConnectionState.Disconnecting.ToString();
-                });
+                await this.dispatcher.RunAsync(
+                    CoreDispatcherPriority.Normal, 
+                    () =>
+                        {
+                            this.appSettings.CurrentConnectionState = (int)ConnectionState.Disconnecting;
+                            App.Telemetry.Context.Properties["connection.state"] =
+                                ConnectionState.Disconnecting.ToString();
+                        });
 
-                service.Disconnect(currentConnection);
-                currentConnection = null;
+                this.service.Disconnect(this.currentConnection);
+                this.currentConnection = null;
 
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    appSettings.CurrentConnectionState = (int) ConnectionState.NotConnected;
-                    App.Telemetry.Context.Properties["connection.state"] = ConnectionState.NotConnected.ToString();
-                });
+                await this.dispatcher.RunAsync(
+                    CoreDispatcherPriority.Normal, 
+                    () =>
+                        {
+                            this.appSettings.CurrentConnectionState = (int)ConnectionState.NotConnected;
+                            App.Telemetry.Context.Properties["connection.state"] =
+                                ConnectionState.NotConnected.ToString();
+                        });
 
                 App.Telemetry.TrackEvent("Disconnect");
             }
@@ -446,64 +498,72 @@ namespace Shield
         public async Task<bool> Connect(Connection selectedConnection)
         {
             var result = false;
-            if (currentConnection != null)
+            if (this.currentConnection != null)
             {
-                service.Disconnect(currentConnection);
+                this.service.Disconnect(this.currentConnection);
                 await Task.Delay(1000);
             }
 
             try
             {
                 var worked = false;
-                connectionStopwatch.Reset();
-                connectionStopwatch.Start();
+                this.connectionStopwatch.Reset();
+                this.connectionStopwatch.Start();
 
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await this.dispatcher.RunAsync(
+                    CoreDispatcherPriority.Normal, 
+                    () =>
+                        {
+                            this.appSettings.CurrentConnectionState = (int)ConnectionState.Connecting;
+                            App.Telemetry.Context.Properties["connection.state"] = ConnectionState.Connecting.ToString();
+                            App.Telemetry.Context.Properties["connection.name"] = string.Format(
+                                "{0:X}", 
+                                selectedConnection.DisplayName.GetHashCode());
+                            App.Telemetry.Context.Properties["connection.detail"] = string.Format(
+                                "{0:X}", 
+                                GetConnectionDetail(selectedConnection).GetHashCode());
+                        });
+
+                await this.dispatcher.RunAsync(
+                    CoreDispatcherPriority.Normal, 
+                    async () =>
+                        {
+                            App.Telemetry.TrackEvent("Connection_Attempt");
+                            worked = await this.service.Connect(selectedConnection);
+                            this.connectionStopwatch.Stop();
+
+                            if (!worked)
+                            {
+                                this.appSettings.CurrentConnectionState = (int)ConnectionState.CouldNotConnect;
+                                App.Telemetry.Context.Properties["connection.state"] = "Failed";
+                            }
+                            else
+                            {
+                                this.appSettings.CurrentConnectionState = (int)ConnectionState.Connected;
+                                this.currentConnection = selectedConnection;
+                                this.appSettings.PreviousConnectionName = this.currentConnection.DisplayName;
+                                App.Telemetry.Context.Properties["connection.state"] =
+                                    ConnectionState.Connected.ToString();
+                                result = true;
+                            }
+
+                            App.Telemetry.TrackEvent("Connection");
+                        });
+
+                if (this.service.CharEventHandlerCount == 0)
                 {
-                    appSettings.CurrentConnectionState = (int) ConnectionState.Connecting;
-                    App.Telemetry.Context.Properties["connection.state"] = ConnectionState.Connecting.ToString();
-                    App.Telemetry.Context.Properties["connection.name"] = string.Format("{0:X}",
-                        selectedConnection.DisplayName.GetHashCode());
-                    App.Telemetry.Context.Properties["connection.detail"] = string.Format("{0:X}",
-                        GetConnectionDetail(selectedConnection).GetHashCode());
-                });
-
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-                {
-                    App.Telemetry.TrackEvent("Connection_Attempt");
-                    worked = await service.Connect(selectedConnection);
-                    connectionStopwatch.Stop();
-
-                    if (!worked)
-                    {
-                        appSettings.CurrentConnectionState = (int) ConnectionState.CouldNotConnect;
-                        App.Telemetry.Context.Properties["connection.state"] = "Failed";
-                    }
-                    else
-                    {
-                        appSettings.CurrentConnectionState = (int) ConnectionState.Connected;
-                        currentConnection = selectedConnection;
-                        appSettings.PreviousConnectionName = currentConnection.DisplayName;
-                        App.Telemetry.Context.Properties["connection.state"] = ConnectionState.Connected.ToString();
-                        result = true;
-                    }
-
-                    App.Telemetry.TrackEvent("Connection");
-                });
-
-                if (service.CharEventHandlerCount == 0)
-                {
-                    service.CharReceived += c => manager.OnCharsReceived(c.ToString());
-                    service.CharEventHandlerCount++;
+                    this.service.CharReceived += c => this.manager.OnCharsReceived(c.ToString());
+                    this.service.CharEventHandlerCount++;
                 }
             }
             catch (Exception e)
             {
-                Log("!:error connecting:" + e.Message);
+                this.Log("!:error connecting:" + e.Message);
 
                 await
-                    dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                        () => { appSettings.CurrentConnectionState = (int) ConnectionState.CouldNotConnect; });
+                    this.dispatcher.RunAsync(
+                        CoreDispatcherPriority.Normal, 
+                        () => { this.appSettings.CurrentConnectionState = (int)ConnectionState.CouldNotConnect; });
                 App.Telemetry.TrackException(e);
             }
 
@@ -512,56 +572,59 @@ namespace Shield
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            InitializeManager();
+            this.InitializeManager();
 
-            if ((!appSettings.AutoConnect || string.IsNullOrWhiteSpace(appSettings.PreviousConnectionName))
-                && currentConnection == null)
+            if ((!this.appSettings.AutoConnect || string.IsNullOrWhiteSpace(this.appSettings.PreviousConnectionName))
+                && this.currentConnection == null)
             {
-                Frame.Navigate(typeof (SettingsPage));
+                this.Frame.Navigate(typeof(SettingsPage));
             }
 
             if (!string.IsNullOrWhiteSpace(e.Parameter?.ToString()))
             {
-                OnLaunchWhileActive(e.Parameter.ToString());
+                this.OnLaunchWhileActive(e.Parameter.ToString());
             }
         }
 
         private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            await SendResult(new ScreenResultMessage
-            {
-                Service = "LCDG",
-                Type = 'S',
-                Action = "clicked",
-                Result = ((sender as Button).Tag).ToString(),
-                Area = "CONTROL"
-            });
+            await
+                this.SendResult(
+                    new ScreenResultMessage
+                        {
+                            Service = "LCDG", 
+                            Type = 'S', 
+                            Action = "clicked", 
+                            Result = (sender as Button)?.Tag.ToString(), 
+                            Area = "CONTROL"
+                        });
         }
 
         private async void UIElement_OnHolding(object sender, HoldingRoutedEventArgs e)
         {
-            await SendResult(new ScreenResultMessage
-            {
-                Service = "LCDG",
-                Type = 'S',
-                Action = "holding",
-                Result = ((sender as Button).Tag).ToString(),
-                Area = "CONTROL"
-            });
+            await
+                this.SendResult(
+                    new ScreenResultMessage
+                        {
+                            Service = "LCDG", 
+                            Type = 'S', 
+                            Action = "holding", 
+                            Result = (sender as Button)?.Tag.ToString(), 
+                            Area = "CONTROL"
+                        });
         }
-
 
         private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
             var swi = sender as ToggleSwitch;
 
-            manager.OnStringReceived("{ 'Service': 'SENSORS', 'Sensors': [ {'" + swi.Tag + "' : " +
-                                     (swi.IsOn ? "true" : "false") + "} ] }");
+            this.manager.OnStringReceived(
+                "{ 'Service': 'SENSORS', 'Sensors': [ {'" + swi.Tag + "' : " + (swi.IsOn ? "true" : "false") + "} ] }");
         }
 
         public void RefreshConnections()
         {
-            PopulateList();
+            this.PopulateList();
         }
 
         private void AppButtons_OnClick(object sender, RoutedEventArgs e)
@@ -570,44 +633,45 @@ namespace Shield
 
             if (appbutton.Tag.Equals("Settings"))
             {
-                Frame.Navigate(typeof (SettingsPage));
+                this.Frame.Navigate(typeof(SettingsPage));
             }
             else if (appbutton.Tag.Equals("Control"))
             {
-                appSettings.IsControlscreen = true;
+                this.appSettings.IsControlscreen = true;
             }
-            else if (appbutton.Tag.Equals("Display")) // to full screen
+            else if (appbutton.Tag.Equals("Display"))
             {
-                appSettings.IsFullscreen = true;
+                // to full screen
+                this.appSettings.IsFullscreen = true;
             }
             else if (appbutton.Tag.Equals("Refresh"))
             {
-                SendResult(new SystemResultMessage("REFRESH"), "!R").Wait();
+                this.SendResult(new SystemResultMessage("REFRESH"), "!R").Wait();
             }
             else if (appbutton.Tag.Equals("CloseApp"))
             {
-                CheckAlwaysRunning(false);
+                this.CheckAlwaysRunning(false);
 
-                isRunning = false;
-                if (currentConnection != null)
+                this.isRunning = false;
+                if (this.currentConnection != null)
                 {
-                    service.Disconnect(currentConnection);
+                    this.service.Disconnect(this.currentConnection);
                 }
 
                 Application.Current.Exit();
             }
 
-            commandBar.IsOpen = false;
+            this.commandBar.IsOpen = false;
         }
 
         public void UpdateDestinations()
         {
             // As of right now we only support one destination
-            destinations.Clear();
+            this.destinations.Clear();
 
             // Add the AzureBlob Destination Endpoint
-            var blobDestination = new AzureBlob(appSettings.BlobAccountName, appSettings.BlobAccountKey);
-            destinations.Add(blobDestination);
+            var blobDestination = new AzureBlob(this.appSettings.BlobAccountName, this.appSettings.BlobAccountKey);
+            this.destinations.Add(blobDestination);
         }
 
         public async void OnLaunchWhileActive(string arguments)
@@ -617,23 +681,26 @@ namespace Shield
                 var notify = JsonConvert.DeserializeObject<NotificationLaunch>(arguments);
                 if (notify != null)
                 {
-                    await dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                        async () =>
-                        {
-                            await
-                                SendResult(new NotifyResultMessage
+                    await
+                        this.dispatcher.RunAsync(
+                            CoreDispatcherPriority.Normal, 
+                            async () =>
                                 {
-                                    Id = int.Parse(notify.Id),
-                                    Service = "NOTIFY",
-                                    Type = 'N',
-                                    Tag = notify.Tag
+                                    await
+                                        this.SendResult(
+                                            new NotifyResultMessage
+                                                {
+                                                    Id = int.Parse(notify.Id), 
+                                                    Service = "NOTIFY", 
+                                                    Type = 'N', 
+                                                    Tag = notify.Tag
+                                                });
                                 });
-                        });
                 }
             }
             catch (Exception e)
             {
-                Log("Toast:" + e.Message);
+                this.Log("Toast:" + e.Message);
             }
         }
 
@@ -644,15 +711,18 @@ namespace Shield
                 return string.Empty;
             }
 
-            if (connection.Source is DeviceInformation)
+            var deviceInformation = connection.Source as DeviceInformation;
+            if ( deviceInformation != null )
             {
-                return (connection.Source as DeviceInformation).Id;
+                return deviceInformation.Id;
             }
-            if (connection.Source is EndpointPair)
+
+            var endpointPair = connection.Source as EndpointPair;
+            if ( endpointPair != null )
             {
-                var source = connection.Source as EndpointPair;
-                return string.Format("{0}:{1}", source.RemoteHostName, source.RemoteServiceName);
+                return string.Format("{0}:{1}", endpointPair.RemoteHostName, endpointPair.RemoteServiceName);
             }
+
             return connection.Source.ToString();
         }
     }
@@ -660,7 +730,9 @@ namespace Shield
     public class NotificationLaunch
     {
         public string Type { get; set; }
+
         public string Id { get; set; }
+
         public string Tag { get; set; }
     }
 }

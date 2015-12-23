@@ -21,17 +21,18 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.Storage.Streams;
-using Windows.Web.Http;
-using Windows.Web.Http.Headers;
-using Shield.Core.Models;
-
 namespace Shield.Services
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using Shield.Core.Models;
+
+    using Windows.Storage.Streams;
+    using Windows.Web.Http;
+    using Windows.Web.Http.Headers;
+
     public class Web
     {
         private readonly MainPage mainPage;
@@ -61,24 +62,24 @@ namespace Shield.Services
                     switch (web.Action.ToUpperInvariant())
                     {
                         case "POST":
-                        {
-                            var content = new HttpStringContent(web.Data, UnicodeEncoding.Utf8, "application/json");
+                            {
+                                var content = new HttpStringContent(web.Data, UnicodeEncoding.Utf8, "application/json");
 
-                            request.DefaultRequestHeaders.Accept.Add(
-                                new HttpMediaTypeWithQualityHeaderValue("application/json"));
+                                request.DefaultRequestHeaders.Accept.Add(
+                                    new HttpMediaTypeWithQualityHeaderValue("application/json"));
 
-                            response = await request.PostAsync(new Uri(web.Url), content);
-                            break;
-                        }
+                                response = await request.PostAsync(new Uri(web.Url), content);
+                                break;
+                            }
 
                         case "GET":
-                        {
-                            request.DefaultRequestHeaders.Accept.Add(
-                                new HttpMediaTypeWithQualityHeaderValue("application/json"));
-                            response = await request.GetAsync(new Uri(web.Url));
+                            {
+                                request.DefaultRequestHeaders.Accept.Add(
+                                    new HttpMediaTypeWithQualityHeaderValue("application/json"));
+                                response = await request.GetAsync(new Uri(web.Url));
 
-                            break;
-                        }
+                                break;
+                            }
                     }
 
                     response?.EnsureSuccessStatusCode();
@@ -86,7 +87,7 @@ namespace Shield.Services
 
                 if (response != null)
                 {
-                    var result = new ResultMessage(web) {ResultId = (int) response.StatusCode, Type = 'W'};
+                    var result = new ResultMessage(web) { ResultId = (int)response.StatusCode, Type = 'W' };
 
                     if (!string.IsNullOrWhiteSpace(web.Parse) || web.Len > 0)
                     {
@@ -94,12 +95,12 @@ namespace Shield.Services
 
                         if (!string.IsNullOrWhiteSpace(web.Parse))
                         {
-                            var parser = new Parser {Content = temp, Instructions = web.Parse};
+                            var parser = new Parser { Content = temp, Instructions = web.Parse };
                             if (parser.Parse())
                             {
                                 if (parser.IsDictionary)
                                 {
-                                    mainPage.mainDictionary[parser.Tablename] = parser.Dictionary;
+                                    this.mainPage.mainDictionary[parser.Tablename] = parser.Dictionary;
                                     temp = parser.Tablename;
                                     result.ResultId = parser.Dictionary.Count();
                                 }
@@ -111,16 +112,16 @@ namespace Shield.Services
                         }
 
                         result.Result = string.IsNullOrWhiteSpace(temp)
-                            ? string.Empty
-                            : temp.Substring(0, Math.Min(temp.Length, web.Len == 0 ? 200 : web.Len));
+                                            ? string.Empty
+                                            : temp.Substring(0, Math.Min(temp.Length, web.Len == 0 ? 200 : web.Len));
                     }
 
-                    await mainPage.SendResult(result);
+                    await this.mainPage.SendResult(result);
                 }
             }
             catch (Exception e)
             {
-                await mainPage.SendResult(new ResultMessage(web) {ResultId = e.HResult, Result = e.Message});
+                await this.mainPage.SendResult(new ResultMessage(web) { ResultId = e.HResult, Result = e.Message });
             }
         }
     }

@@ -21,22 +21,23 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
-using System;
-
 namespace Shield
 {
+    using System;
+
     public class UnsupportedSensorException : Exception
     {
         public UnsupportedSensorException()
         {
         }
 
-        public UnsupportedSensorException(string message) : base(message)
+        public UnsupportedSensorException(string message)
+            : base(message)
         {
         }
 
-        public UnsupportedSensorException(string message, Exception innerException) : base(message, innerException)
+        public UnsupportedSensorException(string message, Exception innerException)
+            : base(message, innerException)
         {
         }
     }

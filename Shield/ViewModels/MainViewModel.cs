@@ -21,23 +21,27 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
-using System.ComponentModel;
-using Shield.Services;
-
 namespace Shield.ViewModels
 {
+    using System.ComponentModel;
+
+    using Shield.Services;
+
     public sealed class MainViewModel : INotifyPropertyChanged, IMainViewModel
     {
         private Sensors sensors;
 
         public Sensors Sensors
         {
-            get { return sensors; }
+            get
+            {
+                return this.sensors;
+            }
+
             set
             {
-                sensors = value;
-                OnPropertyChanged("Sensors");
+                this.sensors = value;
+                this.OnPropertyChanged("Sensors");
             }
         }
 
@@ -45,7 +49,7 @@ namespace Shield.ViewModels
 
         private void OnPropertyChanged(string propertyName)
         {
-            var handler = PropertyChanged;
+            var handler = this.PropertyChanged;
             handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }

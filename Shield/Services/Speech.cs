@@ -21,36 +21,44 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Media.SpeechRecognition;
-using Windows.Media.SpeechSynthesis;
-using Windows.Storage;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using Shield.Core.Models;
-
 namespace Shield.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using Shield.Core.Models;
+
+    using Windows.Media.SpeechRecognition;
+    using Windows.Media.SpeechSynthesis;
+    using Windows.Storage;
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Media;
+
     public struct RecognizedSpeech
     {
-        public string text;
-        public int index;
         public string action;
+
         public int confidence;
-        public SpeechRecognitionResultStatus status;
+
         internal int error;
+
+        public int index;
+
+        public SpeechRecognitionResultStatus status;
+
+        public string text;
     }
 
     public enum SpeechStatus
     {
-        None,
-        Listening,
+        None, 
+
+        Listening, 
+
         Stopped
     }
 
@@ -64,26 +72,32 @@ namespace Shield.Services
         public delegate void SpeechStatusChangedHandler(object sender, SpeechArgs args);
 
         private bool isRecognizing;
+
         private bool isUserStopped;
 
         private SpeechRecognizer recognizer;
+
         public event SpeechStatusChangedHandler SpeechStatusChanged;
 
         public async void Speak(MediaElement audioPlayer, SpeechMessage speech)
         {
             var synth = new SpeechSynthesizer();
             var ttsStream = await synth.SynthesizeTextToStreamAsync(speech.Message);
-            audioPlayer.SetSource(ttsStream, "");
+            audioPlayer.SetSource(ttsStream, string.Empty);
             audioPlayer.CurrentStateChanged +=
                 async (object sender, RoutedEventArgs e) =>
-                {
-                    await
-                        MainPage.Instance.SendResult(new ResultMessage(speech)
-                        {
-                            ResultId = (int) audioPlayer.CurrentState,
-                            Result = Enum.GetName(typeof (MediaElementState), audioPlayer.CurrentState)
-                        });
-                };
+                    {
+                        await
+                            MainPage.Instance.SendResult(
+                                new ResultMessage(speech)
+                                    {
+                                        ResultId = (int)audioPlayer.CurrentState, 
+                                        Result =
+                                            Enum.GetName(
+                                                typeof(MediaElementState), 
+                                                audioPlayer.CurrentState)
+                                    });
+                    };
         }
 
         public async Task<RecognizedSpeech> Recognize(string constraints, bool ui)
@@ -124,10 +138,10 @@ namespace Shield.Services
                     constraints = constraints.Replace(";", "-").Replace("&amp", " and ").Replace("&", " and ");
                 }
 
-                //build grammar constraints
+                // build grammar constraints
                 var grammarFileTemplate =
                     await
-                        StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///GrammarConstraintTemplate.grxml"));
+                    StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///GrammarConstraintTemplate.grxml"));
 
                 const string wordTemplate = "<item>{0}</item>";
                 const string itemTemplate = "<item><one-of>{0}</one-of><tag>out=\"{1}\";</tag></item>";
@@ -168,47 +182,46 @@ namespace Shield.Services
                 var grammarTemplate = await FileIO.ReadTextAsync(grammarFileTemplate);
                 var grammarFile =
                     await
-                        localFolder.CreateFileAsync("GrammarConstraint.grxml", CreationCollisionOption.ReplaceExisting);
+                    localFolder.CreateFileAsync("GrammarConstraint.grxml", CreationCollisionOption.ReplaceExisting);
                 var finalGrammarText = string.Format(grammarTemplate, itemBuilder);
                 await FileIO.WriteTextAsync(grammarFile, finalGrammarText);
 
                 grammarFileConstraint = new SpeechRecognitionGrammarFileConstraint(grammarFile, "constraints");
             }
 
-            if (isRecognizing && recognizer != null)
+            if (this.isRecognizing && this.recognizer != null)
             {
-                await recognizer.StopRecognitionAsync();
+                await this.recognizer.StopRecognitionAsync();
             }
 
-            recognizer = new SpeechRecognizer();
+            this.recognizer = new SpeechRecognizer();
 
-            //if (recognizer != null)
-            //{
-            //}
-            //else
-            //{
-            //    //recognizer.Constraints?.Clear();
-            //    //await recognizer.CompileConstraintsAsync();
-            //}
-
+            // if (recognizer != null)
+            // {
+            // }
+            // else
+            // {
+            // //recognizer.Constraints?.Clear();
+            // //await recognizer.CompileConstraintsAsync();
+            // }
             if (grammarFileConstraint != null)
             {
-                recognizer.Constraints.Add(grammarFileConstraint);
+                this.recognizer.Constraints.Add(grammarFileConstraint);
             }
 
             SpeechRecognitionResult recognize = null;
 
             try
             {
-                isRecognizing = false;
-                SpeechStatusChanged?.Invoke(this, new SpeechArgs {Status = SpeechStatus.None});
+                this.isRecognizing = false;
+                this.SpeechStatusChanged?.Invoke(this, new SpeechArgs { Status = SpeechStatus.None });
 
-                await recognizer.CompileConstraintsAsync();
+                await this.recognizer.CompileConstraintsAsync();
 
-                isRecognizing = true;
-                SpeechStatusChanged?.Invoke(this, new SpeechArgs {Status = SpeechStatus.Listening});
+                this.isRecognizing = true;
+                this.SpeechStatusChanged?.Invoke(this, new SpeechArgs { Status = SpeechStatus.Listening });
 
-                recognize = await (ui ? recognizer.RecognizeWithUIAsync() : recognizer.RecognizeAsync());
+                recognize = await (ui ? this.recognizer.RecognizeWithUIAsync() : this.recognizer.RecognizeAsync());
             }
             catch (Exception e)
             {
@@ -224,12 +237,13 @@ namespace Shield.Services
             }
             finally
             {
-                isRecognizing = false;
-                SpeechStatusChanged?.Invoke(this,
-                    new SpeechArgs {Status = isUserStopped ? SpeechStatus.Stopped : SpeechStatus.None});
+                this.isRecognizing = false;
+                this.SpeechStatusChanged?.Invoke(
+                    this, 
+                    new SpeechArgs { Status = this.isUserStopped ? SpeechStatus.Stopped : SpeechStatus.None });
             }
 
-            result.status = isUserStopped ? SpeechRecognitionResultStatus.UserCanceled : recognize.Status;
+            result.status = this.isUserStopped ? SpeechRecognitionResultStatus.UserCanceled : recognize.Status;
 
             if (constraints == null)
             {
@@ -237,7 +251,7 @@ namespace Shield.Services
                 return result;
             }
 
-            result.confidence = (int) recognize.Confidence;
+            result.confidence = (int)recognize.Confidence;
 
             var text = recognize.Text.ToUpperInvariant();
 
@@ -283,17 +297,17 @@ namespace Shield.Services
 
         public void Stop()
         {
-            if (isRecognizing)
+            if (this.isRecognizing)
             {
-                isRecognizing = false;
-                isUserStopped = true;
+                this.isRecognizing = false;
+                this.isUserStopped = true;
                 try
                 {
-                    recognizer?.StopRecognitionAsync();
+                    this.recognizer?.StopRecognitionAsync();
                 }
                 catch (InvalidOperationException)
                 {
-                    //ignore invalid stops
+                    // ignore invalid stops
                 }
             }
         }

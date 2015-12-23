@@ -1,39 +1,39 @@
-// /*
-//     Copyright(c) Microsoft Open Technologies, Inc. All rights reserved.
-// 
-//     The MIT License(MIT)
-// 
-//     Permission is hereby granted, free of charge, to any person obtaining a copy
-//     of this software and associated documentation files(the "Software"), to deal
-//     in the Software without restriction, including without limitation the rights
-//     to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
-//     copies of the Software, and to permit persons to whom the Software is
-//     furnished to do so, subject to the following conditions :
-// 
-//     The above copyright notice and this permission notice shall be included in
-//     all copies or substantial portions of the Software.
-// 
-//     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
-//     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//     THE SOFTWARE.
-// */
+/*
+    Copyright(c) Microsoft Open Technologies, Inc. All rights reserved.
 
-using System;
-using System.Threading.Tasks;
-using Windows.Devices.Enumeration;
-using Windows.Devices.SerialCommunication;
+    The MIT License(MIT)
 
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files(the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions :
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.
+*/
 namespace Shield.Communication.Services
 {
+    using System;
+    using System.Threading.Tasks;
+
+    using Windows.Devices.Enumeration;
+    using Windows.Devices.SerialCommunication;
+
     public class USB : ServiceBase
     {
         public USB()
         {
-            isPollingToSend = true;
+            this.isPollingToSend = true;
         }
 
         public SerialDevice service { get; private set; }
@@ -69,22 +69,22 @@ namespace Shield.Communication.Services
             var deviceInfo = newConnection.Source as DeviceInformation;
             if (deviceInfo != null)
             {
-                service = await SerialDevice.FromIdAsync(deviceInfo.Id);
-                if (service == null)
+                this.service = await SerialDevice.FromIdAsync(deviceInfo.Id);
+                if (this.service == null)
                 {
                     return false;
                 }
 
-                service.BaudRate = 115200;
-                service.StopBits = SerialStopBitCount.One;
-                service.Handshake = SerialHandshake.None;
-                service.DataBits = 8;
+                this.service.BaudRate = 115200;
+                this.service.StopBits = SerialStopBitCount.One;
+                this.service.Handshake = SerialHandshake.None;
+                this.service.DataBits = 8;
 
-                service.ReadTimeout = TimeSpan.FromSeconds(5);
-                service.WriteTimeout = TimeSpan.FromSeconds(5);
-                service.IsDataTerminalReadyEnabled = false;
+                this.service.ReadTimeout = TimeSpan.FromSeconds(5);
+                this.service.WriteTimeout = TimeSpan.FromSeconds(5);
+                this.service.IsDataTerminalReadyEnabled = false;
 
-                return InstrumentSocket(service.InputStream, service.OutputStream);
+                return this.InstrumentSocket(this.service.InputStream, this.service.OutputStream);
             }
 
             return false;
@@ -92,9 +92,9 @@ namespace Shield.Communication.Services
 
         public override void Dispose()
         {
-            service?.Dispose();
+            this.service?.Dispose();
             base.Dispose();
-            service = null;
+            this.service = null;
         }
     }
 }
