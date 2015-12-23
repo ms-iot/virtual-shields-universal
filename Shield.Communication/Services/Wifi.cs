@@ -1,46 +1,45 @@
-/*
-    Copyright(c) Microsoft Open Technologies, Inc. All rights reserved.
-
-    The MIT License(MIT)
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files(the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions :
-
-    The above copyright notice and this permission notice shall be included in
-    all copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-    THE SOFTWARE.
-*/
+// /*
+//     Copyright(c) Microsoft Open Technologies, Inc. All rights reserved.
+// 
+//     The MIT License(MIT)
+// 
+//     Permission is hereby granted, free of charge, to any person obtaining a copy
+//     of this software and associated documentation files(the "Software"), to deal
+//     in the Software without restriction, including without limitation the rights
+//     to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+//     copies of the Software, and to permit persons to whom the Software is
+//     furnished to do so, subject to the following conditions :
+// 
+//     The above copyright notice and this permission notice shall be included in
+//     all copies or substantial portions of the Software.
+// 
+//     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+//     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//     THE SOFTWARE.
+// */
 
 using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
+using Windows.Devices.Bluetooth.Rfcomm;
+using Windows.Devices.Enumeration;
 using Windows.Networking;
 using Windows.Networking.Proximity;
 using Windows.Networking.Sockets;
-using Windows.Storage.Streams;
-using Windows.Devices.Bluetooth.Rfcomm;
-using Windows.Devices.Enumeration;
 
 namespace Shield.Communication.Services
 {
     public class Wifi : ServiceBase
     {
-        private int broadcastPort;
-        private bool beaconIsOn = false;
-        DatagramSocket listener = new DatagramSocket(); 
+        private bool beaconIsOn;
+        private readonly int broadcastPort;
+        private readonly DatagramSocket listener = new DatagramSocket();
 
         public Wifi(int broadcastPort)
         {
@@ -82,7 +81,7 @@ namespace Shield.Communication.Services
                 {
                     await listener.BindServiceNameAsync(broadcastPort.ToString());
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     // ignore dropped listen sockets
                 }
@@ -94,14 +93,14 @@ namespace Shield.Communication.Services
             object outObj;
             if (CoreApplication.Properties.TryGetValue("remotePeer", out outObj))
             {
-                EchoMessage((RemotePeer)outObj, args);
+                EchoMessage((RemotePeer) outObj, args);
                 return;
             }
 
             // We do not have an output stream yet so create one.
             try
             {
-                IOutputStream outputStream = await listener.GetOutputStreamAsync(args.RemoteAddress, args.RemotePort);
+                var outputStream = await listener.GetOutputStreamAsync(args.RemoteAddress, args.RemotePort);
 
                 // It might happen that the OnMessage was invoked more than once before the GetOutputStreamAsync completed.
                 // In this case we will end up with multiple streams - make sure we have just one of it.
@@ -110,7 +109,7 @@ namespace Shield.Communication.Services
                 {
                     if (CoreApplication.Properties.TryGetValue("remotePeer", out outObj))
                     {
-                        peer = (RemotePeer)outObj;
+                        peer = (RemotePeer) outObj;
                     }
                     else
                     {
@@ -129,12 +128,11 @@ namespace Shield.Communication.Services
                     throw;
                 }
 
-               // NotifyUserFromAsyncThread("Connect failed with error: " + exception.Message, NotifyType.ErrorMessage);
+                // NotifyUserFromAsyncThread("Connect failed with error: " + exception.Message, NotifyType.ErrorMessage);
             }
-
         }
 
-        async void EchoMessage(RemotePeer peer, DatagramSocketMessageReceivedEventArgs eventArguments)
+        private void EchoMessage(RemotePeer peer, DatagramSocketMessageReceivedEventArgs eventArguments)
         {
             if (!peer.IsMatching(eventArguments.RemoteAddress, eventArguments.RemotePort))
             {
@@ -149,7 +147,7 @@ namespace Shield.Communication.Services
             {
                 var reader = eventArguments.GetDataReader();
                 var size = reader.UnconsumedBufferLength;
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 while (reader.UnconsumedBufferLength > 0)
                 {
                     var b = reader.ReadByte();
@@ -242,7 +240,7 @@ namespace Shield.Communication.Services
                 {
                     iponly = ip.Substring(0, colon);
                     port = ip.Substring(colon + 1);
-                } 
+                }
 
                 return new RemotePeer(null, new HostName(iponly), port);
             }
@@ -276,23 +274,21 @@ namespace Shield.Communication.Services
                 {
                     try
                     {
-                        CancellationTokenSource cts = new CancellationTokenSource();
+                        var cts = new CancellationTokenSource();
                         cts.CancelAfter(10000);
                         await socket.ConnectAsync(deviceHostName, remoteServiceName);
                         return InstrumentSocket(socket);
                     }
                     catch (Exception e)
                     {
-                        //log
+                        OnThreadedException(e);
                     }
                 }
 
                 return false;
             }
-            else
-            {
-                return true;
-            }
+
+            return true;
         }
     }
 }

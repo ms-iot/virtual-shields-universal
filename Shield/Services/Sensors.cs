@@ -27,7 +27,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.Devices.Sensors;
 using Windows.UI.Core;
@@ -77,6 +76,8 @@ namespace Shield.Services
 
     public class XYZ : DependencyObject
     {
+        public bool IsChanged;
+
         public XYZ()
         {
         }
@@ -109,18 +110,17 @@ namespace Shield.Services
         public string Tag { get; set; }
         public double Delta { get; set; }
         public DataItems Data { get; set; }
-        public bool IsChanged = false;
 
         private bool IsWithinDelta(double a, double b)
         {
-            return Math.Abs(b - a) < this.Delta;
+            return Math.Abs(b - a) < Delta;
         }
 
         public XYZ New(double x, double y, double z, double w)
         {
             var item = this; //ew XYZ() { Source = Source, Data = Data, Name = Name, Tag = Tag };
 
-            if (this.Delta > 0 && IsWithinDelta(x, item.Data[0].Value) && IsWithinDelta(y, item.Data[1].Value) &&
+            if (Delta > 0 && IsWithinDelta(x, item.Data[0].Value) && IsWithinDelta(y, item.Data[1].Value) &&
                 IsWithinDelta(z, item.Data[2].Value)
                 && (item.Data.Count() < 4 || IsWithinDelta(w, item.Data[3].Value)))
             {
@@ -165,6 +165,8 @@ namespace Shield.Services
         private const int LOCATION = 3;
         private const int QUANTIZATION = 4;
         private const int LIGHTSENSOR = 5;
+
+        private const uint baseMinimum = 100; //ms
         private readonly CoreDispatcher dispatcher;
         private Accelerometer accelerometer;
         private Compass compass;
@@ -289,13 +291,11 @@ namespace Shield.Services
 
             try
             {
-                reading = args == null ? ( sender == null ? null : ( await sender.GetGeopositionAsync() ) ) : args.Position;
+                reading = args == null ? (sender == null ? null : (await sender.GetGeopositionAsync())) : args.Position;
             }
             catch (UnauthorizedAccessException uae)
             {
-                //throw new UnsupportedSensorException("Geolocator not enabled : "+uae.Message);
-                //ignore??
-                return;
+                throw new UnsupportedSensorException("Geolocator not enabled : " + uae.Message);
             }
 
             await
@@ -304,7 +304,8 @@ namespace Shield.Services
                     {
                         this[LOCATION] = reading == null
                             ? this[LOCATION].New(0, 0, 0, 0)
-                            : this[LOCATION].New(reading.Coordinate.Point.Position.Latitude, reading.Coordinate.Point.Position.Longitude,
+                            : this[LOCATION].New(reading.Coordinate.Point.Position.Latitude,
+                                reading.Coordinate.Point.Position.Longitude,
                                 reading.Coordinate.Point.Position.Altitude, 0);
                         if (this[LOCATION].IsChanged)
                         {
@@ -342,8 +343,6 @@ namespace Shield.Services
             }
         }
 
-        private const uint baseMinimum = 100; //ms
-
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async void Start()
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
@@ -354,52 +353,52 @@ namespace Shield.Services
             }
             catch (Exception e)
             {
-                throw new UnsupportedSensorException( "Accelerometer error: "+e.Message );
+                throw new UnsupportedSensorException("Accelerometer error: " + e.Message);
             }
 
             try
             {
                 ToggleGyrometer();
             }
-            catch( Exception e )
+            catch (Exception e)
             {
-                throw new UnsupportedSensorException( "Gyrometer error: " + e.Message );
+                throw new UnsupportedSensorException("Gyrometer error: " + e.Message);
             }
 
             try
             {
                 ToggleCompass();
             }
-            catch( Exception e )
+            catch (Exception e)
             {
-                throw new UnsupportedSensorException( "Compass error: " + e.Message );
+                throw new UnsupportedSensorException("Compass error: " + e.Message);
             }
 
             try
             {
                 ToggleGeolocator();
             }
-            catch( Exception e )
+            catch (Exception e)
             {
-                throw new UnsupportedSensorException( "Geolocator error: " + e.Message );
+                throw new UnsupportedSensorException("Geolocator error: " + e.Message);
             }
 
             try
             {
                 ToggleOrientation();
             }
-            catch( Exception e )
+            catch (Exception e)
             {
-                throw new UnsupportedSensorException( "Orientation error: " + e.Message );
+                throw new UnsupportedSensorException("Orientation error: " + e.Message);
             }
 
             try
             {
                 ToggleLightSensor();
             }
-            catch( Exception e )
+            catch (Exception e)
             {
-                throw new UnsupportedSensorException( "LightSensor error: " + e.Message );
+                throw new UnsupportedSensorException("LightSensor error: " + e.Message);
             }
         }
 
@@ -525,7 +524,7 @@ namespace Shield.Services
                             SensorSwitches.L = null;
                             try
                             {
-                                NewLoc( geolocator, null );
+                                NewLoc(geolocator, null);
                             }
                             catch (UnsupportedSensorException use)
                             {

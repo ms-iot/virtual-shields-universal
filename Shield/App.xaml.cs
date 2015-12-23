@@ -27,18 +27,18 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Foundation.Metadata;
 using Windows.Globalization;
 using Windows.Media.SpeechRecognition;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 using Windows.Phone.UI.Input;
 using Windows.Storage;
 using Windows.UI.Notifications;
-using Shield.Core.Models;
-using System.IO;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
+using Shield.Core.Models;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=402347&clcid=0x409
 
@@ -49,7 +49,6 @@ namespace Shield
     /// </summary>
     sealed partial class App : Application
     {
-
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -57,18 +56,19 @@ namespace Shield
         public App()
         {
             WindowsAppInitializer.InitializeAsync()
-                .ContinueWith(task =>
-                {
-                    TelemetryConfiguration.Active.TelemetryInitializers.Add(new UwpDeviceTelemetryInitializer());
-                })
+                .ContinueWith(
+                    task =>
+                    {
+                        TelemetryConfiguration.Active.TelemetryInitializers.Add(new UwpDeviceTelemetryInitializer());
+                    })
                 .ContinueWith(task => { Telemetry = new TelemetryClient(); });
 
             InitializeComponent();
             Suspending += OnSuspending;
             Resuming += OnResuming;
             UnhandledException += App_UnhandledException;
-           
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+
+            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             {
                 HardwareButtons.BackPressed += HardwareButtons_BackPressed;
             }
@@ -83,11 +83,13 @@ namespace Shield
             }
         }
 
+        public static TelemetryClient Telemetry { get; private set; }
+
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             if (Debugger.IsAttached)
             {
-                Debug.WriteLine(e.Message); 
+                Debug.WriteLine(e.Message);
                 Debug.WriteLine(e.Exception.StackTrace);
             }
         }
@@ -106,7 +108,7 @@ namespace Shield
 
         private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
         {
-            Frame frame = Window.Current.Content as Frame;
+            var frame = Window.Current.Content as Frame;
             if (frame == null)
             {
                 return;
@@ -140,7 +142,7 @@ namespace Shield
             if (rootFrame == null)
             {
                 Telemetry.TrackEvent("Launch");
-                
+
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
                 // Set the default language
@@ -191,6 +193,7 @@ namespace Shield
                 //ignore if not available
             }
         }
+
         /// <summary>
         /// Invoked when Navigation to a certain page fails
         /// </summary>
@@ -221,12 +224,6 @@ namespace Shield
             }
 
             deferral.Complete();
-        }
-
-        public static TelemetryClient Telemetry
-        {
-            get;
-            private set;
         }
     }
 }

@@ -30,7 +30,6 @@ namespace Shield
 {
     public class BoolToVisConverter : IValueConverter
     {
-
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             return (bool) value ? Visibility.Visible : Visibility.Collapsed;

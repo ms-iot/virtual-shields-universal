@@ -25,7 +25,6 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using Windows.Media;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;

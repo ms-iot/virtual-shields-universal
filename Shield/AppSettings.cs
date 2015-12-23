@@ -22,7 +22,6 @@
     THE SOFTWARE.
 */
 
-using Shield.Communication;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -30,6 +29,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Metadata;
+using Windows.Storage;
+using Shield.Communication;
 
 namespace Shield
 {
@@ -44,23 +47,19 @@ namespace Shield
 
     public class AppSettings : INotifyPropertyChanged
     {
-        private Windows.Storage.ApplicationDataContainer localSettings;
-        private Connections connectionList;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        private string[] ConnectionStateText;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        internal const int CONNECTION_BLUETOOTH = 0;
+        internal const int CONNECTION_WIFI = 1;
+        internal const int CONNECTION_MANUAL = 2;
+        internal const int CONNECTION_USB = 3;
 
         public static AppSettings Instance;
-        private bool isLogging;
-        private StringBuilder log = new StringBuilder();
+        internal static readonly int BroadcastPort = 1235;
+        private readonly string[] ConnectionStateText;
+        private readonly ApplicationDataContainer localSettings;
+        private Connections connectionList;
 
-        private bool isListening = false;
+        private bool isListening;
+        private bool isLogging;
 
         public AppSettings()
         {
@@ -69,7 +68,7 @@ namespace Shield
                 Instance = this;
             }
 
-            var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+            var loader = new ResourceLoader();
             ConnectionStateText = new[]
             {
                 loader.GetString("NotConnected"), loader.GetString("Connecting"), loader.GetString("Connected"),
@@ -84,71 +83,15 @@ namespace Shield
 
             try
             {
-                localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+                localSettings = ApplicationData.Current.LocalSettings;
 
                 connectionList = new Connections();
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Exception while using LocalSettings: " + e.ToString());
+                Debug.WriteLine("Exception while using LocalSettings: " + e);
                 throw;
             }
-        }
-
-        public bool AddOrUpdateValue(Object value, [CallerMemberName] string Key = null)
-        {
-            bool valueChanged = false;
-
-            if (localSettings.Values.ContainsKey(Key))
-            {
-                if (localSettings.Values[Key] != value)
-                {
-                    localSettings.Values[Key] = value;
-                    valueChanged = true;
-                }
-            }
-            else
-            {
-                localSettings.Values.Add(Key, value);
-                valueChanged = true;
-            }
-
-            return valueChanged;
-        }
-
-        public T GetValueOrDefault<T>(T defaultValue, [CallerMemberName] string Key = null)
-        {
-            T value;
-
-            // If the key exists, retrieve the value.
-            if (localSettings.Values.ContainsKey(Key))
-            {
-                try
-                {
-                    value = (T)localSettings.Values[Key];
-                }
-                catch (InvalidCastException)
-                {
-                    value = defaultValue;
-                }
-            }
-            else
-            {
-                value = defaultValue;
-            }
-
-            return value;
-        }
-
-        public bool Remove(Object value, [CallerMemberName] string Key = null)
-        {
-            if (localSettings.Values.ContainsKey(Key))
-            {
-                localSettings.DeleteContainer(Key);
-                return true;
-            }
-
-            return false;
         }
 
         public bool AutoConnect
@@ -179,10 +122,7 @@ namespace Shield
 
         public int ConnectionIndex
         {
-            get
-            {
-                return GetValueOrDefault(0);
-            }
+            get { return GetValueOrDefault(0); }
             set
             {
                 AddOrUpdateValue(value);
@@ -194,12 +134,6 @@ namespace Shield
                 MainPage.Instance.SetService();
             }
         }
-
-        internal const int CONNECTION_BLUETOOTH = 0;
-        internal const int CONNECTION_WIFI = 1;
-        internal const int CONNECTION_MANUAL = 2;
-        internal const int CONNECTION_USB = 3;
-        internal static readonly int BroadcastPort = 1235;
 
         public string[] ConnectionItems => new[] {"Bluetooth", "Network", "Manual", "USB"};
 
@@ -230,6 +164,7 @@ namespace Shield
             get { return GetValueOrDefault(""); }
             set { AddOrUpdateValue(value); }
         }
+
         public string UserInfo3
         {
             get { return GetValueOrDefault(""); }
@@ -259,6 +194,7 @@ namespace Shield
             get { return GetValueOrDefault(""); }
             set { AddOrUpdateValue(value); }
         }
+
         public string BlobAccountKey
         {
             get { return GetValueOrDefault(""); }
@@ -280,7 +216,8 @@ namespace Shield
         public bool IsFullscreen
         {
             get { return GetValueOrDefault(true); }
-            set {
+            set
+            {
                 AddOrUpdateValue(value);
                 OnPropertyChanged("IsFullscreen");
                 OnPropertyChanged("IsControlscreen");
@@ -290,10 +227,7 @@ namespace Shield
         public bool IsControlscreen
         {
             get { return !IsFullscreen; }
-            set
-            {
-                IsFullscreen = !value;
-            }
+            set { IsFullscreen = !value; }
         }
 
         public bool IsLogging
@@ -313,26 +247,21 @@ namespace Shield
 
         public string LogText
         {
-            get
-            {
-                return log.ToString();
-            }
+            get { return Log.ToString(); }
             set
             {
-                log.Append(value);
+                Log.Append(value);
                 OnPropertyChanged("LogText");
             }
         }
 
-        public StringBuilder Log
-        {
-            get { return log; }
-        }
+        public StringBuilder Log { get; } = new StringBuilder();
 
         public int CurrentConnectionState
         {
             get { return GetValueOrDefault((int) ConnectionState.NotConnected); }
-            set {
+            set
+            {
                 AddOrUpdateValue(value);
                 OnPropertyChanged("CurrentConnectionStateText");
             }
@@ -340,16 +269,80 @@ namespace Shield
 
         public string CurrentConnectionStateText
         {
-            get { return this.ConnectionStateText[CurrentConnectionState]; }
+            get { return ConnectionStateText[CurrentConnectionState]; }
         }
 
         public List<string> DeviceNames { get; set; }
+
+        public bool MissingBackButton => !ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons");
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            var handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public bool AddOrUpdateValue(object value, [CallerMemberName] string Key = null)
+        {
+            var valueChanged = false;
+
+            if (localSettings.Values.ContainsKey(Key))
+            {
+                if (localSettings.Values[Key] != value)
+                {
+                    localSettings.Values[Key] = value;
+                    valueChanged = true;
+                }
+            }
+            else
+            {
+                localSettings.Values.Add(Key, value);
+                valueChanged = true;
+            }
+
+            return valueChanged;
+        }
+
+        public T GetValueOrDefault<T>(T defaultValue, [CallerMemberName] string Key = null)
+        {
+            T value;
+
+            // If the key exists, retrieve the value.
+            if (localSettings.Values.ContainsKey(Key))
+            {
+                try
+                {
+                    value = (T) localSettings.Values[Key];
+                }
+                catch (InvalidCastException)
+                {
+                    value = defaultValue;
+                }
+            }
+            else
+            {
+                value = defaultValue;
+            }
+
+            return value;
+        }
+
+        public bool Remove(object value, [CallerMemberName] string Key = null)
+        {
+            if (localSettings.Values.ContainsKey(Key))
+            {
+                localSettings.DeleteContainer(Key);
+                return true;
+            }
+
+            return false;
+        }
 
         public void ReportChanged(string key)
         {
             OnPropertyChanged(key);
         }
-
-        public bool MissingBackButton => !Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons");
     }
 }

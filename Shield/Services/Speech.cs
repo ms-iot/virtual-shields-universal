@@ -27,16 +27,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Globalization;
 using Windows.Media.SpeechRecognition;
 using Windows.Media.SpeechSynthesis;
 using Windows.Storage;
-using Windows.UI.Core;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-using Windows.Web.Http;
-using Shield.Core;
 using Shield.Core.Models;
 
 namespace Shield.Services
@@ -66,28 +62,35 @@ namespace Shield.Services
     public class Speech
     {
         public delegate void SpeechStatusChangedHandler(object sender, SpeechArgs args);
-        public event SpeechStatusChangedHandler SpeechStatusChanged;
+
+        private bool isRecognizing;
+        private bool isUserStopped;
 
         private SpeechRecognizer recognizer;
-        private bool isRecognizing = false;
-        private bool isUserStopped = false;
+        public event SpeechStatusChangedHandler SpeechStatusChanged;
 
         public async void Speak(MediaElement audioPlayer, SpeechMessage speech)
         {
             var synth = new SpeechSynthesizer();
             var ttsStream = await synth.SynthesizeTextToStreamAsync(speech.Message);
             audioPlayer.SetSource(ttsStream, "");
-            audioPlayer.CurrentStateChanged += async (object sender, Windows.UI.Xaml.RoutedEventArgs e) =>
-            {
-                await MainPage.Instance.SendResult(new ResultMessage(speech) { ResultId = (int)audioPlayer.CurrentState, Result = Enum.GetName(typeof(MediaElementState), audioPlayer.CurrentState) });
-            };
+            audioPlayer.CurrentStateChanged +=
+                async (object sender, RoutedEventArgs e) =>
+                {
+                    await
+                        MainPage.Instance.SendResult(new ResultMessage(speech)
+                        {
+                            ResultId = (int) audioPlayer.CurrentState,
+                            Result = Enum.GetName(typeof (MediaElementState), audioPlayer.CurrentState)
+                        });
+                };
         }
 
         public async Task<RecognizedSpeech> Recognize(string constraints, bool ui)
         {
             SpeechRecognitionGrammarFileConstraint grammarFileConstraint = null;
             var result = new RecognizedSpeech();
-            bool isTable = false;
+            var isTable = false;
             Dictionary<string, string> dictionary = null;
 
             if (!string.IsNullOrWhiteSpace(constraints))
@@ -103,11 +106,11 @@ namespace Shield.Services
                     var constraintBuilder = new StringBuilder();
                     dictionary = MainPage.Instance.mainDictionary[name];
 
-                    Debug.WriteLine("table "+name+" count=" + dictionary.Count);
+                    Debug.WriteLine("table " + name + " count=" + dictionary.Count);
 
                     foreach (var key in dictionary.Keys)
                     {
-                        constraintBuilder.Append(key.Replace(","," "));
+                        constraintBuilder.Append(key.Replace(",", " "));
                         constraintBuilder.Append(",");
                     }
 
@@ -118,7 +121,7 @@ namespace Shield.Services
                     }
 
                     constraints = constraintBuilder.ToString(0, constraintBuilder.Length - 1);
-                    constraints = constraints.Replace(";", "-").Replace("&amp"," and ").Replace("&"," and ");
+                    constraints = constraints.Replace(";", "-").Replace("&amp", " and ").Replace("&", " and ");
                 }
 
                 //build grammar constraints
@@ -198,12 +201,12 @@ namespace Shield.Services
             try
             {
                 isRecognizing = false;
-                SpeechStatusChanged?.Invoke(this, new SpeechArgs { Status = SpeechStatus.None });
+                SpeechStatusChanged?.Invoke(this, new SpeechArgs {Status = SpeechStatus.None});
 
                 await recognizer.CompileConstraintsAsync();
 
                 isRecognizing = true;
-                SpeechStatusChanged?.Invoke(this, new SpeechArgs { Status = SpeechStatus.Listening });
+                SpeechStatusChanged?.Invoke(this, new SpeechArgs {Status = SpeechStatus.Listening});
 
                 recognize = await (ui ? recognizer.RecognizeWithUIAsync() : recognizer.RecognizeAsync());
             }
@@ -222,7 +225,8 @@ namespace Shield.Services
             finally
             {
                 isRecognizing = false;
-                SpeechStatusChanged?.Invoke(this, new SpeechArgs { Status = isUserStopped ? SpeechStatus.Stopped : SpeechStatus.None });
+                SpeechStatusChanged?.Invoke(this,
+                    new SpeechArgs {Status = isUserStopped ? SpeechStatus.Stopped : SpeechStatus.None});
             }
 
             result.status = isUserStopped ? SpeechRecognitionResultStatus.UserCanceled : recognize.Status;

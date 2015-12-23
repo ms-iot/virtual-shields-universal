@@ -155,6 +155,7 @@
     <Content Include="Assets\refresh.png" />
     <Content Include="Assets\right.png" />
     <Content Include="Assets\settings.png" />
+    <Content Include="Assets\ShieldsWelcome.png" />
     <Content Include="Assets\SmallLogo.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\StoreLogo.scale-100.png" />

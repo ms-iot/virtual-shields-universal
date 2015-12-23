@@ -39,7 +39,7 @@ namespace Shield.ViewModels
 
         private void RegisterIoCBindings()
         {
-            IocContainer.Container.RegisterType(typeof(IMainViewModel), typeof(MainViewModel),
+            IocContainer.Container.RegisterType(typeof (IMainViewModel), typeof (MainViewModel),
                 new object[] {}, new ContainerControlledLifetimeManager());
         }
     }
@@ -47,18 +47,18 @@ namespace Shield.ViewModels
     public class IocContainer
     {
         public static IocContainer Container = new IocContainer();
-        private Dictionary<Type, object> objects = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, object> objects = new Dictionary<Type, object>();
 
         public static T Get<T>()
         {
             return (T) ((ContainerControlledLifetimeManager) Container.objects[typeof (T)]).GetValue();
         }
 
-        public void RegisterType(Type interfaceType, Type realType, object[] parms, 
+        public void RegisterType(Type interfaceType, Type realType, object[] parms,
             ContainerControlledLifetimeManager containerControlledLifetimeManager)
         {
             var instance = Activator.CreateInstance(realType, parms);
-            containerControlledLifetimeManager.SetValue( instance );
+            containerControlledLifetimeManager.SetValue(instance);
             objects.Add(interfaceType, containerControlledLifetimeManager);
         }
     }

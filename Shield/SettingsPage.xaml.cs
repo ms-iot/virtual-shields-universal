@@ -22,35 +22,30 @@
     THE SOFTWARE.
 */
 
-using Shield.Communication;
 using System;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
+using Shield.Communication;
 
 namespace Shield
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class SettingsPage : Page
     {
-        private MainPage main;
-        private AppSettings appSettings;
-    
+        private readonly AppSettings appSettings;
+        private readonly MainPage main;
+
         public SettingsPage()
         {
             main = MainPage.Instance;
-            appSettings = (AppSettings)App.Current.Resources["appSettings"];
+            appSettings = (AppSettings) Application.Current.Resources["appSettings"];
             var index = appSettings.ConnectionIndex;
 
-            this.InitializeComponent();
+            InitializeComponent();
 
-            this.ConnectSelection.SelectedIndex = index;
+            ConnectSelection.SelectedIndex = index;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -75,11 +70,11 @@ namespace Shield
                 if (result)
                 {
                     await Task.Delay(2000);
-                    if (this.Frame.CanGoBack)
+                    if (Frame.CanGoBack)
                     {
                         try
                         {
-                            this.Frame.GoBack();
+                            Frame.GoBack();
                         }
                         catch (Exception)
                         {
@@ -118,7 +113,8 @@ namespace Shield
                 appSettings.LogText = main.logger.ToString();
             }
         }
-        private async void Log_Clear(object sender, RoutedEventArgs e)
+
+        private void Log_Clear(object sender, RoutedEventArgs e)
         {
             appSettings.Log.Clear();
             appSettings.LogText = string.Empty;
@@ -136,7 +132,7 @@ namespace Shield
 
         private void NavBack(object sender, RoutedEventArgs e)
         {
-            this.Frame.GoBack();
+            Frame.GoBack();
         }
 
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

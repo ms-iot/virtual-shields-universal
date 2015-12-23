@@ -31,19 +31,6 @@ namespace Shield.ViewModels
     {
         private Sensors sensors;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public MainViewModel()
-        {
-            
-        }
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         public Sensors Sensors
         {
             get { return sensors; }
@@ -52,6 +39,14 @@ namespace Shield.ViewModels
                 sensors = value;
                 OnPropertyChanged("Sensors");
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            var handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 

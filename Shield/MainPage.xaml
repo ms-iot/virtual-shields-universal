@@ -91,7 +91,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             
-            <Image Grid.Row="0" Grid.RowSpan="2" x:Name="backgroundImage"  x:FieldModifier="Internal" Height="800" Width="480"/>
+            <Image Grid.Row="0" Grid.RowSpan="2" x:Name="backgroundImage" Source="Assets/ShieldsWelcome.png"  x:FieldModifier="Internal" Height="Auto" Width="Auto" Stretch="Uniform"/>
             <CaptureElement Grid.Row="0" Grid.RowSpan="2" x:Name="canvasBackground"  x:FieldModifier="Internal" Visibility="Collapsed"/>
             <TextBlock Grid.Row="0" Grid.RowSpan="2" x:Name="text"  x:FieldModifier="Internal" FontSize="32" />
             <MediaElement Grid.Row="0" Grid.RowSpan="2" Name="player" x:FieldModifier="Internal" AutoPlay="True" Height="Auto" Width="Auto"/>

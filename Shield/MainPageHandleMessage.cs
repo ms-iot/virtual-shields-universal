@@ -33,8 +33,8 @@ using Windows.ApplicationModel.Email;
 using Windows.Data.Xml.Dom;
 using Windows.Devices.Geolocation;
 using Windows.Devices.Sensors;
-﻿using Windows.Graphics.Display;
-﻿using Windows.Media.SpeechRecognition;
+using Windows.Graphics.Display;
+using Windows.Media.SpeechRecognition;
 using Windows.Phone.Devices.Notification;
 using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.Storage;
@@ -62,12 +62,12 @@ namespace Shield
         private readonly Queue<string> keys = new Queue<string>();
         private readonly Dictionary<string, bool> keysInProcess = new Dictionary<string, bool>();
         private bool isCameraInitializing;
+        public StringBuilder logger;
 
         public Dictionary<string, Dictionary<string, string>> mainDictionary =
             new Dictionary<string, Dictionary<string, string>>();
 
         private Speech speechService;
-        public StringBuilder logger;
 
         private void QueueMessage(MessageBase message)
         {
@@ -185,7 +185,6 @@ namespace Shield
             catch (Exception)
             {
                 //ignore telemetry errors if any
-
             }
 
             switch (message.Service)
@@ -863,7 +862,12 @@ namespace Shield
                         throw new UnsupportedSensorException("Accelerometer does not exist");
                     }
 
-                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> {{"sensor.type", sensorsMessage.Type.ToString()}, { "sensor.value", sensorItem.A.Value.ToString()}});
+                    App.Telemetry.TrackEvent("Sensor",
+                        new Dictionary<string, string>
+                        {
+                            {"sensor.type", sensorsMessage.Type.ToString()},
+                            {"sensor.value", sensorItem.A.Value.ToString()}
+                        });
                     Sensors.SensorSwitches.A = sensorItem.A.Value;
                 }
                 else if (sensorItem.G != null)
@@ -874,7 +878,12 @@ namespace Shield
                         throw new UnsupportedSensorException("Gyrometer does not exist");
                     }
 
-                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "sensor.type", sensorsMessage.Type.ToString() }, { "sensor.value", sensorItem.G.Value.ToString() } });
+                    App.Telemetry.TrackEvent("Sensor",
+                        new Dictionary<string, string>
+                        {
+                            {"sensor.type", sensorsMessage.Type.ToString()},
+                            {"sensor.value", sensorItem.G.Value.ToString()}
+                        });
                     Sensors.SensorSwitches.G = sensorItem.G.Value;
                 }
                 else if (sensorItem.M != null)
@@ -886,13 +895,24 @@ namespace Shield
                     }
 
                     Sensors.SensorSwitches.M = sensorItem.M.Value;
-                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "sensor.type", sensorsMessage.Type.ToString() }, { "sensor.value", sensorItem.M.Value.ToString() } }); Sensors.SensorSwitches.M = sensorItem.M.Value;
+                    App.Telemetry.TrackEvent("Sensor",
+                        new Dictionary<string, string>
+                        {
+                            {"sensor.type", sensorsMessage.Type.ToString()},
+                            {"sensor.value", sensorItem.M.Value.ToString()}
+                        });
+                    Sensors.SensorSwitches.M = sensorItem.M.Value;
                 }
                 else if (sensorItem.L != null)
                 {
                     sensorsMessage.Type = 'L';
                     Sensors.SensorSwitches.L = sensorItem.L.Value;
-                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "sensor.type", sensorsMessage.Type.ToString() }, { "sensor.value", sensorItem.L.Value.ToString() } });
+                    App.Telemetry.TrackEvent("Sensor",
+                        new Dictionary<string, string>
+                        {
+                            {"sensor.type", sensorsMessage.Type.ToString()},
+                            {"sensor.value", sensorItem.L.Value.ToString()}
+                        });
                 }
                 else if (sensorItem.Q != null)
                 {
@@ -902,7 +922,12 @@ namespace Shield
                         throw new UnsupportedSensorException("OrientationSensor does not exist");
                     }
 
-                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "sensor.type", sensorsMessage.Type.ToString() }, { "sensor.value", sensorItem.Q.Value.ToString() } });
+                    App.Telemetry.TrackEvent("Sensor",
+                        new Dictionary<string, string>
+                        {
+                            {"sensor.type", sensorsMessage.Type.ToString()},
+                            {"sensor.value", sensorItem.Q.Value.ToString()}
+                        });
                     Sensors.SensorSwitches.Q = sensorItem.Q.Value;
                 }
                 else if (sensorItem.P != null)
@@ -913,7 +938,12 @@ namespace Shield
                         throw new UnsupportedSensorException("LightSensor does not exist");
                     }
 
-                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "sensor.type", sensorsMessage.Type.ToString() }, { "sensor.value", sensorItem.P.Value.ToString() } });
+                    App.Telemetry.TrackEvent("Sensor",
+                        new Dictionary<string, string>
+                        {
+                            {"sensor.type", sensorsMessage.Type.ToString()},
+                            {"sensor.value", sensorItem.P.Value.ToString()}
+                        });
                     Sensors.SensorSwitches.P = sensorItem.P.Value;
                 }
 
@@ -947,7 +977,7 @@ namespace Shield
                 }
 
                 await InitializeCamera();
-                
+
                 var imageName = "photo_" + DateTime.Now.Ticks + ".jpg";
                 foreach (
                     var destination in destinations.Where(destination => destination.CheckPrefix(cameraMessage.Url)))
@@ -969,7 +999,7 @@ namespace Shield
                 }
                 catch (Exception e)
                 {
-                    await SendResult(new ResultMessage(cameraMessage) {ResultId = -99, Result = e.Message });
+                    await SendResult(new ResultMessage(cameraMessage) {ResultId = -99, Result = e.Message});
                     lock (keysInProcess)
                     {
                         keysInProcess["CAMERA"] = false;

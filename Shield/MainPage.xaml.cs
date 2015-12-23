@@ -29,9 +29,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
+using Windows.Foundation.Metadata;
 using Windows.Networking;
 using Windows.System.Display;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -44,46 +46,52 @@ using Shield.Core;
 using Shield.Core.Models;
 using Shield.Services;
 using Shield.ViewModels;
-using Windows.UI.ViewManagement;
-using Microsoft.ApplicationInsights;
 
 namespace Shield
 {
     public sealed partial class MainPage : Page
     {
         private const long pingCheck = 60*10000000; //1min
+
+        public static MainPage Instance;
+
+        private readonly AppSettings appSettings;
+        private readonly Stopwatch connectionStopwatch = new Stopwatch();
         internal readonly CoreDispatcher dispatcher;
         private readonly MainViewModel model;
         internal readonly Dictionary<string, int> sensors = new Dictionary<string, int>();
+
+        private readonly Dictionary<string, ServiceBase> services = new Dictionary<string, ServiceBase>();
         private Audio audio;
         private Camera camera;
         public Connection currentConnection;
         private List<IDestination> destinations;
         private bool isCameraInitialized;
+        public bool IsInSettings = false;
+
+        private bool isRunning;
+
+        private bool IsWelcomeMessageShowing = true;
         private DisplayRequest keepScreenOnRequest;
+
+        private int lastConnection = -1;
         private Manager manager;
         private long nextPingCheck = DateTime.UtcNow.Ticks;
         private long recentStringReceivedTick;
         // Setup for ServerClient Connection
         public string remoteHost = "SERVER_IP_OR_ADDRESS";
         public string remoteService = "SERVER_PORT";
-        private long sentPingTick;
-        public ServiceBase service;
-        public bool IsInSettings = false;
-        private Stopwatch connectionStopwatch = new Stopwatch();
-
-        private AppSettings appSettings = null;
-
-        public static MainPage Instance = null;
 
         private Screen screen;
+        private long sentPingTick;
+        public ServiceBase service;
         private Web web;
 
         public MainPage()
         {
             Instance = this;
 
-            appSettings = (AppSettings)App.Current.Resources["appSettings"];
+            appSettings = (AppSettings) Application.Current.Resources["appSettings"];
 
             InitializeComponent();
             model = new MainViewModel();
@@ -91,7 +99,7 @@ namespace Shield
 
             Initialize();
 
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.ViewManagement.StatusBar"))
+            if (ApiInformation.IsTypePresent("Windows.Phone.UI.ViewManagement.StatusBar"))
             {
                 if (StatusBar.GetForCurrentView() != null)
                 {
@@ -102,12 +110,6 @@ namespace Shield
 
         public Sensors Sensors { get; set; }
 
-        private bool isRunning = false;
-
-        private Dictionary<string, ServiceBase> services = new Dictionary<string, ServiceBase>();
-
-        private int lastConnection = -1;
-
         public async void SetService()
         {
             if (appSettings.ConnectionIndex < 0)
@@ -115,34 +117,33 @@ namespace Shield
                 return;
             }
 
-            ServiceBase.OnConnectHandler OnConnection = async connection =>
-            {
-                await SendResult(new SystemResultMessage("CONNECT"), "!!");
-            };
+            ServiceBase.OnConnectHandler OnConnection =
+                async connection =>
+                {
+                    if (IsWelcomeMessageShowing)
+                    {
+                        IsWelcomeMessageShowing = false;
+                        await
+                            dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                                () => { backgroundImage.ClearValue(Image.SourceProperty); });
+                    }
+                    await SendResult(new SystemResultMessage("CONNECT"), "!!");
+                };
 
-            ServiceBase.OnConnectHandler OnDisconnected = connection =>
-            {
-                this.Disconnect();
-            };
+            ServiceBase.OnConnectHandler OnDisconnected = connection => { Disconnect(); };
 
             if (lastConnection != appSettings.ConnectionIndex)
             {
                 await
-                        dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                            () =>
-                            {
-                                appSettings.CurrentConnectionState = (int)ConnectionState.Disconnecting;
-                            });
+                    dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                        () => { appSettings.CurrentConnectionState = (int) ConnectionState.Disconnecting; });
 
-                this.Disconnect();
+                Disconnect();
                 lastConnection = appSettings.ConnectionIndex;
 
                 await
-                        dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                            () =>
-                            {
-                                appSettings.CurrentConnectionState = (int)ConnectionState.NotConnected;
-                            });
+                    dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                        () => { appSettings.CurrentConnectionState = (int) ConnectionState.NotConnected; });
             }
 
             if (service != null)
@@ -155,32 +156,33 @@ namespace Shield
             {
                 case AppSettings.CONNECTION_BLUETOOTH:
                 {
-                        service = services.ContainsKey("Bluetooth") ? services["Bluetooth"] : new Bluetooth();
-                        services["Bluetooth"] = service;
-                        App.Telemetry.Context.Properties["connection.type"] = "Bluetooth";
+                    service = services.ContainsKey("Bluetooth") ? services["Bluetooth"] : new Bluetooth();
+                    services["Bluetooth"] = service;
+                    App.Telemetry.Context.Properties["connection.type"] = "Bluetooth";
 
-                        break;
+                    break;
                 }
                 case AppSettings.CONNECTION_WIFI:
                 case AppSettings.CONNECTION_MANUAL:
                 {
-                        service = services.ContainsKey("Wifi") ? services["Wifi"] : new Wifi(AppSettings.BroadcastPort);
-                        services["Wifi"] = service;
-                        App.Telemetry.Context.Properties["connection.type"] = "Wifi";
+                    service = services.ContainsKey("Wifi") ? services["Wifi"] : new Wifi(AppSettings.BroadcastPort);
+                    services["Wifi"] = service;
+                    App.Telemetry.Context.Properties["connection.type"] = "Wifi";
 
-                        if (appSettings.ConnectionIndex == 2 && !string.IsNullOrWhiteSpace(appSettings.Hostname))
-                        {
-                            service.SetClient("added",
-                                new Connection("added",
-                                    new RemotePeer(null, new HostName(appSettings.Hostname), AppSettings.BroadcastPort.ToString() )));
-                        }
-                        break;
+                    if (appSettings.ConnectionIndex == 2 && !string.IsNullOrWhiteSpace(appSettings.Hostname))
+                    {
+                        service.SetClient("added",
+                            new Connection("added",
+                                new RemotePeer(null, new HostName(appSettings.Hostname),
+                                    AppSettings.BroadcastPort.ToString())));
+                    }
+                    break;
                 }
                 case AppSettings.CONNECTION_USB:
                 {
-                        service = new USB();
-                        App.Telemetry.Context.Properties["connection.type"] = "USB";
-                        break;
+                    service = new USB();
+                    App.Telemetry.Context.Properties["connection.type"] = "USB";
+                    break;
                 }
                 default:
                 {
@@ -191,11 +193,20 @@ namespace Shield
 
             service.OnConnect += OnConnection;
             service.OnDisconnected += OnDisconnected;
+            service.ThreadedException += Service_ThreadedException;
 
             service.Initialize(!appSettings.MissingBackButton);
 
             service.ListenForBeacons();
             RefreshConnections();
+        }
+
+        private async void Service_ThreadedException(Exception exception)
+        {
+            if (exception is UnsupportedSensorException)
+            {
+                await SendResult(new ResultMessage {ResultId = -1, Result = "Unsupported Sensor"});
+            }
         }
 
         private void Initialize()
@@ -260,7 +271,7 @@ namespace Shield
             var isConnecting = false;
             while (isRunning)
             {
-                if (!isConnecting && this.currentConnection == null && !IsInSettings && appSettings.AutoConnect)
+                if (!isConnecting && currentConnection == null && !IsInSettings && appSettings.AutoConnect)
                 {
                     var previousConnection = appSettings.PreviousConnectionName;
                     if (!string.IsNullOrWhiteSpace(previousConnection) && appSettings.ConnectionList.Count > 0)
@@ -388,10 +399,9 @@ namespace Shield
 
             if (!list.Any())
             {
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    App.Telemetry.TrackEvent("VirtualShieldConnectionEnumerationFail");
-                });
+                await
+                    dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                        () => { App.Telemetry.TrackEvent("VirtualShieldConnectionEnumerationFail"); });
 
                 return;
             }
@@ -416,18 +426,17 @@ namespace Shield
             {
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    appSettings.CurrentConnectionState = (int)ConnectionState.Disconnecting;
+                    appSettings.CurrentConnectionState = (int) ConnectionState.Disconnecting;
                     App.Telemetry.Context.Properties["connection.state"] = ConnectionState.Disconnecting.ToString();
                 });
-                
+
                 service.Disconnect(currentConnection);
                 currentConnection = null;
 
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    appSettings.CurrentConnectionState = (int)ConnectionState.NotConnected;
+                    appSettings.CurrentConnectionState = (int) ConnectionState.NotConnected;
                     App.Telemetry.Context.Properties["connection.state"] = ConnectionState.NotConnected.ToString();
-
                 });
 
                 App.Telemetry.TrackEvent("Disconnect");
@@ -436,7 +445,7 @@ namespace Shield
 
         public async Task<bool> Connect(Connection selectedConnection)
         {
-            bool result = false;
+            var result = false;
             if (currentConnection != null)
             {
                 service.Disconnect(currentConnection);
@@ -445,16 +454,18 @@ namespace Shield
 
             try
             {
-                bool worked = false;
+                var worked = false;
                 connectionStopwatch.Reset();
                 connectionStopwatch.Start();
 
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    appSettings.CurrentConnectionState = (int)ConnectionState.Connecting;
+                    appSettings.CurrentConnectionState = (int) ConnectionState.Connecting;
                     App.Telemetry.Context.Properties["connection.state"] = ConnectionState.Connecting.ToString();
-                    App.Telemetry.Context.Properties["connection.name"] = String.Format("{0:X}", selectedConnection.DisplayName.GetHashCode());
-                    App.Telemetry.Context.Properties["connection.detail"] = String.Format("{0:X}", GetConnectionDetail(selectedConnection).GetHashCode());
+                    App.Telemetry.Context.Properties["connection.name"] = string.Format("{0:X}",
+                        selectedConnection.DisplayName.GetHashCode());
+                    App.Telemetry.Context.Properties["connection.detail"] = string.Format("{0:X}",
+                        GetConnectionDetail(selectedConnection).GetHashCode());
                 });
 
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
@@ -465,12 +476,12 @@ namespace Shield
 
                     if (!worked)
                     {
-                        appSettings.CurrentConnectionState = (int)ConnectionState.CouldNotConnect;
+                        appSettings.CurrentConnectionState = (int) ConnectionState.CouldNotConnect;
                         App.Telemetry.Context.Properties["connection.state"] = "Failed";
                     }
                     else
                     {
-                        appSettings.CurrentConnectionState = (int)ConnectionState.Connected;
+                        appSettings.CurrentConnectionState = (int) ConnectionState.Connected;
                         currentConnection = selectedConnection;
                         appSettings.PreviousConnectionName = currentConnection.DisplayName;
                         App.Telemetry.Context.Properties["connection.state"] = ConnectionState.Connected.ToString();
@@ -488,12 +499,11 @@ namespace Shield
             }
             catch (Exception e)
             {
-                this.Log("!:error connecting:" + e.Message);
+                Log("!:error connecting:" + e.Message);
 
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    appSettings.CurrentConnectionState = (int)ConnectionState.CouldNotConnect;
-                });
+                await
+                    dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                        () => { appSettings.CurrentConnectionState = (int) ConnectionState.CouldNotConnect; });
                 App.Telemetry.TrackException(e);
             }
 
@@ -505,14 +515,14 @@ namespace Shield
             InitializeManager();
 
             if ((!appSettings.AutoConnect || string.IsNullOrWhiteSpace(appSettings.PreviousConnectionName))
-                && this.currentConnection == null)
+                && currentConnection == null)
             {
-                this.Frame.Navigate(typeof(SettingsPage));
+                Frame.Navigate(typeof (SettingsPage));
             }
 
             if (!string.IsNullOrWhiteSpace(e.Parameter?.ToString()))
             {
-                this.OnLaunchWhileActive(e.Parameter.ToString());
+                OnLaunchWhileActive(e.Parameter.ToString());
             }
         }
 
@@ -558,11 +568,11 @@ namespace Shield
         {
             var appbutton = sender as AppBarButton;
 
-            if (appbutton.Tag.Equals("Settings")) 
+            if (appbutton.Tag.Equals("Settings"))
             {
-                this.Frame.Navigate(typeof(SettingsPage));
+                Frame.Navigate(typeof (SettingsPage));
             }
-            else if (appbutton.Tag.Equals("Control")) 
+            else if (appbutton.Tag.Equals("Control"))
             {
                 appSettings.IsControlscreen = true;
             }
@@ -579,9 +589,9 @@ namespace Shield
                 CheckAlwaysRunning(false);
 
                 isRunning = false;
-                if (this.currentConnection != null)
+                if (currentConnection != null)
                 {
-                    this.service.Disconnect(this.currentConnection);
+                    service.Disconnect(currentConnection);
                 }
 
                 Application.Current.Exit();
@@ -611,7 +621,7 @@ namespace Shield
                         async () =>
                         {
                             await
-                                SendResult(new NotifyResultMessage()
+                                SendResult(new NotifyResultMessage
                                 {
                                     Id = int.Parse(notify.Id),
                                     Service = "NOTIFY",
@@ -623,7 +633,7 @@ namespace Shield
             }
             catch (Exception e)
             {
-                this.Log("Toast:" + e.Message);
+                Log("Toast:" + e.Message);
             }
         }
 
@@ -633,20 +643,17 @@ namespace Shield
             {
                 return string.Empty;
             }
-            
+
             if (connection.Source is DeviceInformation)
             {
                 return (connection.Source as DeviceInformation).Id;
             }
-            else if (connection.Source is EndpointPair)
+            if (connection.Source is EndpointPair)
             {
                 var source = connection.Source as EndpointPair;
                 return string.Format("{0}:{1}", source.RemoteHostName, source.RemoteServiceName);
             }
-            else
-            {
-                return connection.Source.ToString();
-            }
+            return connection.Source.ToString();
         }
     }
 

@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -33,26 +34,30 @@ using Windows.Data.Xml.Dom;
 using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
 using Shield.Core;
-using System.Diagnostics;
+using XmlDocument = Windows.Data.Xml.Dom.XmlDocument;
+using XmlNodeList = Windows.Data.Xml.Dom.XmlNodeList;
 
 namespace Shield
 {
     public class Parser
     {
+        private XmlDocument doc;
+        private string keypart, valuepart;
+        private XmlNodeList nodes;
         public string Content { get; set; }
         public string Instructions { get; set; }
 
-        public Dictionary<string, string> Dictionary => this.dictionary;
+        public Dictionary<string, string> Dictionary { get; } = new Dictionary<string, string>();
+
         public bool IsDictionary { get; set; }
 
-        private Windows.Data.Xml.Dom.XmlDocument doc;
-        private Windows.Data.Xml.Dom.XmlNodeList nodes;
-        private Dictionary<string, string> dictionary = new Dictionary<string, string>();
-        private string keypart, valuepart;
+        public string Tablename { get; set; }
+
+        public string Result { get; set; }
 
         public bool Parse()
         {
-            var temp = this.Content;
+            var temp = Content;
 
             var results = new List<string>();
             var potentialResults = new Stack<string>();
@@ -85,7 +90,7 @@ namespace Shield
 
                     if (restore)
                     {
-                        temp = potentialResults.Count > 0 ? potentialResults.Pop() : this.Content;
+                        temp = potentialResults.Count > 0 ? potentialResults.Pop() : Content;
                     }
 
                     if (save)
@@ -129,7 +134,7 @@ namespace Shield
                         foreach (var node in nodes)
                         {
                             IXmlNode key = null;
-                            Windows.Data.Xml.Dom.XmlNodeList valueset = null;
+                            XmlNodeList valueset = null;
                             try
                             {
                                 key = node.SelectSingleNode(keypart);
@@ -140,11 +145,10 @@ namespace Shield
                                 //skip if not matching
                                 continue;
                             }
-                            
+
                             if (!string.IsNullOrWhiteSpace(key?.InnerText))
                             {
-
-                                if (!string.IsNullOrWhiteSpace(key.InnerText) && !dictionary.ContainsKey(key.InnerText))
+                                if (!string.IsNullOrWhiteSpace(key.InnerText) && !Dictionary.ContainsKey(key.InnerText))
                                 {
                                     var values = new StringBuilder();
                                     var count = valueset.Count();
@@ -157,12 +161,12 @@ namespace Shield
                                         }
                                     }
 
-                                    dictionary.Add(key.InnerText, values.ToString());
+                                    Dictionary.Add(key.InnerText, values.ToString());
                                 }
                             }
                         }
 
-                        Debug.WriteLine(string.Format("Table {0} saved count = {1}", Tablename, dictionary.Count));
+                        Debug.WriteLine("Table {0} saved count = {1}", Tablename, Dictionary.Count);
                     }
                     else if (cmd.Contains("R"))
                     {
@@ -190,7 +194,7 @@ namespace Shield
                             {
                                 if (cmd.Contains("j"))
                                 {
-                                    temp = ((JProperty)jToken).Name;
+                                    temp = ((JProperty) jToken).Name;
                                     if (cmd.Contains("J"))
                                     {
                                         temp += ":'" + jToken.Value<string>() + "'";
@@ -271,37 +275,34 @@ namespace Shield
             return true;
         }
 
-        public string Tablename { get; set; }
-
-        public string Result { get; set; }
-
         public bool CheckDoc(string temp)
         {
             if (doc != null) return true;
 
             try
             {
-                doc = new Windows.Data.Xml.Dom.XmlDocument();
+                doc = new XmlDocument();
                 doc.LoadXml(temp);
             }
-            catch (Exception)  //backup leverage html agility pack
+            catch (Exception) //backup leverage html agility pack
             {
                 try
                 {
-                    HtmlDocument hdoc = new HtmlDocument();
+                    var hdoc = new HtmlDocument();
                     hdoc.LoadHtml(temp);
                     hdoc.OptionOutputAsXml = true;
                     hdoc.OptionAutoCloseOnEnd = true;
 
-                    MemoryStream stream = new MemoryStream();
+                    var stream = new MemoryStream();
 
-                    XmlWriter xtw = XmlWriter.Create(stream, new XmlWriterSettings { ConformanceLevel = ConformanceLevel.Fragment });
+                    var xtw = XmlWriter.Create(stream,
+                        new XmlWriterSettings {ConformanceLevel = ConformanceLevel.Fragment});
 
                     hdoc.Save(xtw);
 
                     stream.Position = 0;
 
-                    doc.LoadXml((new System.IO.StreamReader(stream)).ReadToEnd());
+                    doc.LoadXml((new StreamReader(stream)).ReadToEnd());
                 }
                 catch (Exception)
                 {
