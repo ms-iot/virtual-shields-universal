@@ -21,34 +21,49 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml;
-using Windows.Data.Xml.Dom;
-using HtmlAgilityPack;
-using Newtonsoft.Json.Linq;
-using Shield.Core;
-using System.Diagnostics;
-
 namespace Shield
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Xml;
+
+    using HtmlAgilityPack;
+
+    using Newtonsoft.Json.Linq;
+
+    using Shield.Core;
+
+    using Windows.Data.Xml.Dom;
+
+    using XmlDocument = Windows.Data.Xml.Dom.XmlDocument;
+    using XmlNodeList = Windows.Data.Xml.Dom.XmlNodeList;
+
     public class Parser
     {
+        private XmlDocument doc;
+
+        private string keypart;
+
+        private string valuepart;
+
+        private XmlNodeList nodes;
+
         public string Content { get; set; }
+
         public string Instructions { get; set; }
 
-        public Dictionary<string, string> Dictionary => this.dictionary;
+        public Dictionary<string, string> Dictionary { get; } = new Dictionary<string, string>();
+
         public bool IsDictionary { get; set; }
 
-        private Windows.Data.Xml.Dom.XmlDocument doc;
-        private Windows.Data.Xml.Dom.XmlNodeList nodes;
-        private Dictionary<string, string> dictionary = new Dictionary<string, string>();
-        private string keypart, valuepart;
+        public string Tablename { get; set; }
+
+        public string Result { get; set; }
 
         public bool Parse()
         {
@@ -58,7 +73,7 @@ namespace Shield
             var potentialResults = new Stack<string>();
             var prefix = string.Empty;
 
-            var parses = Instructions.Split('|');
+            var parses = this.Instructions.Split('|');
             foreach (var parse in parses)
             {
                 var colon = parse.IndexOf(':');
@@ -74,7 +89,7 @@ namespace Shield
                     if (nextToken)
                     {
                         results.Add(temp);
-                        temp = "";
+                        temp = string.Empty;
                     }
 
                     if (prefixed)
@@ -98,53 +113,53 @@ namespace Shield
 
                     if (cmd.Contains("i"))
                     {
-                        if (!CheckDoc(temp))
+                        if (!this.CheckDoc(temp))
                         {
                             return false;
                         }
 
-                        nodes = doc.SelectNodes(part);
-                        IsDictionary = true;
+                        this.nodes = this.doc.SelectNodes(part);
+                        this.IsDictionary = true;
                     }
                     else if (cmd.Contains("k"))
                     {
-                        keypart = part;
+                        this.keypart = part;
                     }
                     else if (cmd.Contains("v"))
                     {
-                        valuepart = part;
+                        this.valuepart = part;
                     }
-                    else if (cmd.Contains("table") && nodes != null)
+                    else if (cmd.Contains("table") && this.nodes != null)
                     {
                         if (part.Contains("name="))
                         {
-                            Tablename = part.Substring(part.IndexOf("name=") + 5);
-                            var j = Tablename.IndexOf(";");
+                            this.Tablename = part.Substring(part.IndexOf("name=") + 5);
+                            var j = this.Tablename.IndexOf(";");
                             if (j > -1)
                             {
-                                Tablename = Tablename.Substring(0, j);
+                                this.Tablename = this.Tablename.Substring(0, j);
                             }
                         }
 
-                        foreach (var node in nodes)
+                        foreach (var node in this.nodes)
                         {
                             IXmlNode key = null;
-                            Windows.Data.Xml.Dom.XmlNodeList valueset = null;
+                            XmlNodeList valueset = null;
                             try
                             {
-                                key = node.SelectSingleNode(keypart);
-                                valueset = node.SelectNodes(valuepart);
+                                key = node.SelectSingleNode(this.keypart);
+                                valueset = node.SelectNodes(this.valuepart);
                             }
                             catch (Exception)
                             {
-                                //skip if not matching
+                                // skip if not matching
                                 continue;
                             }
-                            
+
                             if (!string.IsNullOrWhiteSpace(key?.InnerText))
                             {
-
-                                if (!string.IsNullOrWhiteSpace(key.InnerText) && !dictionary.ContainsKey(key.InnerText))
+                                if (!string.IsNullOrWhiteSpace(key.InnerText)
+                                    && !this.Dictionary.ContainsKey(key.InnerText))
                                 {
                                     var values = new StringBuilder();
                                     var count = valueset.Count();
@@ -157,12 +172,12 @@ namespace Shield
                                         }
                                     }
 
-                                    dictionary.Add(key.InnerText, values.ToString());
+                                    this.Dictionary.Add(key.InnerText, values.ToString());
                                 }
                             }
                         }
 
-                        Debug.WriteLine(string.Format("Table {0} saved count = {1}", Tablename, dictionary.Count));
+                        Debug.WriteLine("Table {0} saved count = {1}", this.Tablename, this.Dictionary.Count);
                     }
                     else if (cmd.Contains("R"))
                     {
@@ -266,42 +281,44 @@ namespace Shield
                 }
             }
 
-            Result = builder.Length == 0 ? string.Empty : builder.ToString();
+            this.Result = builder.Length == 0 ? string.Empty : builder.ToString();
 
             return true;
         }
 
-        public string Tablename { get; set; }
-
-        public string Result { get; set; }
-
         public bool CheckDoc(string temp)
         {
-            if (doc != null) return true;
+            if (this.doc != null)
+            {
+                return true;
+            }
 
             try
             {
-                doc = new Windows.Data.Xml.Dom.XmlDocument();
-                doc.LoadXml(temp);
+                this.doc = new XmlDocument();
+                this.doc.LoadXml(temp);
             }
-            catch (Exception)  //backup leverage html agility pack
+            catch (Exception)
             {
+                // backup leverage html agility pack
                 try
                 {
-                    HtmlDocument hdoc = new HtmlDocument();
+                    var hdoc = new HtmlDocument();
                     hdoc.LoadHtml(temp);
                     hdoc.OptionOutputAsXml = true;
                     hdoc.OptionAutoCloseOnEnd = true;
 
-                    MemoryStream stream = new MemoryStream();
+                    var stream = new MemoryStream();
 
-                    XmlWriter xtw = XmlWriter.Create(stream, new XmlWriterSettings { ConformanceLevel = ConformanceLevel.Fragment });
+                    var xtw = XmlWriter.Create(
+                        stream, 
+                        new XmlWriterSettings { ConformanceLevel = ConformanceLevel.Fragment });
 
                     hdoc.Save(xtw);
 
                     stream.Position = 0;
 
-                    doc.LoadXml((new System.IO.StreamReader(stream)).ReadToEnd());
+                    this.doc.LoadXml((new StreamReader(stream)).ReadToEnd());
                 }
                 catch (Exception)
                 {

@@ -30,6 +30,20 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    
+    <Page.Resources>
+        <Style x:Key="Headers" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="32" />
+            <Setter Property="Margin" Value="0,0,0,-10" />
+            <Setter Property="FontFamily" Value="Segoe UI Light" />
+            <Setter Property="FontWeight" Value="Thin" />
+        </Style>
+        <Style x:Key="ButtonText" TargetType="Button">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontFamily" Value="Segoe UI Light" />
+            <Setter Property="FontWeight" Value="Thin" />
+        </Style>
+    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -47,11 +61,10 @@
         <Pivot Grid.Row="2" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
             <PivotItem>
                 <PivotItem.Header>
-                    <TextBlock Text="Connections" FontSize="48" FontFamily="Segoe UI Light"  FontWeight="Thin" Margin="0,0,0,-18"/>
+                    <TextBlock Text="Connections" Style="{StaticResource Headers}"/>
                 </PivotItem.Header>
                 <Grid  Margin="0,20,0,0">
                     <Grid.RowDefinitions>
-                        <!--<RowDefinition Height="1*"/>-->
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="6*"/>
                         <RowDefinition Height="1*"/>
@@ -62,8 +75,7 @@
                     <ComboBox Grid.Row="0" HorizontalAlignment="Stretch" 
                               ItemsSource="{Binding Source={StaticResource appSettings}, Path=ConnectionItems}"
                               x:Name="ConnectSelection" SelectedValue="{Binding Source={StaticResource appSettings}, Path=ConnectionIndex, Mode=TwoWay}"
-                              SelectionChanged="Selector_OnSelectionChanged">
-                    </ComboBox>
+                              SelectionChanged="Selector_OnSelectionChanged" />
 
                     <StackPanel Grid.Row="1" x:Name="ConnectSettings" Orientation="Vertical" Visibility="{Binding Source={StaticResource appSettings}, Path=NetworkDirectVisible, Converter={StaticResource BoolToVisConverter}}">
                         <TextBox x:Name="serverClientHostNameTextBox" PlaceholderText="HostName or IP address"  Width="auto" Text="{Binding Source={StaticResource appSettings}, Path=Hostname, Mode=TwoWay}" />
@@ -90,11 +102,11 @@
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
 
-                            <Button Grid.Column="0" Height="40" x:Uid="RefreshBtn" x:Name="Refresh" Click="Refresh_Click" HorizontalAlignment="Stretch"></Button>
-                            <Button Grid.Column="2" Height="40" x:Uid="Disconnect" x:Name="DisconncectButton" Click="Disconnect_Click" HorizontalAlignment="Stretch"
-                                    Visibility="{Binding Source={StaticResource appSettings}, Path=ListVisible, Converter={StaticResource BoolToVisConverter}}"></Button>
-                            <Button Grid.Column="4" Height="40" x:Uid="Connect" x:Name="Reconnect" Click="Reconnect_Click" HorizontalAlignment="Stretch"
-                                    Visibility="{Binding Source={StaticResource appSettings}, Path=ListVisible, Converter={StaticResource BoolToVisConverter}}"></Button>
+                            <Button Grid.Column="0" Height="40" x:Uid="RefreshBtn" Style="{StaticResource ButtonText}" x:Name="Refresh" Click="Refresh_Click" HorizontalAlignment="Stretch" />
+                            <Button Grid.Column="2" Height="40" x:Uid="Disconnect" Style="{StaticResource ButtonText}" x:Name="DisconncectButton" Click="Disconnect_Click" HorizontalAlignment="Stretch"
+                                    Visibility="{Binding Source={StaticResource appSettings}, Path=ListVisible, Converter={StaticResource BoolToVisConverter}}" />
+                            <Button Grid.Column="4" Height="40" x:Uid="Connect" Style="{StaticResource ButtonText}" x:Name="Reconnect" Click="Reconnect_Click" HorizontalAlignment="Stretch"
+                                    Visibility="{Binding Source={StaticResource appSettings}, Path=ListVisible, Converter={StaticResource BoolToVisConverter}}" />
                         </Grid>
                     </StackPanel>
 
@@ -120,7 +132,7 @@
 
             <PivotItem>
                 <PivotItem.Header>
-                    <TextBlock Text="destinations" FontSize="48" FontFamily="Segoe UI Light" FontWeight="Thin" Margin="0,0,0,-18"/>
+                    <TextBlock Text="Destinations"  Style="{StaticResource Headers}"/>
                 </PivotItem.Header>
                 <Grid Margin="0,20,0,0">
                     <Grid.RowDefinitions>
@@ -143,7 +155,7 @@
 
             <PivotItem>
                 <PivotItem.Header>
-                    <TextBlock Text="log" FontSize="48" FontFamily="Segoe UI Light" FontWeight="Thin" Margin="0,0,0,-18"/>
+                    <TextBlock Text="Log"  Style="{StaticResource Headers}"/>
                 </PivotItem.Header>
                 <Grid Margin="0,20,0,0">
                     <Grid.RowDefinitions>
@@ -163,10 +175,10 @@
                         </Grid.ColumnDefinitions>
 
                         <Button Grid.Column="0"  Height="40" x:Name="logButton" Click="Log_Click" HorizontalAlignment="Stretch">
-                            <TextBlock x:Name="logText" Text="{Binding Source={StaticResource appSettings}, Path=IsLoggingSwitchText}"></TextBlock>
+                            <TextBlock x:Name="logText" Text="{Binding Source={StaticResource appSettings}, Path=IsLoggingSwitchText}" />
                         </Button>
                         <Button x:Name="logClearButton" Height="40" Click="Log_Clear" Grid.Column="2" HorizontalAlignment="Stretch">
-                            <TextBlock x:Uid="Clear"></TextBlock>
+                            <TextBlock x:Uid="Clear" />
                         </Button>
                     </Grid>
                 </Grid>

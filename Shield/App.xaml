@@ -31,7 +31,7 @@
 
     <Application.Resources>
         <viewModels:ViewModelLocator x:Key="ViewModelLocator" />
-        <local:AppSettings x:Key="appSettings"></local:AppSettings>
+        <local:AppSettings x:Key="appSettings" />
         <local:BoolToVisConverter x:Key="BoolToVisConverter"/>
     </Application.Resources>
 

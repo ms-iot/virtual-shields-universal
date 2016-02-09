@@ -130,6 +130,12 @@
     <Compile Include="Connections.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Shield.Core\Shield.Core.csproj">
+      <Project>{2A334444-D26F-4FBC-B7F7-F5C23951645D}</Project>
+      <Name>Shield.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

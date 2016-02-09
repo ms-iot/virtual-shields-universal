@@ -21,20 +21,21 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.Storage.Streams;
-using Windows.Web.Http;
-using Windows.Web.Http.Headers;
-using Shield.Core.Models;
-
 namespace Shield.Services
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using Shield.Core.Models;
+
+    using Windows.Storage.Streams;
+    using Windows.Web.Http;
+    using Windows.Web.Http.Headers;
+
     public class Web
     {
-        private MainPage mainPage;
+        private readonly MainPage mainPage;
 
         public Web(MainPage mainPage)
         {
@@ -99,7 +100,7 @@ namespace Shield.Services
                             {
                                 if (parser.IsDictionary)
                                 {
-                                    mainPage.mainDictionary[parser.Tablename] = parser.Dictionary;
+                                    this.mainPage.mainDictionary[parser.Tablename] = parser.Dictionary;
                                     temp = parser.Tablename;
                                     result.ResultId = parser.Dictionary.Count();
                                 }
@@ -111,18 +112,17 @@ namespace Shield.Services
                         }
 
                         result.Result = string.IsNullOrWhiteSpace(temp)
-                            ? string.Empty
-                            : temp.Substring(0, Math.Min(temp.Length, web.Len == 0 ? 200 : web.Len));
+                                            ? string.Empty
+                                            : temp.Substring(0, Math.Min(temp.Length, web.Len == 0 ? 200 : web.Len));
                     }
 
-                    await mainPage.SendResult(result);
+                    await this.mainPage.SendResult(result);
                 }
             }
             catch (Exception e)
             {
-                await mainPage.SendResult(new ResultMessage(web) { ResultId = e.HResult, Result = e.Message });
+                await this.mainPage.SendResult(new ResultMessage(web) { ResultId = e.HResult, Result = e.Message });
             }
         }
-
     }
 }

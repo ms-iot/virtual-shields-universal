@@ -21,37 +21,38 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
-using System;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
-using Windows.Networking;
-using Windows.Networking.Proximity;
-using Windows.Networking.Sockets;
-using Windows.Storage.Streams;
-using Windows.Devices.Bluetooth.Rfcomm;
-using Windows.Devices.Enumeration;
-
 namespace Shield.Communication.Services
 {
+    using System;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    using Windows.ApplicationModel.Core;
+    using Windows.Devices.Bluetooth.Rfcomm;
+    using Windows.Devices.Enumeration;
+    using Windows.Networking;
+    using Windows.Networking.Proximity;
+    using Windows.Networking.Sockets;
+
     public class Wifi : ServiceBase
     {
-        private int broadcastPort;
-        private bool beaconIsOn = false;
-        DatagramSocket listener = new DatagramSocket(); 
+        private readonly int broadcastPort;
+
+        private readonly DatagramSocket listener = new DatagramSocket();
+
+        private bool beaconIsOn;
 
         public Wifi(int broadcastPort)
         {
             this.broadcastPort = broadcastPort;
-            isPollingToSend = true;
+            this.isPollingToSend = true;
         }
 
         public override async Task<Connections> GetConnections()
         {
             var connections = new Connections();
-            foreach (var client in clients)
+            foreach (var client in this.clients)
             {
                 if (client.Value != null && client.Value.Source != null)
                 {
@@ -74,15 +75,15 @@ namespace Shield.Communication.Services
 
         public override async void ListenForBeacons()
         {
-            if (!beaconIsOn)
+            if (!this.beaconIsOn)
             {
-                beaconIsOn = true;
-                listener.MessageReceived += ListenerOnMessageReceived;
+                this.beaconIsOn = true;
+                this.listener.MessageReceived += this.ListenerOnMessageReceived;
                 try
                 {
-                    await listener.BindServiceNameAsync(broadcastPort.ToString());
+                    await this.listener.BindServiceNameAsync(this.broadcastPort.ToString());
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     // ignore dropped listen sockets
                 }
@@ -94,14 +95,14 @@ namespace Shield.Communication.Services
             object outObj;
             if (CoreApplication.Properties.TryGetValue("remotePeer", out outObj))
             {
-                EchoMessage((RemotePeer)outObj, args);
+                this.EchoMessage((RemotePeer)outObj, args);
                 return;
             }
 
             // We do not have an output stream yet so create one.
             try
             {
-                IOutputStream outputStream = await listener.GetOutputStreamAsync(args.RemoteAddress, args.RemotePort);
+                var outputStream = await this.listener.GetOutputStreamAsync(args.RemoteAddress, args.RemotePort);
 
                 // It might happen that the OnMessage was invoked more than once before the GetOutputStreamAsync completed.
                 // In this case we will end up with multiple streams - make sure we have just one of it.
@@ -119,7 +120,7 @@ namespace Shield.Communication.Services
                     }
                 }
 
-                EchoMessage(peer, args);
+                this.EchoMessage(peer, args);
             }
             catch (Exception exception)
             {
@@ -129,31 +130,30 @@ namespace Shield.Communication.Services
                     throw;
                 }
 
-               // NotifyUserFromAsyncThread("Connect failed with error: " + exception.Message, NotifyType.ErrorMessage);
+                // NotifyUserFromAsyncThread("Connect failed with error: " + exception.Message, NotifyType.ErrorMessage);
             }
-
         }
 
-        async void EchoMessage(RemotePeer peer, DatagramSocketMessageReceivedEventArgs eventArguments)
+        private void EchoMessage(RemotePeer peer, DatagramSocketMessageReceivedEventArgs eventArguments)
         {
             if (!peer.IsMatching(eventArguments.RemoteAddress, eventArguments.RemotePort))
             {
                 // In the sample we are communicating with just one peer. To communicate with multiple peers application
                 // should cache output streams (i.e. by using a hash map), because creating an output stream for each
-                //  received datagram is costly. Keep in mind though, that every cache requires logic to remove old
+                // received datagram is costly. Keep in mind though, that every cache requires logic to remove old
                 // or unused elements; otherwise cache turns into a memory leaking structure.
-                //NotifyUserFromAsyncThread(String.Format("Got datagram from {0}:{1}, but already 'connected' to {3}", eventArguments.RemoteAddress, eventArguments.RemotePort, peer), NotifyType.ErrorMessage);
+                // NotifyUserFromAsyncThread(String.Format("Got datagram from {0}:{1}, but already 'connected' to {3}", eventArguments.RemoteAddress, eventArguments.RemotePort, peer), NotifyType.ErrorMessage);
             }
 
             try
             {
                 var reader = eventArguments.GetDataReader();
                 var size = reader.UnconsumedBufferLength;
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 while (reader.UnconsumedBufferLength > 0)
                 {
                     var b = reader.ReadByte();
-                    sb.Append((char) b);
+                    sb.Append((char)b);
                 }
 
                 var msg = sb.ToString();
@@ -194,9 +194,9 @@ namespace Shield.Communication.Services
                     peer.Port = port;
 
                     var connection = new Connection(name, peer);
-                    if (!clients.ContainsKey(ip))
+                    if (!this.clients.ContainsKey(ip))
                     {
-                        clients[ip] = connection;
+                        this.clients[ip] = connection;
                     }
                 }
             }
@@ -236,13 +236,13 @@ namespace Shield.Communication.Services
             if (ip != null)
             {
                 var iponly = ip;
-                var port = broadcastPort.ToString();
+                var port = this.broadcastPort.ToString();
                 var colon = ip.IndexOf(':');
                 if (colon > -1)
                 {
                     iponly = ip.Substring(0, colon);
                     port = ip.Substring(colon + 1);
-                } 
+                }
 
                 return new RemotePeer(null, new HostName(iponly), port);
             }
@@ -252,12 +252,15 @@ namespace Shield.Communication.Services
 
         public override async Task<bool> Connect(Connection newConnection)
         {
-            //purposely connect to a destination
-            var peer = await GetHostNameAndService(newConnection.Source);
+            // purposely connect to a destination
+            var peer = await this.GetHostNameAndService(newConnection.Source);
 
-            if (peer?.HostName == null) return false;
+            if (peer?.HostName == null)
+            {
+                return false;
+            }
 
-            var result = await Connect(peer.HostName, peer.Port);
+            var result = await this.Connect(peer.HostName, peer.Port);
             await base.Connect(newConnection);
 
             return result;
@@ -265,34 +268,32 @@ namespace Shield.Communication.Services
 
         private async Task<bool> Connect(HostName deviceHostName, string remoteServiceName)
         {
-            if (!isListening)
+            if (!this.isListening)
             {
-                if (socket == null)
+                if (this.socket == null)
                 {
-                    socket = new StreamSocket();
+                    this.socket = new StreamSocket();
                 }
 
-                if (socket != null)
+                if (this.socket != null)
                 {
                     try
                     {
-                        CancellationTokenSource cts = new CancellationTokenSource();
+                        var cts = new CancellationTokenSource();
                         cts.CancelAfter(10000);
-                        await socket.ConnectAsync(deviceHostName, remoteServiceName);
-                        return InstrumentSocket(socket);
+                        await this.socket.ConnectAsync(deviceHostName, remoteServiceName);
+                        return this.InstrumentSocket(this.socket);
                     }
                     catch (Exception e)
                     {
-                        //log
+                        this.OnThreadedException(e);
                     }
                 }
 
                 return false;
             }
-            else
-            {
-                return true;
-            }
+
+            return true;
         }
     }
 }
