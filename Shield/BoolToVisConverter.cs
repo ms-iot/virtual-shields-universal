@@ -21,24 +21,23 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
-using System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Data;
-
 namespace Shield
 {
+    using System;
+
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Data;
+
     public class BoolToVisConverter : IValueConverter
     {
-
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return (bool) value ? Visibility.Visible : Visibility.Collapsed;
+            return (bool)value ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            return (Visibility) value == Visibility.Visible;
+            return (Visibility)value == Visibility.Visible;
         }
     }
 }

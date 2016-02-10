@@ -21,12 +21,11 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
-using System;
-using System.Collections.Generic;
-
 namespace Shield.Core
 {
+    using System;
+    using System.Collections.Generic;
+
     public static class StringHelper
     {
         public static string LeftOf(this string source, string separator)
@@ -54,7 +53,7 @@ namespace Shield.Core
         public static string[] RemoveQuotes(this string[] source)
         {
             var items = new string[source.Length];
-            for (int i = 0; i < items.Length; i++)
+            for (var i = 0; i < items.Length; i++)
             {
                 items[i] = source[i].Length > 2 ? source[i].Substring(1, source[i].Length - 2) : string.Empty;
             }
@@ -66,7 +65,7 @@ namespace Shield.Core
         {
             var sets = ("XXX" + source).Split(new[] { left, right }, StringSplitOptions.None);
             var items = new List<string>();
-            for (int i = 1; i < sets.Length; i += 2)
+            for (var i = 1; i < sets.Length; i += 2)
             {
                 items.Add(sets[i]);
             }

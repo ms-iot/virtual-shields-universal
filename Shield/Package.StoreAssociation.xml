@@ -27,6 +27,7 @@
     <Language Code="ar-ye" InMinimumRequirementSet="true" />
     <Language Code="as" InMinimumRequirementSet="true" />
     <Language Code="as-in" InMinimumRequirementSet="true" />
+    <Language Code="az" InMinimumRequirementSet="true" />
     <Language Code="az-arab" InMinimumRequirementSet="true" />
     <Language Code="az-arab-az" InMinimumRequirementSet="true" />
     <Language Code="az-cyrl" InMinimumRequirementSet="true" />
@@ -92,6 +93,7 @@
     <Language Code="en-us" InMinimumRequirementSet="true" />
     <Language Code="en-vn" InMinimumRequirementSet="true" />
     <Language Code="en-za" InMinimumRequirementSet="true" />
+    <Language Code="en-zw" InMinimumRequirementSet="true" />
     <Language Code="es" InMinimumRequirementSet="true" />
     <Language Code="es-019" InMinimumRequirementSet="true" />
     <Language Code="es-419" InMinimumRequirementSet="true" />
@@ -155,6 +157,7 @@
     <Language Code="gl-es" InMinimumRequirementSet="true" />
     <Language Code="gu" InMinimumRequirementSet="true" />
     <Language Code="gu-in" InMinimumRequirementSet="true" />
+    <Language Code="ha" InMinimumRequirementSet="true" />
     <Language Code="ha-latn" InMinimumRequirementSet="true" />
     <Language Code="ha-latn-ng" InMinimumRequirementSet="true" />
     <Language Code="he" InMinimumRequirementSet="true" />
@@ -200,6 +203,8 @@
     <Language Code="ky-kg" InMinimumRequirementSet="true" />
     <Language Code="lb" InMinimumRequirementSet="true" />
     <Language Code="lb-lu" InMinimumRequirementSet="true" />
+    <Language Code="lo" InMinimumRequirementSet="true" />
+    <Language Code="lo-la" InMinimumRequirementSet="true" />
     <Language Code="lt" InMinimumRequirementSet="true" />
     <Language Code="lt-lt" InMinimumRequirementSet="true" />
     <Language Code="lv" InMinimumRequirementSet="true" />
@@ -274,6 +279,7 @@
     <Language Code="sl-si" InMinimumRequirementSet="true" />
     <Language Code="sq" InMinimumRequirementSet="true" />
     <Language Code="sq-al" InMinimumRequirementSet="true" />
+    <Language Code="sr" InMinimumRequirementSet="true" />
     <Language Code="sr-cyrl" InMinimumRequirementSet="true" />
     <Language Code="sr-cyrl-ba" InMinimumRequirementSet="true" />
     <Language Code="sr-cyrl-cs" InMinimumRequirementSet="true" />
@@ -323,6 +329,7 @@
     <Language Code="uk-ua" InMinimumRequirementSet="true" />
     <Language Code="ur" InMinimumRequirementSet="true" />
     <Language Code="ur-pk" InMinimumRequirementSet="true" />
+    <Language Code="uz" InMinimumRequirementSet="true" />
     <Language Code="uz-cyrl" InMinimumRequirementSet="true" />
     <Language Code="uz-latn" InMinimumRequirementSet="true" />
     <Language Code="uz-latn-uz" InMinimumRequirementSet="true" />
@@ -334,6 +341,7 @@
     <Language Code="xh-za" InMinimumRequirementSet="true" />
     <Language Code="yo-latn" InMinimumRequirementSet="true" />
     <Language Code="yo-ng" InMinimumRequirementSet="true" />
+    <Language Code="zh" InMinimumRequirementSet="true" />
     <Language Code="zh-cn" InMinimumRequirementSet="true" />
     <Language Code="zh-hans" InMinimumRequirementSet="true" />
     <Language Code="zh-hans-cn" InMinimumRequirementSet="true" />
@@ -343,6 +351,8 @@
     <Language Code="zh-hant-mo" InMinimumRequirementSet="true" />
     <Language Code="zh-hant-tw" InMinimumRequirementSet="true" />
     <Language Code="zh-hk" InMinimumRequirementSet="true" />
+    <Language Code="zh-mo" InMinimumRequirementSet="true" />
+    <Language Code="zh-sg" InMinimumRequirementSet="true" />
     <Language Code="zh-tw" InMinimumRequirementSet="true" />
     <Language Code="zu" InMinimumRequirementSet="true" />
     <Language Code="zu-za" InMinimumRequirementSet="true" />
@@ -362,6 +372,7 @@
     <MainPackageIdentityName>Microsoft.HydroThunderHurricane</MainPackageIdentityName>
     <MainPackageIdentityName>microsoft.Labyrinth</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Memories</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftWiFi</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Music</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.NewsBeta</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.PaintPlay</MainPackageIdentityName>
@@ -374,6 +385,7 @@
     <MainPackageIdentityName>Microsoft.TweetramaBeta</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Video</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WeatherBeta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.27989AA74550C</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.1055520740551010</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.1MSQFT</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.3DBuilder</MainPackageIdentityName>
@@ -463,6 +475,7 @@
     <MainPackageIdentityName>Microsoft.DataMartAlpha</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.DealsfromStore</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.DepthBasics-XAML2</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.DevHome</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.DevSpace</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Dictio</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.DigitalGiftCards</MainPackageIdentityName>
@@ -479,9 +492,11 @@
     <MainPackageIdentityName>Microsoft.DynamicsNAVBeta</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.DynamicsNAVCorfuBeta1</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ECIXboxOneCountdown</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.EducationDelivery</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.EventChat</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.EventExperience</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.EventExperienceMicrosoft</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Example29</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Office.Excel</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.FaceBasics-HTML</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.FaceBasicsUnity</MainPackageIdentityName>
@@ -514,6 +529,7 @@
     <MainPackageIdentityName>Microsoft.Hollydevice</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.HomeTeam</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Hover</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.HS2ProvisioningApp</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.HyperlapseMobile</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.IEDataSavings</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.IETileManager</MainPackageIdentityName>
@@ -548,7 +564,6 @@
     <MainPackageIdentityName>Microsoft.MicrosoftAuthenticator</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftBooks</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftBuilder</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.27989AA74550C</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftDemo1</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftDemo2</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftDemo3</MainPackageIdentityName>
@@ -561,7 +576,6 @@
     <MainPackageIdentityName>Microsoft.DynamicsTimeManagement</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftEdge</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftEdgeBeta</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.MicrosoftEducationDeliveryforTablets</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftFeedback</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftITAcademy</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftITShowcase</MainPackageIdentityName>
@@ -571,6 +585,7 @@
     <MainPackageIdentityName>Microsoft.MicrosoftMuseum</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftOfficeHub</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftPodcast</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftPowerBIForWindows</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftPressGuidedTours</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftRemoteDesktopPreview</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftRetailDemoProvisioning</MainPackageIdentityName>
@@ -578,9 +593,9 @@
     <MainPackageIdentityName>Microsoft.MicrosoftStartupDirectory</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftStreetsTrips</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftTechCompanion</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MicrosoftUniversalFoldableKeyboard</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftVenturesStartupDirectory</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftVPN</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.MicrosoftWiFi</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.SurfaceWirelessDisplayAdapter</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.CheckM8</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Microsoft.FaceViewUnity-Test-Win8.1</MainPackageIdentityName>
@@ -589,6 +604,7 @@
     <MainPackageIdentityName>Microsoft.Microsoft.PPISkype</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Microsoft.WindowsStore</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Microsoft.WPDiet</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Microsoft.Xbox.DevHome</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MicrosoftRetailModeBeta</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.mjftest123</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.mobileowa</MainPackageIdentityName>
@@ -599,6 +615,7 @@
     <MainPackageIdentityName>Microsoft.MSFileManager</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MSPodcast</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MSStarbucks</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.MSApps</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MSCamera</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MSDiagnostics</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.MSDNVoiceSearch</MainPackageIdentityName>
@@ -661,6 +678,7 @@
     <MainPackageIdentityName>Microsoft.Office.People</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Office.Rio</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Office.Sway</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.Office.Whiteboard</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Office365.RAVE</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Officetestnameexample</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.OHelloWorld</MainPackageIdentityName>
@@ -668,13 +686,15 @@
     <MainPackageIdentityName>Microsoft.Office.OneNote</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.OperationalInsights</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.OutlookGroups</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.OutlookGroupsDF</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.OutlookGroupsUniversal</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.PasspointProfileInstaller</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.People</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.PhotoStory</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Windows.Photos</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Piano</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Pictate</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.MicrosoftPowerBIForWindows</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.PowerApps</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.PowerAppsPlayer</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.PowerAppsPlayerBeta</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.PowerBI</MainPackageIdentityName>
@@ -701,9 +721,11 @@
     <MainPackageIdentityName>Microsoft.RMSSharing</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.RtcPowerGates</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.sawhorse</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.ShareAssistant</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.SharePoint2013Newsfeed</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.ShopToXboxOneCountdown</MainPackageIdentityName>
     <MainPackageIdentityName>microsoft.microsoftskydrive</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.SkypeRoomRemote</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.SkypeRoomSystemsBeta</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.SkypeVideoCalling</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.SmokeyTopaz</MainPackageIdentityName>
@@ -738,6 +760,8 @@
     <MainPackageIdentityName>Microsoft.TetraLockscreen</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.TouchDevelop</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Translator10Beta</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.TryWindows</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.TryWindows10</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Skype</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.TypeNameHere</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.uapFramework1120</MainPackageIdentityName>
@@ -763,7 +787,6 @@
     <MainPackageIdentityName>Microsoft.WindowsCommunications</MainPackageIdentityName>
     <MainPackageIdentityName>microsoft.windowscommunicationsapps</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsDefaultLockScreen</MainPackageIdentityName>
-    <MainPackageIdentityName>Microsoft.WindowsDVDPlayer</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsEmulatorbyMicrosoft</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.InsiderHub</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsMapsChinaNavigation</MainPackageIdentityName>
@@ -776,6 +799,7 @@
     <MainPackageIdentityName>Microsoft.WindowsReadingList</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsRemoteArduinoExperience</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsScan</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WindowsDVDPlayer</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsVoiceNotes</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsAlarms</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Windows.ShellExperienceHost</MainPackageIdentityName>
@@ -786,6 +810,7 @@
     <MainPackageIdentityName>Microsoft.WindowsStore1121</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WindowsStore1121b</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.Office.Word</MainPackageIdentityName>
+    <MainPackageIdentityName>Microsoft.WorkFolders</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WorkItemStudio</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WorldSearch</MainPackageIdentityName>
     <MainPackageIdentityName>Microsoft.WPAdControl</MainPackageIdentityName>

@@ -21,37 +21,39 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Email;
-using Windows.Data.Xml.Dom;
-using Windows.Devices.Geolocation;
-using Windows.Devices.Sensors;
-﻿using Windows.Graphics.Display;
-﻿using Windows.Media.SpeechRecognition;
-using Windows.Phone.Devices.Notification;
-using Windows.Security.ExchangeActiveSyncProvisioning;
-using Windows.Storage;
-using Windows.Storage.Streams;
-using Windows.UI.Core;
-using Windows.UI.Notifications;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Shield.Core;
-using Shield.Core.Models;
-using Shield.Services;
-using EmailMessage = Windows.ApplicationModel.Email.EmailMessage;
-
 namespace Shield
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using Shield.Core;
+    using Shield.Core.Models;
+    using Shield.Services;
+
+    using Windows.ApplicationModel.Email;
+    using Windows.Data.Xml.Dom;
+    using Windows.Devices.Geolocation;
+    using Windows.Devices.Sensors;
+    using Windows.Graphics.Display;
+    using Windows.Media.SpeechRecognition;
+    using Windows.Phone.Devices.Notification;
+    using Windows.Security.ExchangeActiveSyncProvisioning;
+    using Windows.Storage;
+    using Windows.Storage.Streams;
+    using Windows.UI.Core;
+    using Windows.UI.Notifications;
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Input;
+    using Windows.UI.Xaml.Media;
+
+    using EmailMessage = Windows.ApplicationModel.Email.EmailMessage;
+
     public sealed partial class MainPage : Page
     {
         private readonly bool allowGlobalCommandBlocking = false;
@@ -60,30 +62,33 @@ namespace Shield
             new Dictionary<string, Queue<MessageBase>>();
 
         private readonly Queue<string> keys = new Queue<string>();
+
         private readonly Dictionary<string, bool> keysInProcess = new Dictionary<string, bool>();
+
         private bool isCameraInitializing;
+
+        public StringBuilder logger;
 
         public Dictionary<string, Dictionary<string, string>> mainDictionary =
             new Dictionary<string, Dictionary<string, string>>();
 
         private Speech speechService;
-        public StringBuilder logger;
 
         private void QueueMessage(MessageBase message)
         {
-            lock (keyedMessageQueues)
+            lock (this.keyedMessageQueues)
             {
-                if (!keyedMessageQueues.ContainsKey(message.Service))
+                if (!this.keyedMessageQueues.ContainsKey(message.Service))
                 {
-                    keyedMessageQueues.Add(message.Service, new Queue<MessageBase>());
+                    this.keyedMessageQueues.Add(message.Service, new Queue<MessageBase>());
                 }
 
-                keyedMessageQueues[message.Service].Enqueue(message);
+                this.keyedMessageQueues[message.Service].Enqueue(message);
             }
 
-            lock (keys)
+            lock (this.keys)
             {
-                keys.Enqueue(message.Service);
+                this.keys.Enqueue(message.Service);
             }
         }
 
@@ -91,12 +96,12 @@ namespace Shield
         {
             var localKeysInProcess = new Dictionary<string, bool>();
 
-            while (isRunning)
+            while (this.isRunning)
             {
                 int count;
-                lock (keys)
+                lock (this.keys)
                 {
-                    count = keys.Count;
+                    count = this.keys.Count;
                 }
 
                 if (count <= 0)
@@ -106,28 +111,28 @@ namespace Shield
                 }
 
                 string service;
-                lock (keys)
+                lock (this.keys)
                 {
-                    service = keys.Dequeue();
+                    service = this.keys.Dequeue();
                 }
 
-                var inUse = allowGlobalCommandBlocking && localKeysInProcess.ContainsKey(service) &&
-                            localKeysInProcess[service];
+                var inUse = this.allowGlobalCommandBlocking && localKeysInProcess.ContainsKey(service)
+                            && localKeysInProcess[service];
 
                 if (!inUse)
                 {
-                    lock (keysInProcess)
+                    lock (this.keysInProcess)
                     {
-                        inUse = keysInProcess.ContainsKey(service) && keysInProcess[service];
+                        inUse = this.keysInProcess.ContainsKey(service) && this.keysInProcess[service];
                     }
                 }
 
                 if (inUse)
                 {
-                    //in use - back of the line
-                    lock (keys)
+                    // in use - back of the line
+                    lock (this.keys)
                     {
-                        keys.Enqueue(service);
+                        this.keys.Enqueue(service);
                     }
 
                     await Task.Delay(50);
@@ -137,14 +142,14 @@ namespace Shield
                     localKeysInProcess[service] = true;
 
                     MessageBase message;
-                    lock (keyedMessageQueues)
+                    lock (this.keyedMessageQueues)
                     {
-                        message = keyedMessageQueues[service].Dequeue();
+                        message = this.keyedMessageQueues[service].Dequeue();
                     }
 
                     try
                     {
-                        await ProcessMessage(message);
+                        await this.ProcessMessage(message);
                     }
                     finally
                     {
@@ -158,210 +163,210 @@ namespace Shield
         {
             try
             {
-                await HandleMessageUnprotected(message);
+                await this.HandleMessageUnprotected(message);
             }
             catch (UnsupportedSensorException e)
             {
-                await SendResult(new ResultMessage(message) {ResultId = -2, Result = e.Message});
+                await this.SendResult(new ResultMessage(message) { ResultId = -2, Result = e.Message });
             }
             catch (Exception e)
             {
-                await SendResult(new ResultMessage(message) {ResultId = -1, Result = e.Message});
+                await this.SendResult(new ResultMessage(message) { ResultId = -1, Result = e.Message });
             }
         }
 
         private async Task HandleMessageUnprotected(MessageBase message)
         {
-            Log("R: " + message._Source + "\r\n");
+            this.Log("R: " + message._Source + "\r\n");
 
             try
             {
                 if (message.Service != "SYSTEM")
                 {
-                    var dictionary = new Dictionary<string, string> {{"Type", message.Service}};
+                    var dictionary = new Dictionary<string, string> { { "Type", message.Service } };
                     App.Telemetry.TrackEvent("MessageInfo", dictionary);
                 }
             }
             catch (Exception)
             {
-                //ignore telemetry errors if any
-
+                // ignore telemetry errors if any
             }
 
             switch (message.Service)
             {
                 case "SYSTEM":
-                {
-                    if (message.Action.Equals("PONG"))
                     {
-                        var totalRoundTrip = recentStringReceivedTick - sentPingTick;
-                        App.Telemetry.TrackMetric("VirtualShieldPingPongTimeDifferenceMillisec",
-                            totalRoundTrip/TimeSpan.TicksPerMillisecond);
+                        if (message.Action.Equals("PONG"))
+                        {
+                            var totalRoundTrip = this.recentStringReceivedTick - this.sentPingTick;
+                            App.Telemetry.TrackMetric(
+                                "VirtualShieldPingPongTimeDifferenceMillisec", 
+                                totalRoundTrip / TimeSpan.TicksPerMillisecond);
+                        }
+                        else if (message.Action.Equals("START"))
+                        {
+                            // reset orientation
+                            DisplayInformation.AutoRotationPreferences = DisplayOrientations.None;
+
+                            // turn off all sensors, accept buffer length
+                            var switches = new SensorSwitches { A = 0, G = 0, L = 0, M = 0, P = 0, Q = 0 };
+                            var sensors = new List<SensorSwitches>();
+                            sensors.Add(switches);
+
+                            this.ToggleSensors(new SensorMessage { Sensors = sensors, Id = 0 });
+                        }
+
+                        break;
                     }
-                    else if (message.Action.Equals("START"))
-                    {
-                        //reset orientation
-                        DisplayInformation.AutoRotationPreferences = DisplayOrientations.None;
 
-                        //turn off all sensors, accept buffer length
-                        var switches = new SensorSwitches {A = 0, G = 0, L = 0, M = 0, P = 0, Q = 0};
-                        var sensors = new List<SensorSwitches>();
-                        sensors.Add(switches);
-
-                        ToggleSensors(new SensorMessage {Sensors = sensors, Id = 0});
-                    }
-
-                    break;
-                }
                 case "SMS":
-                {
-                    var smsService = new Sms();
-                    var sms = message as SmsMessage;
-
-                    StorageFile attachment = null;
-                    if (!string.IsNullOrWhiteSpace(sms.Attachment))
                     {
-                        attachment = await StorageFile.GetFileFromPathAsync(sms.Attachment);
-                    }
+                        var smsService = new Sms();
+                        var sms = message as SmsMessage;
 
-                    smsService.Send(sms.To, sms.Message, attachment, null);
-                    break;
-                }
+                        StorageFile attachment = null;
+                        if (!string.IsNullOrWhiteSpace(sms.Attachment))
+                        {
+                            attachment = await StorageFile.GetFileFromPathAsync(sms.Attachment);
+                        }
+
+                        smsService.Send(sms.To, sms.Message, attachment, null);
+                        break;
+                    }
 
                 case "EMAIL":
-                {
-                    var email = new EmailMessage();
-                    var emailMessage = message as Core.Models.EmailMessage;
-                    email.Body = emailMessage.Message;
-                    email.Subject = emailMessage.Subject;
-                    email.To.Add(new EmailRecipient(emailMessage.To));
-                    if (!string.IsNullOrWhiteSpace(emailMessage.Cc))
                     {
-                        email.CC.Add(new EmailRecipient(emailMessage.To));
+                        var email = new EmailMessage();
+                        var emailMessage = message as Core.Models.EmailMessage;
+                        email.Body = emailMessage.Message;
+                        email.Subject = emailMessage.Subject;
+                        email.To.Add(new EmailRecipient(emailMessage.To));
+                        if (!string.IsNullOrWhiteSpace(emailMessage.Cc))
+                        {
+                            email.CC.Add(new EmailRecipient(emailMessage.To));
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(emailMessage.Attachment))
+                        {
+                            var storageFile = await StorageFile.GetFileFromPathAsync(emailMessage.Attachment);
+                            var stream = RandomAccessStreamReference.CreateFromFile(storageFile);
+
+                            var attachment = new EmailAttachment(storageFile.Name, stream);
+
+                            email.Attachments.Add(attachment);
+                        }
+
+                        await EmailManager.ShowComposeNewEmailAsync(email);
+
+                        break;
                     }
-
-                    if (!string.IsNullOrWhiteSpace(emailMessage.Attachment))
-                    {
-                        var storageFile = await StorageFile.GetFileFromPathAsync(emailMessage.Attachment);
-                        var stream = RandomAccessStreamReference.CreateFromFile(storageFile);
-
-                        var attachment = new EmailAttachment(
-                            storageFile.Name,
-                            stream);
-
-                        email.Attachments.Add(attachment);
-                    }
-
-                    await EmailManager.ShowComposeNewEmailAsync(email);
-
-                    break;
-                }
 
                 case "NOTIFY":
-                {
-                    var notify = message as NotifyMessage;
-                    if (string.IsNullOrWhiteSpace(notify.Action))
                     {
-                        return;
-                    }
+                        var notify = message as NotifyMessage;
+                        if (string.IsNullOrWhiteSpace(notify.Action))
+                        {
+                            return;
+                        }
 
-                    if (notify.Action.ToUpperInvariant().Equals("TOAST"))
-                    {
-                        await SendToastNotification(notify);
-                    }
-                    else if (notify.Action.ToUpperInvariant().Equals("TILE"))
-                    {
-                        await SendTileNotification(notify);
-                    }
+                        if (notify.Action.ToUpperInvariant().Equals("TOAST"))
+                        {
+                            await this.SendToastNotification(notify);
+                        }
+                        else if (notify.Action.ToUpperInvariant().Equals("TILE"))
+                        {
+                            await this.SendTileNotification(notify);
+                        }
 
-                    break;
-                }
+                        break;
+                    }
 
                 case "LCDG":
                 case "LCDT":
-                {
-                    await
-                        dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                            () => { screen.LcdPrint(message as ScreenMessage); });
-                    break;
-                }
+                    {
+                        await
+                            this.dispatcher.RunAsync(
+                                CoreDispatcherPriority.Normal, 
+                                () => { this.screen.LcdPrint(message as ScreenMessage); });
+                        break;
+                    }
 
                 case "LOG":
-                {
-                    await screen.LogPrint(message as ScreenMessage);
-                    break;
-                }
+                    {
+                        await this.screen.LogPrint(message as ScreenMessage);
+                        break;
+                    }
 
                 case "SPEECH":
-                {
-                    Speak(message as SpeechMessage);
-                    break;
-                }
+                    {
+                        this.Speak(message as SpeechMessage);
+                        break;
+                    }
 
                 case "RECOGNIZE":
-                {
-                    Recognize(message as SpeechRecognitionMessage);
-                    break;
-                }
+                    {
+                        this.Recognize(message as SpeechRecognitionMessage);
+                        break;
+                    }
 
                 case "SENSORS":
-                {
-                    ToggleSensors(message as SensorMessage);
-                    break;
-                }
+                    {
+                        this.ToggleSensors(message as SensorMessage);
+                        break;
+                    }
 
                 case "WEB":
-                {
-                    await web.RequestUrl(message as WebMessage);
-                    break;
-                }
+                    {
+                        await this.web.RequestUrl(message as WebMessage);
+                        break;
+                    }
 
                 case "CAMERA":
-                {
-                    var camMsg = message as CameraMessage;
-                    if (camMsg.Action != null && camMsg.Message != null && camMsg.Message.Equals("PREVIEW"))
                     {
-                        if (camMsg.Action.Equals("ENABLE") && !isCameraInitialized)
+                        var camMsg = message as CameraMessage;
+                        if (camMsg.Action != null && camMsg.Message != null && camMsg.Message.Equals("PREVIEW"))
                         {
-                            await InitializeCamera();
-                            camera.isPreviewing = true;
+                            if (camMsg.Action.Equals("ENABLE") && !this.isCameraInitialized)
+                            {
+                                await this.InitializeCamera();
+                                this.camera.isPreviewing = true;
+                            }
+                            else if (camMsg.Action.Equals("DISABLE"))
+                            {
+                                this.camera.isPreviewing = false;
+                            }
                         }
-                        else if (camMsg.Action.Equals("DISABLE"))
+                        else
                         {
-                            camera.isPreviewing = false;
+                            await this.TakePicture(message as CameraMessage);
                         }
-                    }
-                    else
-                    {
-                        await TakePicture(message as CameraMessage);
-                    }
 
-                    break;
-                }
+                        break;
+                    }
 
                 case "VIBRATE":
-                {
-                    Vibrate(message as TimingMessage);
-                    break;
-                }
+                    {
+                        this.Vibrate(message as TimingMessage);
+                        break;
+                    }
 
                 case "MICROPHONE":
-                {
-                    await Record(message as TimingMessage);
-                    break;
-                }
+                    {
+                        await this.Record(message as TimingMessage);
+                        break;
+                    }
 
                 case "PLAY":
-                {
-                    await Play(message as TimingMessage);
-                    break;
-                }
+                    {
+                        await this.Play(message as TimingMessage);
+                        break;
+                    }
 
                 case "DEVICE":
-                {
-                    await DeviceInfo(message as DeviceMessage);
-                    break;
-                }
+                    {
+                        await this.DeviceInfo(message as DeviceMessage);
+                        break;
+                    }
             }
         }
 
@@ -372,196 +377,198 @@ namespace Shield
             switch (action)
             {
                 case "CAPABILITIES":
-                {
-                    var resultId = 0;
-                    var result = new StringBuilder();
-
-                    if (Accelerometer.GetDefault() != null)
                     {
-                        resultId += 1;
-                        result.Append("A");
+                        var resultId = 0;
+                        var result = new StringBuilder();
+
+                        if (Accelerometer.GetDefault() != null)
+                        {
+                            resultId += 1;
+                            result.Append("A");
+                        }
+
+                        if (Gyrometer.GetDefault() != null)
+                        {
+                            resultId += 2;
+                            result.Append("G");
+                        }
+
+                        var accessStatus = await Geolocator.RequestAccessAsync();
+                        if (accessStatus == GeolocationAccessStatus.Allowed)
+                        {
+                            resultId += 4;
+                            result.Append("L");
+                        }
+
+                        if (Compass.GetDefault() != null)
+                        {
+                            resultId += 8;
+                            result.Append("M");
+                        }
+
+                        if (OrientationSensor.GetDefault() != null)
+                        {
+                            resultId += 16;
+                            result.Append("O");
+                        }
+
+                        if (LightSensor.GetDefault() != null)
+                        {
+                            resultId += 32;
+                            result.Append("P");
+                        }
+
+                        await
+                            this.SendResult(
+                                new DeviceResultMessage(devMessage) { ResultId = resultId, Result = result.ToString() });
+
+                        break;
                     }
-
-                    if (Gyrometer.GetDefault() != null)
-                    {
-                        resultId += 2;
-                        result.Append("G");
-                    }
-
-                    var accessStatus = await Geolocator.RequestAccessAsync();
-                    if (accessStatus == GeolocationAccessStatus.Allowed)
-                    {
-                        resultId += 4;
-                        result.Append("L");
-                    }
-
-                    if (Compass.GetDefault() != null)
-                    {
-                        resultId += 8;
-                        result.Append("M");
-                    }
-
-                    if (OrientationSensor.GetDefault() != null)
-                    {
-                        resultId += 16;
-                        result.Append("O");
-                    }
-
-                    if (LightSensor.GetDefault() != null)
-                    {
-                        resultId += 32;
-                        result.Append("P");
-                    }
-
-                    await SendResult(new DeviceResultMessage(devMessage)
-                    {
-                        ResultId = resultId,
-                        Result = result.ToString()
-                    });
-
-                    break;
-                }
 
                 case "DATETIME":
-                {
-                    var utcNow = DateTime.UtcNow;
-                    var now = DateTime.Now;
-                    await SendResult(new DeviceResultMessage(devMessage)
                     {
-                        ResultD = (utcNow - new DateTime(1970, 1, 1)).TotalSeconds,
-                        Result = utcNow.ToString("s") + "Z",
-                        Offset = TimeZoneInfo.Local.GetUtcOffset(now).TotalMinutes
-                    });
+                        var utcNow = DateTime.UtcNow;
+                        var now = DateTime.Now;
+                        await
+                            this.SendResult(
+                                new DeviceResultMessage(devMessage)
+                                    {
+                                        ResultD =
+                                            (utcNow - new DateTime(1970, 1, 1))
+                                            .TotalSeconds, 
+                                        Result = utcNow.ToString("s") + "Z", 
+                                        Offset =
+                                            TimeZoneInfo.Local.GetUtcOffset(now)
+                                            .TotalMinutes
+                                    });
 
-                    break;
-                }
+                        break;
+                    }
 
                 case "NAME":
-                {
-                    var deviceInfo = new EasClientDeviceInformation();
-
-                    await SendResult(new DeviceResultMessage(devMessage)
                     {
-                        Result = deviceInfo.FriendlyName
-                    });
+                        var deviceInfo = new EasClientDeviceInformation();
 
-                    break;
-                }
+                        await this.SendResult(new DeviceResultMessage(devMessage) { Result = deviceInfo.FriendlyName });
+
+                        break;
+                    }
 
                 case "OS":
-                {
-                    var deviceInfo = new EasClientDeviceInformation();
-
-                    await SendResult(new DeviceResultMessage(devMessage)
                     {
-                        Result = deviceInfo.OperatingSystem
-                    });
+                        var deviceInfo = new EasClientDeviceInformation();
 
-                    break;
-                }
+                        await
+                            this.SendResult(new DeviceResultMessage(devMessage) { Result = deviceInfo.OperatingSystem });
+
+                        break;
+                    }
 
                 case "FWVER":
-                {
-                    var deviceInfo = new EasClientDeviceInformation();
-
-                    await SendResult(new DeviceResultMessage(devMessage)
                     {
-                        Result = deviceInfo.SystemFirmwareVersion
-                    });
+                        var deviceInfo = new EasClientDeviceInformation();
 
-                    break;
-                }
+                        await
+                            this.SendResult(
+                                new DeviceResultMessage(devMessage) { Result = deviceInfo.SystemFirmwareVersion });
+
+                        break;
+                    }
 
                 case "HWVER":
-                {
-                    var deviceInfo = new EasClientDeviceInformation();
-
-                    await SendResult(new DeviceResultMessage(devMessage)
                     {
-                        Result = deviceInfo.SystemHardwareVersion
-                    });
+                        var deviceInfo = new EasClientDeviceInformation();
 
-                    break;
-                }
+                        await
+                            this.SendResult(
+                                new DeviceResultMessage(devMessage) { Result = deviceInfo.SystemHardwareVersion });
 
+                        break;
+                    }
 
                 case "PRODUCTNAME":
-                {
-                    var deviceInfo = new EasClientDeviceInformation();
-
-                    await SendResult(new DeviceResultMessage(devMessage)
                     {
-                        Result = deviceInfo.SystemProductName
-                    });
+                        var deviceInfo = new EasClientDeviceInformation();
 
-                    break;
-                }
+                        await
+                            this.SendResult(
+                                new DeviceResultMessage(devMessage) { Result = deviceInfo.SystemProductName });
 
+                        break;
+                    }
 
                 case "MANUFACTURER":
-                {
-                    var deviceInfo = new EasClientDeviceInformation();
-
-                    await SendResult(new DeviceResultMessage(devMessage)
                     {
-                        Result = deviceInfo.SystemManufacturer
-                    });
+                        var deviceInfo = new EasClientDeviceInformation();
 
-                    break;
-                }
+                        await
+                            this.SendResult(
+                                new DeviceResultMessage(devMessage) { Result = deviceInfo.SystemManufacturer });
+
+                        break;
+                    }
 
                 case "GET":
-                {
-                    if (string.IsNullOrWhiteSpace(devMessage.Key))
                     {
-                        await SendResult(new DeviceResultMessage(devMessage) {ResultId = -2});
-                        return;
+                        if (string.IsNullOrWhiteSpace(devMessage.Key))
+                        {
+                            await this.SendResult(new DeviceResultMessage(devMessage) { ResultId = -2 });
+                            return;
+                        }
+
+                        await
+                            this.SendResult(
+                                new DeviceResultMessage(devMessage)
+                                    {
+                                        Result =
+                                            this.appSettings.GetValueOrDefault(
+                                                devMessage.Message, 
+                                                devMessage.Key)
+                                    });
+
+                        break;
                     }
-
-                    await SendResult(new DeviceResultMessage(devMessage)
-                    {
-                        Result = appSettings.GetValueOrDefault(devMessage.Message, devMessage.Key)
-                    });
-
-                    break;
-                }
 
                 case "SET":
-                {
-                    if (string.IsNullOrWhiteSpace(devMessage.Key))
                     {
-                        await SendResult(new DeviceResultMessage(devMessage) {ResultId = -2});
-                        return;
+                        if (string.IsNullOrWhiteSpace(devMessage.Key))
+                        {
+                            await this.SendResult(new DeviceResultMessage(devMessage) { ResultId = -2 });
+                            return;
+                        }
+
+                        var original = this.appSettings.GetValueOrDefault(string.Empty, devMessage.Key);
+                        await
+                            this.SendResult(
+                                new DeviceResultMessage(devMessage)
+                                    {
+                                        ResultId =
+                                            this.appSettings.AddOrUpdateValue(
+                                                devMessage.Message, 
+                                                devMessage.Key)
+                                                ? 0
+                                                : -1, 
+                                        Result = original
+                                    });
+
+                        this.appSettings.ReportChanged(devMessage.Key);
+
+                        break;
                     }
-
-                    var original = appSettings.GetValueOrDefault(string.Empty, devMessage.Key);
-                    await SendResult(new DeviceResultMessage(devMessage)
-                    {
-                        ResultId = appSettings.AddOrUpdateValue(devMessage.Message, devMessage.Key) ? 0 : -1,
-                        Result = original
-                    });
-
-                    appSettings.ReportChanged(devMessage.Key);
-
-                    break;
-                }
 
                 case "DELETE":
-                {
-                    if (string.IsNullOrWhiteSpace(devMessage.Key))
                     {
-                        await SendResult(new DeviceResultMessage(devMessage) {ResultId = -2});
-                        return;
+                        if (string.IsNullOrWhiteSpace(devMessage.Key))
+                        {
+                            await this.SendResult(new DeviceResultMessage(devMessage) { ResultId = -2 });
+                            return;
+                        }
+
+                        var result = this.appSettings.Remove(devMessage.Key);
+                        await this.SendResult(new DeviceResultMessage(devMessage) { ResultId = result ? 0 : 1 });
+
+                        break;
                     }
-
-                    var result = appSettings.Remove(devMessage.Key);
-                    await SendResult(new DeviceResultMessage(devMessage)
-                    {
-                        ResultId = result ? 0 : 1
-                    });
-
-                    break;
-                }
             }
         }
 
@@ -576,8 +583,8 @@ namespace Shield
             if (!string.IsNullOrWhiteSpace(notify.Image))
             {
                 var toastImageAttributes = toastXml.GetElementsByTagName("image");
-                ((XmlElement) toastImageAttributes[0]).SetAttribute("src", notify.Image);
-                ((XmlElement) toastImageAttributes[0]).SetAttribute("alt", "");
+                ((XmlElement)toastImageAttributes[0]).SetAttribute("src", notify.Image);
+                ((XmlElement)toastImageAttributes[0]).SetAttribute("alt", string.Empty);
             }
 
             var toastNode = toastXml.SelectSingleNode("/toast");
@@ -597,13 +604,14 @@ namespace Shield
                 toastNode.AppendChild(audio);
             }
 
-            ((XmlElement) toastNode).SetAttribute("launch",
-                "{\"Type\":\"toast\",\"Id\":\"" + notify.Id + "\",\"Tag\":\"" + (notify.Tag ?? string.Empty) +
-                "\"}");
+            ((XmlElement)toastNode).SetAttribute(
+                "launch", 
+                "{\"Type\":\"toast\",\"Id\":\"" + notify.Id + "\",\"Tag\":\"" + (notify.Tag ?? string.Empty) + "\"}");
 
             var toast = new ToastNotification(toastXml);
             await
-                dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                this.dispatcher.RunAsync(
+                    CoreDispatcherPriority.Normal, 
                     () => { ToastNotificationManager.CreateToastNotifier().Show(toast); });
         }
 
@@ -613,15 +621,15 @@ namespace Shield
 
             UpdateTileParts(notify, tileXml);
 
-            var tileNotification = new TileNotification(tileXml) {Tag = notify.Tag ?? notify.Id.ToString()};
+            var tileNotification = new TileNotification(tileXml) { Tag = notify.Tag ?? notify.Id.ToString() };
 
             TileUpdateManager.CreateTileUpdaterForApplication().Update(tileNotification);
 
             tileNotification.ExpirationTime = DateTimeOffset.UtcNow.AddMinutes(10);
 
-            await
-                dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                    () =>
+            await this.dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal, 
+                () =>
                     {
                         try
                         {
@@ -629,7 +637,7 @@ namespace Shield
                         }
                         catch (Exception)
                         {
-                            //already updated is ok.
+                            // already updated is ok.
                         }
                     });
         }
@@ -646,145 +654,152 @@ namespace Shield
             if (!string.IsNullOrWhiteSpace(notify.Image))
             {
                 var img = tileXml.GetElementsByTagName("image");
-                ((XmlElement) img[0]).SetAttribute("src", notify.Image);
-                ((XmlElement) img[0]).SetAttribute("alt", "");
+                ((XmlElement)img[0]).SetAttribute("src", notify.Image);
+                ((XmlElement)img[0]).SetAttribute("alt", string.Empty);
             }
         }
 
         private async Task Play(TimingMessage playMessage)
         {
             var folders = new Dictionary<string, StorageFolder>
-            {
-                {"MUSIC:", KnownFolders.MusicLibrary},
-                {"VIDEOS:", KnownFolders.VideosLibrary},
-                {"PICTURES:", KnownFolders.PicturesLibrary},
-                {"CAMERA:", KnownFolders.CameraRoll},
-                {"SAVED:", KnownFolders.SavedPictures}
-            };
+                              {
+                                  { "MUSIC:", KnownFolders.MusicLibrary }, 
+                                  { "VIDEOS:", KnownFolders.VideosLibrary }, 
+                                  { "PICTURES:", KnownFolders.PicturesLibrary }, 
+                                  { "CAMERA:", KnownFolders.CameraRoll }, 
+                                  { "SAVED:", KnownFolders.SavedPictures }
+                              };
 
             try
             {
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-                {
-                    // force start of whatever is most recently sent
-                    if (player.CurrentState != MediaElementState.Closed &&
-                        player.CurrentState != MediaElementState.Stopped)
-                    {
-                        player.Stop();
-                    }
-
-                    if (player.Source != null)
-                    {
-                        player.Source = null;
-                    }
-
-                    StorageFile file = null;
-
-                    var url = playMessage.Url;
-                    var isWebUrl = false;
-
-                    var colon = url.IndexOf(':');
-                    if (colon > -1)
-                    {
-                        var root = url.Substring(0, colon + 1).ToUpperInvariant();
-
-                        var folder = folders.SingleOrDefault(f => root.StartsWith(f.Key));
-                        if (folder.Value != null)
+                await this.dispatcher.RunAsync(
+                    CoreDispatcherPriority.Normal, 
+                    async () =>
                         {
-                            file = await folder.Value.GetFileAsync(url.Substring(colon + 1));
-                        }
-                        else
-                        {
-                            isWebUrl = true;
-                        }
-                    }
+                            // force start of whatever is most recently sent
+                            if (this.player.CurrentState != MediaElementState.Closed
+                                && this.player.CurrentState != MediaElementState.Stopped)
+                            {
+                                this.player.Stop();
+                            }
 
-                    if (isWebUrl)
-                    {
-                        player.Source = new Uri(url);
-                    }
-                    else
-                    {
-                        if (file == null)
-                        {
-                            await
-                                SendResult(new ResultMessage(playMessage)
+                            if (this.player.Source != null)
+                            {
+                                this.player.Source = null;
+                            }
+
+                            StorageFile file = null;
+
+                            var url = playMessage.Url;
+                            var isWebUrl = false;
+
+                            var colon = url.IndexOf(':');
+                            if (colon > -1)
+                            {
+                                var root = url.Substring(0, colon + 1).ToUpperInvariant();
+
+                                var folder = folders.SingleOrDefault(f => root.StartsWith(f.Key));
+                                if (folder.Value != null)
                                 {
-                                    ResultId = -3,
-                                    Result = "file does not exist"
-                                });
-                            return;
-                        }
+                                    file = await folder.Value.GetFileAsync(url.Substring(colon + 1));
+                                }
+                                else
+                                {
+                                    isWebUrl = true;
+                                }
+                            }
 
-                        var stream = await file.OpenAsync(FileAccessMode.Read);
-                        player.SetSource(stream, file.ContentType);
-                    }
+                            if (isWebUrl)
+                            {
+                                this.player.Source = new Uri(url);
+                            }
+                            else
+                            {
+                                if (file == null)
+                                {
+                                    await
+                                        this.SendResult(
+                                            new ResultMessage(playMessage)
+                                                {
+                                                    ResultId = -3, 
+                                                    Result = "file does not exist"
+                                                });
+                                    return;
+                                }
 
-                    player.Tag = playMessage;
-                    player.CurrentStateChanged += Player_CurrentStateChanged;
+                                var stream = await file.OpenAsync(FileAccessMode.Read);
+                                this.player.SetSource(stream, file.ContentType);
+                            }
 
-                    player.Play();
-                });
+                            this.player.Tag = playMessage;
+                            this.player.CurrentStateChanged += this.Player_CurrentStateChanged;
+
+                            this.player.Play();
+                        });
             }
             catch (Exception e)
             {
-                await SendResult(new ResultMessage(playMessage) {ResultId = e.HResult, Result = e.Message});
+                await this.SendResult(new ResultMessage(playMessage) { ResultId = e.HResult, Result = e.Message });
             }
         }
 
         private async void Player_CurrentStateChanged(object sender, RoutedEventArgs e)
         {
-            var msg = (TimingMessage) player.Tag;
+            var msg = (TimingMessage)this.player.Tag;
             await
-                SendResult(new ResultMessage(msg)
-                {
-                    ResultId = (int) player.CurrentState,
-                    Result = Enum.GetName(typeof (MediaElementState), player.CurrentState)
-                });
+                this.SendResult(
+                    new ResultMessage(msg)
+                        {
+                            ResultId = (int)this.player.CurrentState, 
+                            Result = Enum.GetName(typeof(MediaElementState), this.player.CurrentState)
+                        });
         }
 
         private async void Log(string message)
         {
             Debug.WriteLine(message);
 
-            if (appSettings.IsLogging)
+            if (this.appSettings.IsLogging)
             {
                 var now = DateTime.Now;
-                logger.AppendLine(now.ToString("HH:mm:ss.fff:") + message);
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { appSettings.LogText = message; });
+                this.logger.AppendLine(now.ToString("HH:mm:ss.fff:") + message);
+                await
+                    this.dispatcher.RunAsync(
+                        CoreDispatcherPriority.Normal, 
+                        () => { this.appSettings.LogText = message; });
             }
         }
 
-        private async Task<bool> SendToDestinations(IAddressable message, MemoryStream memStream,
+        private async Task<bool> SendToDestinations(
+            IAddressable message, 
+            MemoryStream memStream, 
             StorageFolder defaultFolder)
         {
             var sent = false;
 
             // pushes back for each destination
-            foreach (var destination in destinations.Where(destination => destination.CheckPrefix(message.Url)))
+            foreach (var destination in this.destinations.Where(destination => destination.CheckPrefix(message.Url)))
             {
                 memStream.Position = 0;
                 var url = await destination.Send(memStream, message.Url);
 
-                await SendResult(new ResultMessage(message as MessageBase) {Result = url, ResultId = 1});
+                await this.SendResult(new ResultMessage(message as MessageBase) { Result = url, ResultId = 1 });
                 sent = true;
             }
 
             var colonIndex = message.Url?.IndexOf(':') ?? -2;
             if (!sent && (colonIndex == -1 || colonIndex > 1))
-                // destination which is (drive-letter:) or direct filename.
             {
+                // destination which is (drive-letter:) or direct filename.
                 try
                 {
-                    var namedFile = await defaultFolder.CreateFileAsync(message.Url,
-                        CreationCollisionOption.ReplaceExisting);
+                    var namedFile =
+                        await defaultFolder.CreateFileAsync(message.Url, CreationCollisionOption.ReplaceExisting);
                     await FileIO.WriteBytesAsync(namedFile, memStream.ToArray());
                     sent = true;
-                    await SendResult(new ResultMessage(message as MessageBase)
-                    {
-                        Result = namedFile.Name,
-                        ResultId = 1
-                    });
+                    await
+                        this.SendResult(
+                            new ResultMessage(message as MessageBase) { Result = namedFile.Name, ResultId = 1 });
                 }
                 catch (Exception)
                 {
@@ -797,61 +812,65 @@ namespace Shield
 
         private async Task Record(TimingMessage message)
         {
-            lock (keysInProcess)
+            lock (this.keysInProcess)
             {
-                keysInProcess["MICROPHONE"] = true;
+                this.keysInProcess["MICROPHONE"] = true;
             }
 
-            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            {
-                await audio.InitializeAudioRecording();
-                IRandomAccessStream stream;
-                try
-                {
-                    appSettings.IsListening = true;
-                    stream = await audio.CaptureAudio(new TimeSpan(0, 0, 0, 0, message.Ms));
-                }
-                finally
-                {
-                    appSettings.IsListening = false;
-                }
-
-                if (message.Autoplay.HasValue && message.Autoplay.Value)
-                {
-                    player.AutoPlay = true;
-                    player.SetSource(stream, audio.GetFile().FileType);
-                    player.Play();
-                }
-
-                //stores the image in Azure BLOB Storage
-                var memStream = new MemoryStream();
-                var fileStream = stream.AsStreamForRead();
-                await fileStream.CopyToAsync(memStream);
-
-                if (!await SendToDestinations(message, memStream, KnownFolders.VideosLibrary))
-                {
-                    await SendResult(new ResultMessage(message) {Result = audio.GetFile().Name, ResultId = 1});
-                }
-                else
-                {
-                    if (message.Keep == null || !message.Keep.Value)
+            await this.dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal, 
+                async () =>
                     {
-                        //remove original
-                        await fileStream.FlushAsync();
-                        await audio.GetFile().DeleteAsync();
-                    }
-                }
+                        await this.audio.InitializeAudioRecording();
+                        IRandomAccessStream stream;
+                        try
+                        {
+                            this.appSettings.IsListening = true;
+                            stream = await this.audio.CaptureAudio(new TimeSpan(0, 0, 0, 0, message.Ms));
+                        }
+                        finally
+                        {
+                            this.appSettings.IsListening = false;
+                        }
 
-                lock (keysInProcess)
-                {
-                    keysInProcess["MICROPHONE"] = false;
-                }
-            });
+                        if (message.Autoplay.HasValue && message.Autoplay.Value)
+                        {
+                            this.player.AutoPlay = true;
+                            this.player.SetSource(stream, this.audio.GetFile().FileType);
+                            this.player.Play();
+                        }
+
+                        // stores the image in Azure BLOB Storage
+                        var memStream = new MemoryStream();
+                        var fileStream = stream.AsStreamForRead();
+                        await fileStream.CopyToAsync(memStream);
+
+                        if (!await this.SendToDestinations(message, memStream, KnownFolders.VideosLibrary))
+                        {
+                            await
+                                this.SendResult(
+                                    new ResultMessage(message) { Result = this.audio.GetFile().Name, ResultId = 1 });
+                        }
+                        else
+                        {
+                            if (message.Keep == null || !message.Keep.Value)
+                            {
+                                // remove original
+                                await fileStream.FlushAsync();
+                                await this.audio.GetFile().DeleteAsync();
+                            }
+                        }
+
+                        lock (this.keysInProcess)
+                        {
+                            this.keysInProcess["MICROPHONE"] = false;
+                        }
+                    });
         }
 
         private void ToggleSensors(SensorMessage sensorsMessage)
         {
-            Sensors.SensorSwitches.Id = sensorsMessage.Id;
+            this.Sensors.SensorSwitches.Id = sensorsMessage.Id;
 
             foreach (var sensorItem in sensorsMessage.Sensors)
             {
@@ -863,8 +882,14 @@ namespace Shield
                         throw new UnsupportedSensorException("Accelerometer does not exist");
                     }
 
-                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> {{"sensor.type", sensorsMessage.Type.ToString()}, { "sensor.value", sensorItem.A.Value.ToString()}});
-                    Sensors.SensorSwitches.A = sensorItem.A.Value;
+                    App.Telemetry.TrackEvent(
+                        "Sensor", 
+                        new Dictionary<string, string>
+                            {
+                                { "sensor.type", sensorsMessage.Type.ToString() }, 
+                                { "sensor.value", sensorItem.A.Value.ToString() }
+                            });
+                    this.Sensors.SensorSwitches.A = sensorItem.A.Value;
                 }
                 else if (sensorItem.G != null)
                 {
@@ -874,8 +899,14 @@ namespace Shield
                         throw new UnsupportedSensorException("Gyrometer does not exist");
                     }
 
-                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "sensor.type", sensorsMessage.Type.ToString() }, { "sensor.value", sensorItem.G.Value.ToString() } });
-                    Sensors.SensorSwitches.G = sensorItem.G.Value;
+                    App.Telemetry.TrackEvent(
+                        "Sensor", 
+                        new Dictionary<string, string>
+                            {
+                                { "sensor.type", sensorsMessage.Type.ToString() }, 
+                                { "sensor.value", sensorItem.G.Value.ToString() }
+                            });
+                    this.Sensors.SensorSwitches.G = sensorItem.G.Value;
                 }
                 else if (sensorItem.M != null)
                 {
@@ -885,14 +916,27 @@ namespace Shield
                         throw new UnsupportedSensorException("Compass does not exist");
                     }
 
-                    Sensors.SensorSwitches.M = sensorItem.M.Value;
-                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "sensor.type", sensorsMessage.Type.ToString() }, { "sensor.value", sensorItem.M.Value.ToString() } }); Sensors.SensorSwitches.M = sensorItem.M.Value;
+                    this.Sensors.SensorSwitches.M = sensorItem.M.Value;
+                    App.Telemetry.TrackEvent(
+                        "Sensor", 
+                        new Dictionary<string, string>
+                            {
+                                { "sensor.type", sensorsMessage.Type.ToString() }, 
+                                { "sensor.value", sensorItem.M.Value.ToString() }
+                            });
+                    this.Sensors.SensorSwitches.M = sensorItem.M.Value;
                 }
                 else if (sensorItem.L != null)
                 {
                     sensorsMessage.Type = 'L';
-                    Sensors.SensorSwitches.L = sensorItem.L.Value;
-                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "sensor.type", sensorsMessage.Type.ToString() }, { "sensor.value", sensorItem.L.Value.ToString() } });
+                    this.Sensors.SensorSwitches.L = sensorItem.L.Value;
+                    App.Telemetry.TrackEvent(
+                        "Sensor", 
+                        new Dictionary<string, string>
+                            {
+                                { "sensor.type", sensorsMessage.Type.ToString() }, 
+                                { "sensor.value", sensorItem.L.Value.ToString() }
+                            });
                 }
                 else if (sensorItem.Q != null)
                 {
@@ -902,8 +946,14 @@ namespace Shield
                         throw new UnsupportedSensorException("OrientationSensor does not exist");
                     }
 
-                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "sensor.type", sensorsMessage.Type.ToString() }, { "sensor.value", sensorItem.Q.Value.ToString() } });
-                    Sensors.SensorSwitches.Q = sensorItem.Q.Value;
+                    App.Telemetry.TrackEvent(
+                        "Sensor", 
+                        new Dictionary<string, string>
+                            {
+                                { "sensor.type", sensorsMessage.Type.ToString() }, 
+                                { "sensor.value", sensorItem.Q.Value.ToString() }
+                            });
+                    this.Sensors.SensorSwitches.Q = sensorItem.Q.Value;
                 }
                 else if (sensorItem.P != null)
                 {
@@ -913,230 +963,246 @@ namespace Shield
                         throw new UnsupportedSensorException("LightSensor does not exist");
                     }
 
-                    App.Telemetry.TrackEvent("Sensor", new Dictionary<string, string> { { "sensor.type", sensorsMessage.Type.ToString() }, { "sensor.value", sensorItem.P.Value.ToString() } });
-                    Sensors.SensorSwitches.P = sensorItem.P.Value;
+                    App.Telemetry.TrackEvent(
+                        "Sensor", 
+                        new Dictionary<string, string>
+                            {
+                                { "sensor.type", sensorsMessage.Type.ToString() }, 
+                                { "sensor.value", sensorItem.P.Value.ToString() }
+                            });
+                    this.Sensors.SensorSwitches.P = sensorItem.P.Value;
                 }
 
-                //outside of scope - applies to last only
-                Sensors.SensorSwitches.Delta = sensorItem.Delta;
-                Sensors.SensorSwitches.Interval = sensorItem.Interval;
+                // outside of scope - applies to last only
+                this.Sensors.SensorSwitches.Delta = sensorItem.Delta;
+                this.Sensors.SensorSwitches.Interval = sensorItem.Interval;
             }
 
-            Sensors.Start();
+            this.Sensors.Start();
         }
 
         private void Vibrate(TimingMessage timingMessage)
         {
             var vibrationDevice = VibrationDevice.GetDefault();
-            vibrationDevice.Vibrate(new TimeSpan(0, 0, 0, timingMessage.Ms/1000, timingMessage.Ms%1000));
+            vibrationDevice.Vibrate(new TimeSpan(0, 0, 0, timingMessage.Ms / 1000, timingMessage.Ms % 1000));
         }
 
         private async Task TakePicture(CameraMessage cameraMessage)
         {
-            if (isCameraInitializing)
+            if (this.isCameraInitializing)
             {
-                await SendResult(new ResultMessage(cameraMessage) {ResultId = -3, Result = "Initializing"});
+                await this.SendResult(new ResultMessage(cameraMessage) { ResultId = -3, Result = "Initializing" });
                 return;
             }
 
-            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            {
-                lock (keysInProcess)
-                {
-                    keysInProcess["CAMERA"] = true;
-                }
-
-                await InitializeCamera();
-                
-                var imageName = "photo_" + DateTime.Now.Ticks + ".jpg";
-                foreach (
-                    var destination in destinations.Where(destination => destination.CheckPrefix(cameraMessage.Url)))
-                {
-                    imageName = destination.ParseAddressForFileName(cameraMessage.Url);
-                    break;
-                }
-
-                StorageFile stream = null;
-                try
-                {
-                    var timeout = DateTime.Now.AddSeconds(5);
-                    while (!camera.isPreviewing && DateTime.Now < timeout)
+            await this.dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal, 
+                async () =>
                     {
-                        await Task.Delay(250);
-                    }
+                        lock (this.keysInProcess)
+                        {
+                            this.keysInProcess["CAMERA"] = true;
+                        }
 
-                    stream = await camera.Capture(imageName);
-                }
-                catch (Exception e)
-                {
-                    await SendResult(new ResultMessage(cameraMessage) {ResultId = -99, Result = e.Message });
-                    lock (keysInProcess)
-                    {
-                        keysInProcess["CAMERA"] = false;
-                    }
+                        await this.InitializeCamera();
 
-                    return;
-                }
+                        var imageName = "photo_" + DateTime.Now.Ticks + ".jpg";
+                        foreach (
+                            var destination in
+                                this.destinations.Where(destination => destination.CheckPrefix(cameraMessage.Url)))
+                        {
+                            imageName = destination.ParseAddressForFileName(cameraMessage.Url);
+                            break;
+                        }
 
-                //stores the image in Azure BLOB Storage
-                var memStream = new MemoryStream();
-                var fileStream = await stream.OpenStreamForReadAsync();
-                await fileStream.CopyToAsync(memStream);
+                        StorageFile stream = null;
+                        try
+                        {
+                            var timeout = DateTime.Now.AddSeconds(5);
+                            while (!this.camera.isPreviewing && DateTime.Now < timeout)
+                            {
+                                await Task.Delay(250);
+                            }
 
-                if (!await SendToDestinations(cameraMessage, memStream, KnownFolders.PicturesLibrary))
-                {
-                    await SendResult(new ResultMessage(cameraMessage) {Result = imageName});
-                }
+                            stream = await this.camera.Capture(imageName);
+                        }
+                        catch (Exception e)
+                        {
+                            await
+                                this.SendResult(new ResultMessage(cameraMessage) { ResultId = -99, Result = e.Message });
+                            lock (this.keysInProcess)
+                            {
+                                this.keysInProcess["CAMERA"] = false;
+                            }
 
-                lock (keysInProcess)
-                {
-                    keysInProcess["CAMERA"] = false;
-                }
-            });
+                            return;
+                        }
+
+                        // stores the image in Azure BLOB Storage
+                        var memStream = new MemoryStream();
+                        var fileStream = await stream.OpenStreamForReadAsync();
+                        await fileStream.CopyToAsync(memStream);
+
+                        if (!await this.SendToDestinations(cameraMessage, memStream, KnownFolders.PicturesLibrary))
+                        {
+                            await this.SendResult(new ResultMessage(cameraMessage) { Result = imageName });
+                        }
+
+                        lock (this.keysInProcess)
+                        {
+                            this.keysInProcess["CAMERA"] = false;
+                        }
+                    });
         }
 
         private async void Recognize(SpeechRecognitionMessage speech)
         {
-            if (speechService == null)
+            if (this.speechService == null)
             {
-                speechService = new Speech();
-                speechService.SpeechStatusChanged +=
-                    (sender, args) => { appSettings.IsListening = args.Status == SpeechStatus.Listening; };
+                this.speechService = new Speech();
+                this.speechService.SpeechStatusChanged +=
+                    (sender, args) => { this.appSettings.IsListening = args.Status == SpeechStatus.Listening; };
             }
 
-            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            {
-                try
-                {
-                    if (speech.Action != null && speech.Action.Equals("STOP"))
+            await this.dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal, 
+                async () =>
                     {
-                        speechService.Stop();
-                        return;
-                    }
-
-                    var expectedConfidence = speech.Confidence ?? (int) SpeechRecognitionConfidence.Medium;
-
-                    var recognizeText = default(RecognizedSpeech);
-
-                    var confident = false;
-                    var timeout = DateTime.UtcNow.AddMilliseconds(speech.Ms ?? 0);
-                    while (!confident && (speech.Ms == null || speech.Ms == 0 || DateTime.UtcNow < timeout))
-                        //consider timeout here
-                    {
-                        Debug.WriteLine("recognizing...");
-                        recognizeText = await speechService.Recognize(speech.Message, speech.UI);
-                        Debug.WriteLine("end recognizing...");
-                        if (recognizeText.status != SpeechRecognitionResultStatus.Success)
+                        try
                         {
-                            break;
+                            if (speech.Action != null && speech.Action.Equals("STOP"))
+                            {
+                                this.speechService.Stop();
+                                return;
+                            }
+
+                            var expectedConfidence = speech.Confidence ?? (int)SpeechRecognitionConfidence.Medium;
+
+                            var recognizeText = default(RecognizedSpeech);
+
+                            var confident = false;
+                            var timeout = DateTime.UtcNow.AddMilliseconds(speech.Ms ?? 0);
+                            while (!confident && (speech.Ms == null || speech.Ms == 0 || DateTime.UtcNow < timeout))
+                            {
+                                // consider timeout here
+                                Debug.WriteLine("recognizing...");
+                                recognizeText = await this.speechService.Recognize(speech.Message, speech.UI);
+                                Debug.WriteLine("end recognizing...");
+                                if (recognizeText.status != SpeechRecognitionResultStatus.Success)
+                                {
+                                    break;
+                                }
+
+                                confident = expectedConfidence >= recognizeText.confidence;
+                            }
+
+                            var status = recognizeText.status == SpeechRecognitionResultStatus.Success
+                                             ? recognizeText.index
+                                             : (recognizeText.status == SpeechRecognitionResultStatus.UserCanceled
+                                                    ? 0
+                                                    : -(int)recognizeText.status);
+
+                            if ((recognizeText.status == SpeechRecognitionResultStatus.Unknown
+                                 || recognizeText.status == SpeechRecognitionResultStatus.Success) && !confident
+                                && (speech.Ms != null && speech.Ms != 0 || DateTime.UtcNow >= timeout))
+                            {
+                                status = 0; // timeout or cancelled
+                            }
+
+                            await
+                                this.SendResult(
+                                    new SpeechResultMessage(speech)
+                                        {
+                                            Result = recognizeText.text, 
+                                            ResultId = status, 
+                                            Action = recognizeText.action, 
+                                            Value = recognizeText.confidence
+                                        });
                         }
-
-                        confident = expectedConfidence >= recognizeText.confidence;
-                    }
-
-                    var status = recognizeText.status == SpeechRecognitionResultStatus.Success
-                        ? recognizeText.index
-                        : (recognizeText.status == SpeechRecognitionResultStatus.UserCanceled
-                            ? 0
-                            : -(int) recognizeText.status);
-
-                    if ((recognizeText.status == SpeechRecognitionResultStatus.Unknown ||
-                         recognizeText.status == SpeechRecognitionResultStatus.Success)
-                        && !confident && (speech.Ms != null && speech.Ms != 0 || DateTime.UtcNow >= timeout))
-                    {
-                        status = 0; //timeout or cancelled
-                    }
-
-                    await
-                        SendResult(new SpeechResultMessage(speech)
+                        catch (Exception e)
                         {
-                            Result = recognizeText.text,
-                            ResultId = status,
-                            Action = recognizeText.action,
-                            Value = recognizeText.confidence
-                        });
-                }
-                catch (Exception e)
-                {
-                    await SendResult(new ResultMessage
-                        (speech) {Result = e.Message, ResultId = e.HResult});
-                }
-            });
+                            await
+                                this.SendResult(new ResultMessage(speech) { Result = e.Message, ResultId = e.HResult });
+                        }
+                    });
         }
 
         private async void Speak(SpeechMessage speech)
         {
             var service = new Speech();
 
-            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            {
-                try
-                {
-                    if (speech.Action != null && speech.Action.Equals("STOP"))
+            await this.dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal, 
+                async () =>
                     {
-                        player?.Stop();
-                    }
-                    else
-                    {
-                        service.Speak(player, speech);
-                    }
-                }
-                catch (Exception e)
-                {
-                    await SendResult(new ResultMessage(speech)
-                    {
-                        Result = e.Message,
-                        ResultId = e.HResult
+                        try
+                        {
+                            if (speech.Action != null && speech.Action.Equals("STOP"))
+                            {
+                                this.player?.Stop();
+                            }
+                            else
+                            {
+                                service.Speak(this.player, speech);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            await
+                                this.SendResult(new ResultMessage(speech) { Result = e.Message, ResultId = e.HResult });
+                        }
                     });
-                }
-            });
         }
 
-        internal async Task SendEvent(object sender, RoutedEventArgs e, string action, MessageBase message = null,
+        internal async Task SendEvent(
+            object sender, 
+            RoutedEventArgs e, 
+            string action, 
+            MessageBase message = null, 
             string messageText = null)
         {
-            if (sender is Grid && sensors.ContainsKey("LCDG:TOUCH"))
+            if (sender is Grid && this.sensors.ContainsKey("LCDG:TOUCH"))
             {
                 if (e is PointerRoutedEventArgs)
                 {
-                    var pe = (PointerRoutedEventArgs) e;
+                    var pe = (PointerRoutedEventArgs)e;
                     var pt = pe.GetCurrentPoint(sender as FrameworkElement);
-                    await SendResult(new ScreenResultMessage(message)
-                    {
-                        Area = "TOUCH",
-                        Action = action,
-                        X = pt.Position.X,
-                        Y = pt.Position.Y
-                    });
+                    await
+                        this.SendResult(
+                            new ScreenResultMessage(message)
+                                {
+                                    Area = "TOUCH", 
+                                    Action = action, 
+                                    X = pt.Position.X, 
+                                    Y = pt.Position.Y
+                                });
                 }
             }
             else if (!(sender is Grid))
             {
                 var source = (e.OriginalSource ?? sender) as FrameworkElement;
 
-                var id = (int) source.GetValue(Screen.RemoteIdProperty);
+                var id = (int)source.GetValue(Screen.RemoteIdProperty);
 
                 if (message == null)
                 {
-                    message = new ScreenMessage
-                    {
-                        Type = 'S',
-                        Service = "LCDG",
-                        Id = id
-                    };
+                    message = new ScreenMessage { Type = 'S', Service = "LCDG", Id = id };
                 }
 
                 var newid = (message.Id == 0) ? id : message.Id;
 
-                await SendResult(new ScreenResultMessage(message)
-                {
-                    Area = source.GetType().Name.ToUpperInvariant(),
-                    Action = action,
-                    Tag = source.Tag?.ToString(),
-                    Type = message.Type ?? 'S',
-                    Id = newid,
-                    Result = messageText
-                }, newid + action);
+                await
+                    this.SendResult(
+                        new ScreenResultMessage(message)
+                            {
+                                Area = source.GetType().Name.ToUpperInvariant(), 
+                                Action = action, 
+                                Tag = source.Tag?.ToString(), 
+                                Type = message.Type ?? 'S', 
+                                Id = newid, 
+                                Result = messageText
+                            }, 
+                        newid + action);
             }
         }
     }

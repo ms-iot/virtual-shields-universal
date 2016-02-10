@@ -21,85 +21,122 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.Networking.Sockets;
-using Windows.Storage.Streams;
-
 namespace Shield.Communication.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using Windows.Networking.Sockets;
+    using Windows.Storage.Streams;
+
     public class PrioritizedMessage
     {
         public string Message { get; set; }
+
         public int Priority { get; set; }
     }
 
     public class ServiceBase : IDisposable
     {
-        internal StreamSocket socket;
-        internal DataWriter dataWriter;
-        internal DataReader dataReader;
-        internal bool isListening = false;
-        internal bool isPollingToSend = false;
-
         public delegate void CharReceivedHandler(char message);
-        public event CharReceivedHandler CharReceived;
-        public int CharEventHandlerCount = 0;
-        internal Dictionary<string, Connection> clients = new Dictionary<string, Connection>();
-
-        public bool IsClearToSend { get; set; }
 
         public delegate void OnConnectHandler(Connection newConnection);
 
-        public event OnConnectHandler OnConnect;
-        public event OnConnectHandler OnDisconnected;
+        public delegate void ThreadedExceptionHandler(Exception exception);
 
-        private Connection currentConnection = null;
-        internal bool isPrePairedDevice = false;
+        // todo: Add a set of priorities with timestamps - send in order of : priority + oldest msg.
+        private readonly Dictionary<string, PrioritizedMessage> queuedMessages =
+            new Dictionary<string, PrioritizedMessage>();
+
+        private readonly Queue<string> queuedSends = new Queue<string>();
+
+        public int CharEventHandlerCount = 0;
+
+        internal Dictionary<string, Connection> clients = new Dictionary<string, Connection>();
+
+        private Connection currentConnection;
+
+        internal DataReader dataReader;
+
+        internal DataWriter dataWriter;
+
         private bool isFlushImplemented = true;
 
-        //todo: Add a set of priorities with timestamps - send in order of : priority + oldest msg.
-        private Dictionary<string, PrioritizedMessage> queuedMessages = new Dictionary<string, PrioritizedMessage>();
-        private Queue<string> queuedSends = new Queue<string>(); 
+        internal bool isListening;
+
+        internal bool isPollingToSend = false;
+
+        internal bool isPrePairedDevice;
+
+        private int msBetweenSends = 10;
+
+        private DateTime nextSend = DateTime.Now;
+
+        internal StreamSocket socket;
+
+        public bool IsClearToSend { get; set; }
+
+        public bool IsConnected { get; set; }
+
+        public virtual void Dispose()
+        {
+            if (this.socket != null)
+            {
+                this.socket?.Dispose();
+                this.currentConnection = null;
+                this.isListening = false;
+                this.socket = null;
+                this.isFlushImplemented = true;
+            }
+        }
+
+        public event ThreadedExceptionHandler ThreadedException;
+
+        public event CharReceivedHandler CharReceived;
+
+        public event OnConnectHandler OnConnect;
+
+        public event OnConnectHandler OnDisconnected;
 
         public void Initialize(bool isPrePairedDevice)
         {
-            if (socket != null)
-            {
-                socket.Dispose();
-            }
+            this.socket?.Dispose();
 
-            socket = new StreamSocket();
+            this.socket = new StreamSocket();
 
             this.isPrePairedDevice = isPrePairedDevice;
         }
 
         public void Terminate()
         {
-            isListening = false;
+            this.isListening = false;
             this.Dispose();
+        }
+
+        public void OnThreadedException(Exception e)
+        {
+            this.ThreadedException?.Invoke(e);
         }
 
         public void SetClient(string name, Connection connection)
         {
-            clients[name] = connection;
+            this.clients[name] = connection;
         }
 
         public void ClearClient(string name)
         {
             if (name == null)
             {
-                clients.Clear();
+                this.clients.Clear();
                 return;
             }
 
-            if (clients.ContainsKey(name))
+            if (this.clients.ContainsKey(name))
             {
-                clients.Remove(name);
+                this.clients.Remove(name);
             }
         }
 
@@ -110,8 +147,9 @@ namespace Shield.Communication.Services
 
         public virtual void Disconnect(Connection connection)
         {
+            this.IsConnected = false;
             this.OnDisconnected?.Invoke(connection);
-            Terminate();
+            this.Terminate();
         }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
@@ -120,12 +158,13 @@ namespace Shield.Communication.Services
         {
             this.currentConnection = newConnection;
             this.OnConnect?.Invoke(newConnection);
+            this.IsConnected = true;
             return false;
         }
 
         internal bool InstrumentSocket(StreamSocket socket)
         {
-            return InstrumentSocket(socket.InputStream, socket.OutputStream);
+            return this.InstrumentSocket(socket.InputStream, socket.OutputStream);
         }
 
         internal bool InstrumentSocket(IInputStream input, IOutputStream output)
@@ -134,13 +173,13 @@ namespace Shield.Communication.Services
 
             try
             {
-                dataReader = new DataReader(input);
+                this.dataReader = new DataReader(input);
                 this.isListening = true;
 #pragma warning disable 4014
-                Task.Run(() => { ReceiveMessages(); });
-                Task.Run(() => { SendMessages(); });
+                Task.Run(() => { this.ReceiveMessages(); });
+                Task.Run(() => { this.SendMessages(); });
 #pragma warning restore 4014
-                dataWriter = new DataWriter(output);
+                this.dataWriter = new DataWriter(output);
                 result = true;
             }
             catch (Exception e)
@@ -156,21 +195,33 @@ namespace Shield.Communication.Services
         {
             try
             {
-                while (isListening)
+                while (this.isListening)
                 {
                     uint sizeFieldCount = 0;
                     try
                     {
-                        sizeFieldCount = await dataReader.LoadAsync(1);
+                        sizeFieldCount = await this.dataReader.LoadAsync(1);
+                    }
+                    catch (UnsupportedSensorException use)
+                    {
+                        Debug.WriteLine("UnsupportedSensorException: " + use);
+
+                        // send message to remote
+                        this.ThreadedException?.Invoke(use);
                     }
                     catch (Exception e)
                     {
                         // ignore normal socket disconnections
+                        // -2147023901 == The I/O operation has been aborted because of either a thread exit or an application request. 
                         if (e.HResult != -2147023901)
                         {
+                            Debug.WriteLine("Socket exception: " + e);
+                            this.ThreadedException?.Invoke(e);
                             throw;
                         }
 
+                        Debug.WriteLine("Socket disconnect: " + e);
+                        this.ThreadedException?.Invoke(e);
                         continue;
                     }
 
@@ -180,35 +231,32 @@ namespace Shield.Communication.Services
                         break;
                     }
 
-                    uint val = dataReader.ReadByte();
+                    uint val = this.dataReader.ReadByte();
                     if (val < 255)
                     {
-                        Debug.Write(val.ToString()+",");
-                        CharReceived?.Invoke((char)val);
+                        Debug.Write(val + ",");
+                        this.CharReceived?.Invoke((char)val);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                Debug.WriteLine("ReceiveMessages Fatal Exception: " + ex);
                 this.Terminate();
             }
         }
-
-        private int msBetweenSends = 10;
-        private DateTime nextSend = DateTime.Now;
 
         public async void SendMessages()
         {
             try
             {
-                while (isListening)
+                while (this.isListening)
                 {
                     if (this.IsClearToSend)
                     {
                         string part = null;
 
-                        lock (queuedMessages)
+                        lock (this.queuedMessages)
                         {
                             if (this.queuedSends.Count > 0)
                             {
@@ -233,7 +281,10 @@ namespace Shield.Communication.Services
                                 while (head < length)
                                 {
                                     tail += 60;
-                                    this.queuedSends.Enqueue(tail < length ? value.Message.Substring(head, 60) : value.Message.Substring(head));
+                                    this.queuedSends.Enqueue(
+                                        tail < length
+                                            ? value.Message.Substring(head, 60)
+                                            : value.Message.Substring(head));
                                     head += 60;
                                 }
                             }
@@ -242,10 +293,9 @@ namespace Shield.Communication.Services
                         if (part != null)
                         {
                             Debug.WriteLine(part);
-                            await SendMessage2(part);
+                            await this.SendMessage2(part);
                         }
                     }
-
                 }
             }
             catch (Exception ex)
@@ -257,50 +307,38 @@ namespace Shield.Communication.Services
 
         public async Task SendMessage(string data, string key = null, int priority = 10)
         {
-            if (!isPollingToSend)
+            if (!this.isPollingToSend)
             {
-                await SendMessage2(data);
+                await this.SendMessage2(data);
             }
 
             key = key ?? "?";
 
-            lock (queuedMessages)
+            lock (this.queuedMessages)
             {
-                this.queuedMessages[key] = new PrioritizedMessage {Message = data, Priority = priority};
+                this.queuedMessages[key] = new PrioritizedMessage { Message = data, Priority = priority };
             }
         }
 
         public async Task SendMessage2(string data)
         {
-            if (dataWriter != null)
+            if (this.dataWriter != null)
             {
                 Debug.WriteLine("Sending: " + data);
-                dataWriter.WriteString(data);
-                await dataWriter.StoreAsync();
+                this.dataWriter.WriteString(data);
+                await this.dataWriter.StoreAsync();
 
-                if (isFlushImplemented)
+                if (this.isFlushImplemented)
                 {
                     try
                     {
-                        await dataWriter.FlushAsync();
+                        await this.dataWriter.FlushAsync();
                     }
                     catch (NotImplementedException)
                     {
-                        isFlushImplemented = false;
+                        this.isFlushImplemented = false;
                     }
                 }
-            }
-        }
-
-        public virtual void Dispose()
-        {
-            if (socket != null)
-            {
-                socket?.Dispose();
-                currentConnection = null;
-                isListening = false;
-                socket = null;
-                isFlushImplemented = true;
             }
         }
 

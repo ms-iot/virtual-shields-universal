@@ -21,27 +21,22 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Windows.Networking;
-using Windows.Networking.Proximity;
-using Windows.Networking.Sockets;
-using Windows.Devices.Bluetooth.Rfcomm;
-using Windows.Devices.Enumeration;
-using Windows.Devices.SerialCommunication;
-
 namespace Shield.Communication.Services
 {
+    using System;
+    using System.Threading.Tasks;
+
+    using Windows.Devices.Enumeration;
+    using Windows.Devices.SerialCommunication;
+
     public class USB : ServiceBase
     {
-        public SerialDevice service { get; private set; }
-
         public USB()
         {
-            isPollingToSend = true;
+            this.isPollingToSend = true;
         }
+
+        public SerialDevice service { get; private set; }
 
         public override async Task<Connections> GetConnections()
         {
@@ -63,7 +58,7 @@ namespace Shield.Communication.Services
 
                 return connections;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -71,37 +66,35 @@ namespace Shield.Communication.Services
 
         public override async Task<bool> Connect(Connection newConnection)
         {
-            bool result = false;
-
             var deviceInfo = newConnection.Source as DeviceInformation;
             if (deviceInfo != null)
             {
-                service = await SerialDevice.FromIdAsync(deviceInfo.Id);
-                if (service == null)
+                this.service = await SerialDevice.FromIdAsync(deviceInfo.Id);
+                if (this.service == null)
                 {
                     return false;
                 }
 
-                service.BaudRate = 115200;
-                service.StopBits = SerialStopBitCount.One;
-                service.Handshake = SerialHandshake.None;
-                service.DataBits = 8;
-           
-                service.ReadTimeout = TimeSpan.FromSeconds(5);
-                service.WriteTimeout = TimeSpan.FromSeconds(5);
-                service.IsDataTerminalReadyEnabled = false;
+                this.service.BaudRate = 115200;
+                this.service.StopBits = SerialStopBitCount.One;
+                this.service.Handshake = SerialHandshake.None;
+                this.service.DataBits = 8;
 
-                return InstrumentSocket(service.InputStream, service.OutputStream);
+                this.service.ReadTimeout = TimeSpan.FromSeconds(5);
+                this.service.WriteTimeout = TimeSpan.FromSeconds(5);
+                this.service.IsDataTerminalReadyEnabled = false;
+
+                return this.InstrumentSocket(this.service.InputStream, this.service.OutputStream);
             }
- 
-            return result;
+
+            return false;
         }
 
         public override void Dispose()
         {
-            service?.Dispose();
+            this.service?.Dispose();
             base.Dispose();
-            service = null;
+            this.service = null;
         }
     }
 }

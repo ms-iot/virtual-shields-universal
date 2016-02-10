@@ -12,13 +12,13 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.10240.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10166.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>Shield_StoreKey.pfx</PackageCertificateKeyFile>
-    <ApplicationInsightsResourceId>/subscriptions/3028579c-d25b-4ab8-87fc-455abc9bb7fb/resourcegroups/AppInsights-MakerProjects/providers/microsoft.insights/components/Windows Virtual Shields for Arduino - Public</ApplicationInsightsResourceId>
+    <ApplicationInsightsResourceId>/subscriptions/3028579c-d25b-4ab8-87fc-455abc9bb7fb/resourcegroups/AppInsights-MakerProjects/providers/microsoft.insights/components/Windows Virtual Shields for Arduino - Internal</ApplicationInsightsResourceId>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <PackageCertificateThumbprint>4102783C48AB585FC76AA855A6AE11EDC5152C79</PackageCertificateThumbprint>
@@ -99,6 +99,7 @@
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <None Include="project.json" />
     <None Include="Service References\Application Insights\ConnectedService.json" />
@@ -154,6 +155,7 @@
     <Content Include="Assets\refresh.png" />
     <Content Include="Assets\right.png" />
     <Content Include="Assets\settings.png" />
+    <Content Include="Assets\ShieldsWelcome.png" />
     <Content Include="Assets\SmallLogo.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\StoreLogo.scale-100.png" />

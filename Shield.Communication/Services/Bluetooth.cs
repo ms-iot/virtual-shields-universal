@@ -21,30 +21,31 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Windows.Networking;
-using Windows.Networking.Proximity;
-using Windows.Networking.Sockets;
-using Windows.Devices.Bluetooth.Rfcomm;
-using Windows.Devices.Enumeration;
-
 namespace Shield.Communication.Services
 {
+    using System;
+    using System.Diagnostics;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    using Windows.Devices.Bluetooth.Rfcomm;
+    using Windows.Devices.Enumeration;
+    using Windows.Networking;
+    using Windows.Networking.Proximity;
+    using Windows.Networking.Sockets;
+
     public class Bluetooth : ServiceBase
     {
         public Bluetooth()
         {
-            isPollingToSend = true;
+            this.isPollingToSend = true;
         }
 
         public override async Task<Connections> GetConnections()
         {
-            if (isPrePairedDevice)
+            if (this.isPrePairedDevice)
             {
-                PeerFinder.AlternateIdentities["Bluetooth:Paired"] = "";
+                PeerFinder.AlternateIdentities["Bluetooth:Paired"] = string.Empty;
             }
 
             try
@@ -62,6 +63,7 @@ namespace Shield.Communication.Services
             }
             catch (Exception e)
             {
+                Debug.WriteLine("GetConnections: pairing failed: " + e);
                 return null;
             }
         }
@@ -93,11 +95,11 @@ namespace Shield.Communication.Services
                 }
             }
 
-            bool result = false;
+            var result = false;
 
             if (hostName != null)
             {
-                result = await Connect(hostName, remoteServiceName);
+                result = await this.Connect(hostName, remoteServiceName);
                 await base.Connect(newConnection);
             }
 
@@ -106,34 +108,32 @@ namespace Shield.Communication.Services
 
         private async Task<bool> Connect(HostName deviceHostName, string remoteServiceName)
         {
-            if (!isListening)
+            if (!this.isListening)
             {
-                if (socket == null)
+                if (this.socket == null)
                 {
-                    socket = new StreamSocket();
+                    this.socket = new StreamSocket();
                 }
 
-                if (socket != null)
+                if (this.socket != null)
                 {
                     try
                     {
-                        CancellationTokenSource cts = new CancellationTokenSource();
+                        var cts = new CancellationTokenSource();
                         cts.CancelAfter(10000);
-                        await socket.ConnectAsync(deviceHostName, remoteServiceName);
-                        return InstrumentSocket(socket);
+                        await this.socket.ConnectAsync(deviceHostName, remoteServiceName);
+                        return this.InstrumentSocket(this.socket);
                     }
                     catch (Exception e)
                     {
-                        //log
+                        Debug.WriteLine("Connect: connection failed: " + e);
                     }
                 }
 
                 return false;
             }
-            else
-            {
-                return true;
-            }
+
+            return true;
         }
     }
 }

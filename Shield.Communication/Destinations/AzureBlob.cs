@@ -21,32 +21,16 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Shield.Communication.Destinations
 {
-    public class AzureBlob : IDestination
+    using System.IO;
+    using System.Threading.Tasks;
+
+    public sealed class AzureBlob : IDestination
     {
-        private string PREFIX = "BLOB://";
-        private BlobHelper blobHelper;
+        private readonly BlobHelper blobHelper;
 
-        // Setup for Azure BLOB storage
-        public string accountName { get; set; }
-        public string accountKey { get; set; }
-
-        string IDestination.PREFIX
-        {
-            get
-            {
-                return PREFIX;
-            }
-        }
+        private readonly string PREFIX = "BLOB://";
 
         public AzureBlob(string accountName, string accountKey)
         {
@@ -55,34 +39,41 @@ namespace Shield.Communication.Destinations
             this.blobHelper = new BlobHelper(accountName, accountKey);
         }
 
-        public string[] ParseAddress(string address)
+        // Setup for Azure BLOB storage
+        public string accountName { get; set; }
+
+        public string accountKey { get; set; }
+
+        string IDestination.PREFIX
         {
-            string parsed = address.Substring(PREFIX.Length);
-            return parsed.Split('/');
+            get
+            {
+                return this.PREFIX;
+            }
         }
 
         public string ParseAddressForFileName(string address)
         {
-            string[] parsedSplit = ParseAddress(address);
+            var parsedSplit = this.ParseAddress(address);
             return parsedSplit[1];
         }
 
         public async Task<string> Send(MemoryStream memStream, string address)
         {
-            string container = "";
-            string blob = "";
+            var container = string.Empty;
+            var blob = string.Empty;
 
-            //Parse the BLOB Address
-            string[] parsedSplit = ParseAddress(address);
+            // Parse the BLOB Address
+            var parsedSplit = this.ParseAddress(address);
             if (parsedSplit.Length == 2)
             {
                 container = parsedSplit[0];
                 blob = parsedSplit[1];
             }
 
-            //stores the image in Azure BLOB Storage
+            // stores the image in Azure BLOB Storage
             memStream.Position = 0;
-            await blobHelper.PutBlob(container, blob, memStream);
+            await this.blobHelper.PutBlob(container, blob, memStream);
 
             return "http://" + this.accountName + ".blob.core.windows.net/" + container + "/" + blob;
         }
@@ -90,6 +81,12 @@ namespace Shield.Communication.Destinations
         public bool CheckPrefix(string address)
         {
             return address.Contains(this.PREFIX);
+        }
+
+        public string[] ParseAddress(string address)
+        {
+            var parsed = address.Substring(this.PREFIX.Length);
+            return parsed.Split('/');
         }
     }
 }

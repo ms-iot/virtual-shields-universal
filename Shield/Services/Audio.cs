@@ -21,37 +21,37 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-
-using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Media;
-using Windows.Media.Capture;
-using Windows.Media.MediaProperties;
-using Windows.Storage;
-using Windows.Storage.Streams;
-
 namespace Shield.Services
 {
+    using System;
+    using System.Diagnostics;
+    using System.Threading.Tasks;
+
+    using Windows.Media;
+    using Windows.Media.Capture;
+    using Windows.Media.MediaProperties;
+    using Windows.Storage;
+    using Windows.Storage.Streams;
+
     public class Audio
     {
         private MediaCapture _mediaCaptureManager;
+
         private StorageFile _recordStorageFile;
 
         public async Task InitializeAudioRecording()
         {
-            _mediaCaptureManager = new MediaCapture();
+            this._mediaCaptureManager = new MediaCapture();
             var settings = new MediaCaptureInitializationSettings();
             settings.StreamingCaptureMode = StreamingCaptureMode.Audio;
             settings.MediaCategory = MediaCategory.Other;
             settings.AudioProcessing = AudioProcessing.Default;
 
-            await _mediaCaptureManager.InitializeAsync(settings);
+            await this._mediaCaptureManager.InitializeAsync(settings);
 
             Debug.WriteLine("Device initialized successfully");
-            _mediaCaptureManager.RecordLimitationExceeded += RecordLimitationExceeded;
-            _mediaCaptureManager.Failed += Failed;
+            this._mediaCaptureManager.RecordLimitationExceeded += this.RecordLimitationExceeded;
+            this._mediaCaptureManager.Failed += this.Failed;
         }
 
         private void RecordLimitationExceeded(MediaCapture sender)
@@ -66,14 +66,14 @@ namespace Shield.Services
 
         public async Task<IRandomAccessStream> CaptureAudio(TimeSpan timespan)
         {
-            await CaptureAudio();
+            await this.CaptureAudio();
             await Task.Delay(timespan);
-            return await StopCapture();
+            return await this.StopCapture();
         }
 
         public StorageFile GetFile()
         {
-            return _recordStorageFile;
+            return this._recordStorageFile;
         }
 
         private async Task CaptureAudio()
@@ -83,15 +83,15 @@ namespace Shield.Services
                 Debug.WriteLine("Starting record");
                 var fileName = "audio.wav";
 
-                _recordStorageFile =
+                this._recordStorageFile =
                     await
-                        KnownFolders.VideosLibrary.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName);
+                    KnownFolders.VideosLibrary.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName);
 
                 Debug.WriteLine("Create record file successfully");
 
                 var recordProfile = MediaEncodingProfile.CreateM4a(AudioEncodingQuality.Auto);
 
-                await _mediaCaptureManager.StartRecordToStorageFileAsync(recordProfile, _recordStorageFile);
+                await this._mediaCaptureManager.StartRecordToStorageFileAsync(recordProfile, this._recordStorageFile);
 
                 Debug.WriteLine("Start Record successful");
             }
@@ -104,10 +104,10 @@ namespace Shield.Services
         private async Task<IRandomAccessStream> StopCapture()
         {
             Debug.WriteLine("Stopping recording");
-            await _mediaCaptureManager.StopRecordAsync();
+            await this._mediaCaptureManager.StopRecordAsync();
             Debug.WriteLine("Stop recording successful");
 
-            var stream = await _recordStorageFile.OpenAsync(FileAccessMode.Read);
+            var stream = await this._recordStorageFile.OpenAsync(FileAccessMode.Read);
 
             return stream;
         }
