@@ -234,7 +234,8 @@ namespace Shield.Communication.Services
                     uint val = this.dataReader.ReadByte();
                     if (val < 255)
                     {
-                        Debug.Write(val + ",");
+                        //Debug.Write(val + ",");
+                        Debug.Write((char)val);
                         this.CharReceived?.Invoke((char)val);
                     }
                 }
