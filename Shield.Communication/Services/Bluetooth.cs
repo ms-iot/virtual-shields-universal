@@ -70,37 +70,43 @@ namespace Shield.Communication.Services
 
         public override async Task<bool> Connect(Connection newConnection)
         {
-            HostName hostName = null;
-            string remoteServiceName = null;
+            var result = false;
+            try
+            {
+                HostName hostName = null;
+                string remoteServiceName = null;
 
-            var peer = newConnection.Source as PeerInformation;
-            if (peer != null)
-            {
-                hostName = peer.HostName;
-                remoteServiceName = "1";
-            }
-            else
-            {
-                var deviceInfo = newConnection.Source as DeviceInformation;
-                if (deviceInfo != null)
+                var peer = newConnection.Source as PeerInformation;
+                if( peer != null )
                 {
-                    var service = await RfcommDeviceService.FromIdAsync(deviceInfo.Id);
-                    if (service == null)
+                    hostName = peer.HostName;
+                    remoteServiceName = "1";
+                }
+                else
+                {
+                    var deviceInfo = newConnection.Source as DeviceInformation;
+                    if( deviceInfo != null )
                     {
-                        return false;
-                    }
+                        var service = await RfcommDeviceService.FromIdAsync(deviceInfo.Id);
+                        if( service == null )
+                        {
+                            return false;
+                        }
 
-                    hostName = service.ConnectionHostName;
-                    remoteServiceName = service.ConnectionServiceName;
+                        hostName = service.ConnectionHostName;
+                        remoteServiceName = service.ConnectionServiceName;
+                    }
+                }
+
+                if( hostName != null )
+                {
+                    result = await this.Connect(hostName, remoteServiceName);
+                    await base.Connect(newConnection);
                 }
             }
-
-            var result = false;
-
-            if (hostName != null)
+            catch (Exception)
             {
-                result = await this.Connect(hostName, remoteServiceName);
-                await base.Connect(newConnection);
+                //ignore bad connection, return false
             }
 
             return result;
