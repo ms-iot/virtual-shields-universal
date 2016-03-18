@@ -127,6 +127,7 @@ namespace Shield.Core
                     this.buffer.Clear();
                     this.braceCount = 0;
                     this.isClosedMessage = false;
+                    this.quoted = false;
                     return;
                 }
 
@@ -153,6 +154,7 @@ namespace Shield.Core
             this.buffer.Append(c);
             if (isComplete)
             {
+                Debug.WriteLine(string.Empty);
                 this.OnStringReceived(this.buffer.ToString());
                 this.buffer.Clear();
             }
@@ -163,6 +165,7 @@ namespace Shield.Core
                 this.buffer.Clear();
                 this.braceCount = 0;
                 this.isClosedMessage = false;
+                this.quoted = false;
             }
         }
 
